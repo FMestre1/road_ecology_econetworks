@@ -1,2 +1,2 @@
 # road_ecoloy_econetworks
-The large-scale effect of roads on ecolohical networks
+The large-scale effect of roads on ecological networks
