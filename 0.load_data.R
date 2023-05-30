@@ -22,4 +22,23 @@ vuln_mammals <- read.csv("C:\\Users\\FMest\\Documents\\0. Artigos\\roads_network
 
 species <- c(vuln_birds$Species, vuln_mammals$Species)
 
+head(vuln_birds)
+head(vuln_mammals)
 
+v_mammal <- data.frame(vuln_mammals[,1:2], "mammal")
+v_bird <- data.frame(vuln_birds[,1:2],"bird")
+
+names(v_mammal)[3] <- "bm"
+names(v_bird)[3] <- "bm"
+
+vulnerability <- data.frame(rbind(v_bird, v_mammal))
+
+i_mammal <- data.frame(vuln_mammals[,c(1,5)], "mammal")
+i_bird <- data.frame(vuln_birds[,c(1,5)],"bird")
+
+names(i_mammal)[3] <- "bm"
+names(i_bird)[3] <- "bm"
+
+iucn <- data.frame(rbind(i_bird, i_mammal))
+#head(iucn)
+#tail(iucn)

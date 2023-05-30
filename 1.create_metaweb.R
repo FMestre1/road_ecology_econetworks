@@ -17,14 +17,16 @@ library(taxize)
 
 #Create table of species information
 species_FAMILY <- tax_name(species, get = 'family', db = 'itis')
+species_GENUS <- tax_name(species, get = 'genus', db = 'itis')
 
 #
 species_df <- data.frame(species,
+                         species_GENUS,
                          species_FAMILY
                          )
 
+species_df <- species_df[,-c(2:3,5,6)]
 head(species_df)
-species_df <- species_df[,-c(2:3)]
 
 ####################
 
@@ -33,46 +35,117 @@ colnames(GLOBI_metaweb) <- species
 rownames(GLOBI_metaweb) <- species
 #View(GLOBI_metaweb)
 
-#AQUI
-
 for(i in 1:nrow(GLOBI_metaweb)){
   
   species_row <- GLOBI_metaweb[i,]
   focal_species <- rownames(species_row)
-  focal_species <- stringr::str_replace(focal_species,"\\.", " ")
-  
+
   #Preys upon...
   preys_upon1 <- rglobi::get_interactions(taxon = focal_species, interaction.type = "preysOn")
   preys_of_focal1 <- preys_upon1$target_taxon_name
-  preys_S <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$query]) == species2_taxonomy$query),]$query) #are the preyed upon species on the IbPen
-  preys_G <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$genus]) == species2_taxonomy$genus),]$query) #are the preyed upon genus on the IbPen
-  preys_F <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$family]) == species2_taxonomy$family),]$query) #are the preyed upon family on the IbPen
-  #preys_O <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$order]) == species2_taxonomy$order),]$query) #are the preyed upon order on the IbPen
-  #preys_C <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$class]) == species2_taxonomy$class),]$query) #are the preyed upon class on the IbPen
+  if(length(preys_of_focal1)!=0) preys_S <- unique(species_df[which(unique(preys_of_focal1[preys_of_focal1 %in% species_df$species]) == species_df$query),]$species)
+  if(length(preys_of_focal1)!=0) preys_G <- unique(species_df[which(unique(preys_of_focal1[preys_of_focal1 %in% species_df$genus]) == species_df$genus),]$species)
+  #preys_F <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$family]) == species2_taxonomy$family),]$query)
+  #preys_O <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$order]) == species2_taxonomy$order),]$query)
+  #preys_C <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$class]) == species2_taxonomy$class),]$query)
   #  
   #preys_TOTAL <- c(preys_S, preys_G, preys_F, preys_O, preys_C)
-  preys_TOTAL <- unique(c(preys_S, preys_G, preys_F))
-  preys_TOTAL <- stringr::str_replace(preys_TOTAL," ", ".")
+  if(length(preys_of_focal1)!=0) preys_TOTAL <- unique(c(preys_S, preys_G))
+  if(length(preys_of_focal1)!=0) rm(preys_S, preys_G)
+  #preys_TOTAL <- stringr::str_replace(preys_TOTAL," ", ".")
   
-  focal_species2 <- stringr::str_replace(focal_species," ", ".")
+  #focal_species2 <- stringr::str_replace(focal_species," ", ".")
   
-  GLOBI_metaweb[focal_species2, preys_TOTAL] <- 1
-  
+  if(exists("preys_TOTAL")) {
+    GLOBI_metaweb[focal_species, preys_TOTAL] <- 1
+    rm(preys_TOTAL)
+  }
   
   #Preyed by...
   preyed_on_by1 <- rglobi::get_interactions(taxon = focal_species, interaction.type = c("eatenBy", "preyedUponBy"))
   predators_of_focal1 <- preyed_on_by1$target_taxon_name
   #     
-  predators_S <- species2_taxonomy[species2_taxonomy$query %in% unique(predators_of_focal1[predators_of_focal1 %in% species2_taxonomy$query]),]$query
-  predators_G <- species2_taxonomy[species2_taxonomy$genus %in% unique(predators_of_focal1[predators_of_focal1 %in% species2_taxonomy$genus]),]$query
-  predators_F <- species2_taxonomy[species2_taxonomy$family %in% unique(predators_of_focal1[predators_of_focal1 %in% species2_taxonomy$family]),]$query
+  if(length(predators_of_focal1)!=0) predators_S <- species_df[species_df$species %in% unique(predators_of_focal1[predators_of_focal1 %in% species_df$species]),]$species
+  if(length(predators_of_focal1)!=0) predators_G <- species_df[species_df$genus %in% unique(predators_of_focal1[predators_of_focal1 %in% species_df$genus]),]$species
+  #predators_F <- species2_taxonomy[species2_taxonomy$family %in% unique(predators_of_focal1[predators_of_focal1 %in% species2_taxonomy$family]),]$query
   #
-  predators_TOTAL <- unique(c(predators_S, predators_G, predators_F))
-  predators_TOTAL <- stringr::str_replace(predators_TOTAL," ", ".")
+  predators_TOTAL <- unique(c(predators_S, predators_G))
+  #predators_TOTAL <- stringr::str_replace(predators_TOTAL," ", ".")
   #
-  GLOBI_metaweb[predators_TOTAL, focal_species2] <- 1
+  if(exists("predators_TOTAL")) {
+    GLOBI_metaweb[predators_TOTAL, focal_species] <- 1
+    rm(predators_TOTAL)
+    }
   
   message("Just did row ", i, "!")
   
 }#END
 
+GLOBI_metaweb[is.na(GLOBI_metaweb)] <- 0
+#View(GLOBI_metaweb)
+
+df_edges <- as.data.frame(which(GLOBI_metaweb == 1, arr.ind = TRUE))
+class(df_edges)
+
+for(i in 1:nrow(df_edges)){
+  
+  row1 <- df_edges[i,]
+  df_edges[i,3] <- colnames(GLOBI_metaweb)[row1[,1]]
+  df_edges[i,4] <- rownames(GLOBI_metaweb)[row1[,2]]
+  
+  message(i)
+  
+}
+
+
+
+
+df_edges <- df_edges[,-c(1:2)]
+rownames(df_edges) <- 1:nrow(df_edges)
+df_edges <- data.frame(df_edges[,2], df_edges[,1])
+names(df_edges)[1] <- "COLUMN"
+names(df_edges)[2] <- "ROW"
+head(df_edges)
+
+df_edges2 <- as.matrix(df_edges)
+
+metaweb_GLOBI <- igraph::graph_from_data_frame(df_edges2)
+
+igraph::V(metaweb_GLOBI)
+igraph::E(metaweb_GLOBI)
+
+
+igraph::plot.igraph(metaweb_GLOBI,layout=layout.circle)
+
+plot.igraph(metaweb_GLOBI,
+           vertex.label.cex=1,
+           vertex.size=3,
+           edge.arrow.size=.25)
+
+lay<-matrix(nrow=123,ncol=2) # create a matrix with one column as runif, the other as trophic level
+lay[,1]<-runif(123)
+lay[,2]<-TrophInd(predweb.adj[[1]])$TL-1
+
+library(cheddar)
+
+nodes_c <- data.frame(iucn, vulnerability)
+nodes_c <- nodes_c[,-c(3,4)]
+names(nodes_c) <- c("node", "iucn_status", "Median_MAXroad.RM.1000", "bm")
+head(nodes_c)
+
+names(df_edges) <- c("resource", "consumer")
+
+cheddar_meatweb <- cheddar::Community(nodes = nodes_c, properties = list(title="European Metaweb infered wit GLOBI"), trophic.links = as.matrix(df_edges))
+
+cheddar::TopLevelNodes(cheddar_meatweb)
+cheddar::IntermediateNodes(cheddar_meatweb)
+cheddar::BasalNodes(cheddar_meatweb)
+
+cheddar::PlotPredationMatrix(cheddar_meatweb)
+
+CommunityPropertyNames(cheddar_meatweb)
+cheddar::NodePropertyNames(TL84)
+cheddar::NodePropertyNames(cheddar_meatweb)
+
+PlotCircularWeb(cheddar_meatweb)
+cheddar::TrophicSimilarity(cheddar_meatweb)
