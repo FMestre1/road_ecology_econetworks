@@ -4,12 +4,12 @@
 #FMestre
 #29-05-2023
 
-
 #load packages
 library(terra)
 library(igraph)
 library(rglobi)
 library(taxize)
+library(cheddar)
 
 #taxize::use_entrez()
 #usethis::edit_r_environ()
@@ -97,9 +97,6 @@ for(i in 1:nrow(df_edges)){
   
 }
 
-
-
-
 df_edges <- df_edges[,-c(1:2)]
 rownames(df_edges) <- 1:nrow(df_edges)
 df_edges <- data.frame(df_edges[,2], df_edges[,1])
@@ -126,8 +123,6 @@ lay<-matrix(nrow=123,ncol=2) # create a matrix with one column as runif, the oth
 lay[,1]<-runif(123)
 lay[,2]<-TrophInd(predweb.adj[[1]])$TL-1
 
-library(cheddar)
-
 nodes_c <- data.frame(iucn, vulnerability)
 nodes_c <- nodes_c[,-c(3,4)]
 names(nodes_c) <- c("node", "iucn_status", "Median_MAXroad.RM.1000", "bm")
@@ -135,17 +130,26 @@ head(nodes_c)
 
 names(df_edges) <- c("resource", "consumer")
 
-cheddar_meatweb <- cheddar::Community(nodes = nodes_c, properties = list(title="European Metaweb infered wit GLOBI"), trophic.links = as.matrix(df_edges))
+cheddar_metaweb <- cheddar::Community(nodes = nodes_c, properties = list(title="European Metaweb infered wit GLOBI"), trophic.links = as.matrix(df_edges))
 
-cheddar::TopLevelNodes(cheddar_meatweb)
-cheddar::IntermediateNodes(cheddar_meatweb)
-cheddar::BasalNodes(cheddar_meatweb)
+#cheddar::TopLevelNodes(cheddar_metaweb)
+#cheddar::IntermediateNodes(cheddar_metaweb)
+#cheddar::BasalNodes(cheddar_metaweb)
 
-cheddar::PlotPredationMatrix(cheddar_meatweb)
+#cheddar::PlotPredationMatrix(cheddar_metaweb)
 
-CommunityPropertyNames(cheddar_meatweb)
-cheddar::NodePropertyNames(TL84)
-cheddar::NodePropertyNames(cheddar_meatweb)
+#CommunityPropertyNames(cheddar_metaweb)
+#cheddar::NodePropertyNames(TL84)
+#cheddar::NodePropertyNames(cheddar_metaweb)
 
-PlotCircularWeb(cheddar_meatweb)
-cheddar::TrophicSimilarity(cheddar_meatweb)
+#PlotCircularWeb(cheddar_metaweb)
+#cheddar::TrophicSimilarity(cheddar_metaweb)
+
+##### SAVE #####
+#save(cheddar_metaweb, file = "cheddar_metaweb.RData")
+#igraph_metaweb <- metaweb_GLOBI
+#save(igraph_metaweb, file = "igraph_metaweb.RData")
+################
+
+
+
