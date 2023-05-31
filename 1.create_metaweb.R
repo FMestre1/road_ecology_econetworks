@@ -143,7 +143,8 @@ cheddar_metaweb <- cheddar::Community(nodes = nodes_c, properties = list(title="
 #cheddar::NodePropertyNames(cheddar_metaweb)
 
 #PlotCircularWeb(cheddar_metaweb)
-#cheddar::TrophicSimilarity(cheddar_metaweb)
+t_similarity <- cheddar::TrophicSimilarity(cheddar_metaweb)
+#write.csv(t_similarity, "t_similarity.csv", row.names=TRUE)
 
 ##### SAVE #####
 #save(cheddar_metaweb, file = "cheddar_metaweb.RData")
