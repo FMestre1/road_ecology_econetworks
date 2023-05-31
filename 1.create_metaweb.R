@@ -45,17 +45,10 @@ for(i in 1:nrow(GLOBI_metaweb)){
   preys_of_focal1 <- preys_upon1$target_taxon_name
   if(length(preys_of_focal1)!=0) preys_S <- unique(species_df[which(unique(preys_of_focal1[preys_of_focal1 %in% species_df$species]) == species_df$query),]$species)
   if(length(preys_of_focal1)!=0) preys_G <- unique(species_df[which(unique(preys_of_focal1[preys_of_focal1 %in% species_df$genus]) == species_df$genus),]$species)
-  #preys_F <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$family]) == species2_taxonomy$family),]$query)
-  #preys_O <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$order]) == species2_taxonomy$order),]$query)
-  #preys_C <- unique(species2_taxonomy[which(unique(preys_of_focal1[preys_of_focal1 %in% species2_taxonomy$class]) == species2_taxonomy$class),]$query)
-  #  
-  #preys_TOTAL <- c(preys_S, preys_G, preys_F, preys_O, preys_C)
+#
   if(length(preys_of_focal1)!=0) preys_TOTAL <- unique(c(preys_S, preys_G))
   if(length(preys_of_focal1)!=0) rm(preys_S, preys_G)
-  #preys_TOTAL <- stringr::str_replace(preys_TOTAL," ", ".")
-  
-  #focal_species2 <- stringr::str_replace(focal_species," ", ".")
-  
+
   if(exists("preys_TOTAL")) {
     GLOBI_metaweb[focal_species, preys_TOTAL] <- 1
     rm(preys_TOTAL)
@@ -67,10 +60,8 @@ for(i in 1:nrow(GLOBI_metaweb)){
   #     
   if(length(predators_of_focal1)!=0) predators_S <- species_df[species_df$species %in% unique(predators_of_focal1[predators_of_focal1 %in% species_df$species]),]$species
   if(length(predators_of_focal1)!=0) predators_G <- species_df[species_df$genus %in% unique(predators_of_focal1[predators_of_focal1 %in% species_df$genus]),]$species
-  #predators_F <- species2_taxonomy[species2_taxonomy$family %in% unique(predators_of_focal1[predators_of_focal1 %in% species2_taxonomy$family]),]$query
   #
   predators_TOTAL <- unique(c(predators_S, predators_G))
-  #predators_TOTAL <- stringr::str_replace(predators_TOTAL," ", ".")
   #
   if(exists("predators_TOTAL")) {
     GLOBI_metaweb[predators_TOTAL, focal_species] <- 1
@@ -111,7 +102,6 @@ metaweb_GLOBI <- igraph::graph_from_data_frame(df_edges2)
 igraph::V(metaweb_GLOBI)
 igraph::E(metaweb_GLOBI)
 
-
 igraph::plot.igraph(metaweb_GLOBI,layout=layout.circle)
 
 plot.igraph(metaweb_GLOBI,
@@ -135,6 +125,7 @@ cheddar_metaweb <- cheddar::Community(nodes = nodes_c, properties = list(title="
 #cheddar::TopLevelNodes(cheddar_metaweb)
 #cheddar::IntermediateNodes(cheddar_metaweb)
 #cheddar::BasalNodes(cheddar_metaweb)
+#cheddar::Cannibals(cheddar_metaweb)
 
 #cheddar::PlotPredationMatrix(cheddar_metaweb)
 
