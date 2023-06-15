@@ -1,19 +1,9 @@
 # Species interactions and Road Density
 
-# library(raster)
 library(sf)
 library(dplyr)
 library(tidyr)
-# library(fasterize)
-# library(classInt)
-# library(ggplot2)
-# library(cowplot)
-# library(ggthemes)
-# library(viridis)  # better colors for everyone
-# library(ggthemes) # theme_map()
-# library(gridExtra)
-# library(readxl)
-# library(data.table)
+
 
 
 
