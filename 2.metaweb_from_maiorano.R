@@ -3,20 +3,21 @@
 
 library(terra)
 library(stringr)
+library(taxize)
 
 ########################################################################################
 # 1. Loading and editing the Maiorano Metaweb             
 ########################################################################################
 
-maiorano_metaweb <- read.csv("C:\\Users\\FMest\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
+maiorano_metaweb <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
 rownames(maiorano_metaweb) <- maiorano_metaweb$X
 maiorano_metaweb <- maiorano_metaweb[,-1]
 #View(maiorano_metaweb)
 
-maiorano_groups <- read.csv("C:\\Users\\FMest\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\SBMgroups_spp.csv", sep=";", header = T)
+maiorano_groups <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_webs_tetrapods_europe\\dataset\\SBMgroups_spp.csv", sep=";", header = T)
 #head(maiorano_groups)
 
-spp_maiorano <- read.delim("C:\\Users\\FMest\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Spp_Id.txt")
+spp_maiorano <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_webs_tetrapods_europe\\dataset\\Spp_Id.txt")
 spp_maiorano$SPPname <- stringr::str_replace(spp_maiorano$SPPname,"_", " ")
 #head(spp_maiorano)
 
@@ -33,19 +34,20 @@ colnames(maiorano_metaweb) <- cn
 
 #View(maiorano_metaweb)
 #save(maiorano_metaweb, file = "maiorano_metaweb.RData")
+#load("maiorano_metaweb.RData")
 
 ########################################################################################
 # 2.Deriving local networks - SAMPLE GRIDS
 ########################################################################################
 
-ssite <- terra::vect("C:/Users/FMest/Documents/0. Artigos/roads_networks/data/area_roads_eco_networks.shp")
+ssite <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\area_roads_eco_networks.shp")
 plot(ssite)
 
-ssite_ibpen <- terra::vect("C:/Users/FMest/Documents/0. Artigos/roads_networks/data/ibpen3.shp")
+ssite_ibpen <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\ibpen3.shp")
 plot(ssite_ibpen)
 
 # 2.1. Getting the grids ###############################################################
-grid_50_ibp <- terra::vect("C:/Users/FMest/Documents/0. Artigos/roads_networks/data/grids_ib_pen.shp")
+grid_50_ibp <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\grids_ib_pen.shp")
 plot(grid_50_ibp)
 
 local_fw_MAIORANO_ibp <- vector(mode = "list", length = length(grid_50_ibp))
@@ -54,13 +56,11 @@ names(local_fw_MAIORANO_ibp) <- grid_50_ibp$PageName
 
 # 2.2. Getting the species in each grid ################################################
 
-#mammal_dist <- terra::vect("D:\\Dados biológicos\\FAscensao_Species_IUCN\\MAMMALS_TERRESTRIAL_ONLY\\MAMMALS_TERRESTRIAL_ONLY.shp")
-#bird_dist <- terra::vect("D:\\Dados biológicos\\FAscensao_Species_IUCN\\BOTW\\birds.shp")
+mammals <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\fernando\\mydf_mammals.csv", header = T)
+birds <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\fernando\\mydf_birds.csv", header = T)
 
-#terra::writeVector(mammal_dist_ibpen, filename = "mammal_dist_ibpen.shp", filetype = "ESRI Shapefile")
-#terra::writeVector(bird_dist_ibpen, filename = "bird_dist_ibpen.shp", filetype = "ESRI Shapefile")
-
-
+View(mammals)
+View(birds)
 
 # 2.3. Local networks ##################################################################
 
@@ -157,6 +157,13 @@ for(i in 1:length(iberian_fw_MAIORANO)){
   #gc()
   
 }#END
+
+
+
+
+
+
+
 
 
 ########################################################################################
