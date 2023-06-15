@@ -22,6 +22,9 @@ mammals_vulnerability <- read.csv("10 RankingvulnerableMammals.csv", header = TR
 
 all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
 
+all_species_vulnerability_1 <- merge(x=all_species_vulnerability, id_grilo_data, by.x="Species", by.y="all_species_vulnerability.Species", all=T) #creation of id_grilo_data comes later in the code 
+
+
 #head(birds_vulnerability)
 #head(mammals_vulnerability)
 #head(all_species_vulnerability)
@@ -153,6 +156,10 @@ id_maiorano_data <- data.frame(rownames(maiorano_metaweb), id_maiorano_data)
 names(id_maiorano_data)[2] <- "gbif_id"
 head(id_maiorano_data)
 
+#id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% focal_sp,]
+#as.character(id_maiorano_data[id_maiorano_data$gbif_id %in% 4265021 , ][1]) 
+#focal_sp
+
 ##Grilo Vulnerability Data
 
 id_grilo_data <- rep(NA, length(all_species_vulnerability$Species))
@@ -173,6 +180,8 @@ head(species_occ_merged_maiorano)
 species_occ_merged_maiorano_grilo <- merge(species_occ_merged_maiorano, id_grilo_data, all=TRUE)
 names(species_occ_merged_maiorano_grilo) <- c("gbif_id", "species_occurrence", "maiorano_data", "grilo_data")
 
+species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occurrence %in% focal_sp,]
+
 #(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo.RData")
 #View(species_occ_merged_maiorano_grilo)
 
@@ -180,6 +189,9 @@ names(species_occ_merged_maiorano_grilo) <- c("gbif_id", "species_occurrence", "
 species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complete.cases(species_occ_merged_maiorano_grilo),]
 #View(species_occ_merged_maiorano_grilo_2)
 #nrow(species_occ_merged_maiorano_grilo_2)
+
+#species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$species_occurrence==focal_sp,]
+#id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. == focal_sp,]
 
 ####################
 
@@ -196,13 +208,16 @@ for(i in 1:length(local_fw_MAIORANO)){
   names(grid_df) <- c("species", "presence")
   fw_names <- grid_df[grid_df$presence==1,]$species #SPECIES IN THE GRID
   fw_names <- fw_names[fw_names %in% species_occ_merged_maiorano_grilo_2$species_occurrence] #remove species not in the 3 datasets
+  fw_names <-  id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% fw_names,]
   
   if (length(fw_names)!=0){
   
     #Nodes
     #species_occ_merged_maiorano_grilo
-    nodes1 <- all_species_vulnerability[all_species_vulnerability$Species %in% fw_names,]
+    
+    nodes1 <- all_species_vulnerability_1[all_species_vulnerability_1$Species %in% fw_names$rownames.maiorano_metaweb.,]
     names(nodes1)[1] <- "node"
+    rownames(nodes1) <- 1:nrow(nodes1)
 
     #Properties
     prop1 <- list()
@@ -218,22 +233,19 @@ for(i in 1:length(local_fw_MAIORANO)){
       
       for(j in 1:length(nodes1$node)){
         
-        focal_sp <- nodes1$node[j]
-        #Using taxize package to evaluate synonyms
-        #if(!(focal_sp %in% rownames(maiorano_metaweb)) & !(focal_sp %in% colnames(maiorano_metaweb))){
-        #  #focal_sp_2 <- get_nbnid(sci_com=focal_sp)
-        #  syn <- nbn_synonyms("Canis lupus")
-        #  nodes1$synonyms[j] <- syn$nameString
-          #focal_sp <- c(nodes1$node[j], focal_sp_3$nameString)
-        #}
+        focal_sp <- nodes1[j,]
+        focal_sp_species <- focal_sp$node
+        focal_sp_id <- focal_sp$gbif_id
         
-        preys3 <- maiorano_metaweb[which(rownames(maiorano_metaweb) == unique(focal_sp)), ]
+        id_maiorano_data
+        id_
+        
+        preys3 <- maiorano_metaweb[which(rownames(maiorano_metaweb) == focal_sp), ]
         preys3 <- colnames(preys3[,which(preys3[,] == 1)])
         preys3 <- nodes1$node[nodes1$node %in% preys3]
         #
-        predators3 <- maiorano_metaweb[,which(colnames(maiorano_metaweb) == unique(focal_sp))]
+        predators3 <- maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp)]
         predators3 <- data.frame(rownames(maiorano_metaweb), maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp)])
-        #if(ncol(predators3)!=0) predators3 <- predators3[which(predators3[,2]==1),][,1]
         predators3 <- predators3[predators3[,2]==1,]
         predators3 <- predators3[!is.na(predators3$rownames.maiorano_metaweb.),]
         predators3 <- predators3$rownames.maiorano_metaweb.
