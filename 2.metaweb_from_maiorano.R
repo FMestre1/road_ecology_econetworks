@@ -198,7 +198,7 @@ species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complet
 # 2.3. Creating local networks
 
 local_fw_MAIORANO <- vector(mode = "list", length = length(grid_50))
-names(local_fw_MAIORANO) <- grid_50$PageName
+names(local_fw_MAIORANO) <- colnames(species_in_grids)
 #head(local_fw_MAIORANO)
 
 for(i in 1:length(local_fw_MAIORANO)){
@@ -234,26 +234,28 @@ for(i in 1:length(local_fw_MAIORANO)){
       for(j in 1:length(nodes1$node)){
         
         focal_sp <- nodes1[j,]
-        focal_sp_species <- focal_sp$node
         focal_sp_id <- focal_sp$gbif_id
+        focal_sp_occurrence <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$species_occurrence
+        focal_sp_maiorano <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$maiorano_data
+        foca_sp_grilo <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$grilo_data
         
-        id_maiorano_data
-        id_
         
-        preys3 <- maiorano_metaweb[which(rownames(maiorano_metaweb) == focal_sp), ]
+        preys3 <- maiorano_metaweb[which(rownames(maiorano_metaweb) == focal_sp_maiorano), ]
         preys3 <- colnames(preys3[,which(preys3[,] == 1)])
-        preys3 <- nodes1$node[nodes1$node %in% preys3]
+        preys3_id <- id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% preys3,]
+        preys3 <- nodes1$node[nodes1$gbif_id %in% preys3_id$gbif_id]
         #
-        predators3 <- maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp)]
-        predators3 <- data.frame(rownames(maiorano_metaweb), maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp)])
+        predators3 <- maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp_maiorano)]
+        predators3 <- data.frame(rownames(maiorano_metaweb), maiorano_metaweb[,which(colnames(maiorano_metaweb) == focal_sp_maiorano)])
         predators3 <- predators3[predators3[,2]==1,]
         predators3 <- predators3[!is.na(predators3$rownames.maiorano_metaweb.),]
         predators3 <- predators3$rownames.maiorano_metaweb.
-        predators3 <- nodes1$node[nodes1$node %in% predators3]
+        predators3_id <- id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% predators3,]
+        predators3 <- nodes1$node[nodes1$gbif_id %in% predators3_id$gbif_id]
         #
         if(length(preys3)!=0){
           nr_preys3 <- length(preys3)
-          nr_pred3 <- rep(focal_sp, nr_preys3)
+          nr_pred3 <- rep(focal_sp_maiorano, nr_preys3)
           df_focal_as_predator <- data.frame(cbind(preys3, nr_pred3))
           names(df_focal_as_predator) <- c("resource", "consumer")
           tlinks_df2 <- rbind(tlinks_df2, df_focal_as_predator)
@@ -261,7 +263,7 @@ for(i in 1:length(local_fw_MAIORANO)){
         }
         if(length(predators3)!=0){
           nr_pred4 <- length(predators3)
-          nr_preys4 <- rep(focal_sp, length(predators3))
+          nr_preys4 <- rep(focal_sp_maiorano, length(predators3))
           df_focal_as_prey <- data.frame(cbind(nr_preys4, predators3))
           names(df_focal_as_prey) <- c("resource", "consumer")
           tlinks_df2 <- rbind(tlinks_df2, df_focal_as_prey)
@@ -293,4 +295,11 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }#END
 
-#plot(local_fw_MAIORANO[[7]])
+#View(species_in_grids)
+
+#plot(local_fw_MAIORANO[[1]])
+#local_fw_MAIORANO[[1]]
+#sort(local_fw_MAIORANO[[1]]$nodes$node)
+
+#test1 <- data.frame(rownames(species_in_grids), species_in_grids[,"DB69"])
+#sort(test1[test1$species_in_grids....DB69..==1,]$rownames.species_in_grids.)
