@@ -199,7 +199,8 @@ species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complet
 
 local_fw_MAIORANO <- vector(mode = "list", length = length(grid_50))
 names(local_fw_MAIORANO) <- colnames(species_in_grids)
-#head(local_fw_MAIORANO)
+
+head(local_fw_MAIORANO)
 
 for(i in 1:length(local_fw_MAIORANO)){
   
@@ -242,8 +243,7 @@ for(i in 1:length(local_fw_MAIORANO)){
         focal_sp_occurrence <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$species_occurrence
         focal_sp_maiorano <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$maiorano_data
         foca_sp_grilo <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id == focal_sp_id,]$grilo_data
-        
-        
+        #
         preys3 <- maiorano_metaweb[which(rownames(maiorano_metaweb) == focal_sp_maiorano), ]
         preys3 <- colnames(preys3[,which(preys3[,] == 1)])
         preys3_id <- id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% preys3,]
@@ -276,7 +276,22 @@ for(i in 1:length(local_fw_MAIORANO)){
         
       }
       
+      for(b in 1:nrow(tlinks_df2)){
+      #tlinks_df2$resource
+      tlink_res_0 <- data.frame(which(tlinks_df2$resource[b] == species_occ_merged_maiorano_grilo_2, arr.ind = TRUE))
+      tlink_res_0_R <- unique(tlink_res_0$row)
+      tlinks_df2$resource[b] <- species_occ_merged_maiorano_grilo_2[tlink_res_0_R,2]
+      
+      #tlinks_df2$consumer
+      tlink_cons_0 <- data.frame(which(tlinks_df2$consumer[b] == species_occ_merged_maiorano_grilo_2, arr.ind = TRUE))
+      tlink_cons_0_R <- unique(tlink_cons_0$row)
+      tlinks_df2$consumer[b] <- species_occ_merged_maiorano_grilo_2[tlink_cons_0_R,2]
+      
+      }
+      
       tlinks_df2 <- unique(tlinks_df2)
+      
+      #species_occ_merged_maiorano_grilo_2
       
       if(nrow(tlinks_df2)!=0){ 
         
