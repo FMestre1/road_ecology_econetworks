@@ -206,16 +206,20 @@ for(i in 1:length(local_fw_MAIORANO)){
   grid_id <- names(local_fw_MAIORANO[i]) #GRID ID
   grid_df <- data.frame(rownames(species_in_grids), species_in_grids[,grid_id])
   names(grid_df) <- c("species", "presence")
-  fw_names <- grid_df[grid_df$presence==1,]$species #SPECIES IN THE GRID
-  fw_names <- fw_names[fw_names %in% species_occ_merged_maiorano_grilo_2$species_occurrence] #remove species not in the 3 datasets
-  fw_names <-  id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% fw_names,]
+  grid_df_1 <- id_ocurrence_species_data[id_ocurrence_species_data$species %in% grid_df$species,]
+  grid_df <- merge(x=grid_df, y=grid_df_1, by.x="species", by.y="species")
+  
+  names(grid_df) <- c("species", "presence", "gbif_id")
+  fw_names <- grid_df[grid_df$presence==1,] #SPECIES IN THE GRID
+  fw_names <- fw_names[fw_names$gbif_id %in% species_occ_merged_maiorano_grilo_2$gbif_id,] #remove species not in the 3 datasets
+  #fw_names <- id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% fw_names,]
   
   if (length(fw_names)!=0){
   
     #Nodes
     #species_occ_merged_maiorano_grilo
     
-    nodes1 <- all_species_vulnerability_1[all_species_vulnerability_1$Species %in% fw_names$rownames.maiorano_metaweb.,]
+    nodes1 <- all_species_vulnerability_1[all_species_vulnerability_1$gbif_id %in% fw_names$gbif_id,]
     names(nodes1)[1] <- "node"
     rownames(nodes1) <- 1:nrow(nodes1)
 
