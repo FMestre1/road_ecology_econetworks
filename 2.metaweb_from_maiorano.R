@@ -200,7 +200,9 @@ species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complet
 local_fw_MAIORANO <- vector(mode = "list", length = length(grid_50))
 names(local_fw_MAIORANO) <- colnames(species_in_grids)
 
-head(local_fw_MAIORANO)
+#head(local_fw_MAIORANO)
+
+#species_occ_merged_maiorano_grilo_2
 
 for(i in 1:length(local_fw_MAIORANO)){
   
@@ -209,21 +211,27 @@ for(i in 1:length(local_fw_MAIORANO)){
   names(grid_df) <- c("species", "presence")
   grid_df_1 <- id_ocurrence_species_data[id_ocurrence_species_data$species %in% grid_df$species,]
   grid_df <- merge(x=grid_df, y=grid_df_1, by.x="species", by.y="species")
-  
   names(grid_df) <- c("species", "presence", "gbif_id")
   fw_names <- grid_df[grid_df$presence==1,] #SPECIES IN THE GRID
-  fw_names <- fw_names[fw_names$gbif_id %in% species_occ_merged_maiorano_grilo_2$gbif_id,] #remove species not in the 3 datasets
+  present_species_id <-  fw_names$gbif_id #SPECIES IN THE GRID
+  present_species_id <- species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$gbif_id %in% present_species_id,]$gbif_id # keep only those in all datasets
+  
+  #fw_names <- fw_names[fw_names$gbif_id %in% species_occ_merged_maiorano_grilo_2$gbif_id,] #remove species not in the 3 datasets
   #fw_names <- id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% fw_names,]
   
-  if (length(fw_names)!=0){
+  if (length(present_species_id)!=0){
   
     #Nodes
-    #species_occ_merged_maiorano_grilo
-    
-    nodes1 <- all_species_vulnerability_1[all_species_vulnerability_1$gbif_id %in% fw_names$gbif_id,]
+    nodes1 <- all_species_vulnerability_1[all_species_vulnerability_1$gbif_id %in% present_species_id,]
     names(nodes1)[1] <- "node"
     rownames(nodes1) <- 1:nrow(nodes1)
-
+    
+    for(x in 1:nrow(nodes1)){
+      #tlinks_df2$resource
+      node1_0 <- unique(data.frame(which(nodes1$node[x] == species_occ_merged_maiorano_grilo_2, arr.ind = TRUE))[,1])
+      nodes1$node[x] <- species_occ_merged_maiorano_grilo_2[node1_0,2]
+      }
+    
     #Properties
     prop1 <- list()
     prop1[[1]] <- grid_id
