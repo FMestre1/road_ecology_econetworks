@@ -197,7 +197,7 @@ species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complet
 
 # 2.3. Creating local networks
 
-local_fw_MAIORANO <- vector(mode = "list", length = length(grid_50))
+local_fw_MAIORANO <- vector(mode = "list", length = ncol(species_in_grids))
 names(local_fw_MAIORANO) <- colnames(species_in_grids)
 
 #head(local_fw_MAIORANO)
@@ -284,7 +284,8 @@ for(i in 1:length(local_fw_MAIORANO)){
         
       }
       
-      for(b in 1:nrow(tlinks_df2)){
+      if(nrow(tlinks_df2)!=0){
+        for(b in 1:nrow(tlinks_df2)){
       #tlinks_df2$resource
       tlink_res_0 <- data.frame(which(tlinks_df2$resource[b] == species_occ_merged_maiorano_grilo_2, arr.ind = TRUE))
       tlink_res_0_R <- unique(tlink_res_0$row)
@@ -295,9 +296,10 @@ for(i in 1:length(local_fw_MAIORANO)){
       tlink_cons_0_R <- unique(tlink_cons_0$row)
       tlinks_df2$consumer[b] <- species_occ_merged_maiorano_grilo_2[tlink_cons_0_R,2]
       
-      }
-      
-      tlinks_df2 <- unique(tlinks_df2)
+        }
+        tlinks_df2 <- unique(tlinks_df2)
+        
+        }
       
       #species_occ_merged_maiorano_grilo_2
       
@@ -307,26 +309,48 @@ for(i in 1:length(local_fw_MAIORANO)){
         
       } else comm1_2 <- cheddar::Community(nodes = nodes1, properties = prop1, trophic.links = NULL)
       
-      #save(comm1_2, file = paste0("0.MAIORANO_interactions_dataset/MAIORANO_fw_community_", grid_ID, ".RData"))
       local_fw_MAIORANO[[i]] <- comm1_2
       
     } else {
       comm2 <- cheddar::Community(nodes = nodes1, properties = prop1, trophic.links = NULL)
       local_fw_MAIORANO[[i]] <- comm2
-      #save(comm2, file = paste0("0.MAIORANO_interactions_dataset/MAIORANO_fw_community_", grid_ID, ".RData"))
     }
-  }else local_fw_MAIORANO[[i]] <- NA
+  } else local_fw_MAIORANO[[i]] <- NA
   
   message(i)
   #gc()
   
 }#END
 
-#View(species_in_grids)
+#Verify resulting networks XXXXX sTART
 
-#plot(local_fw_MAIORANO[[1]])
-#local_fw_MAIORANO[[1]]
-#sort(local_fw_MAIORANO[[1]]$nodes$node)
+ncol(species_in_grids)
+length(local_fw_MAIORANO)
 
-#test1 <- data.frame(rownames(species_in_grids), species_in_grids[,"DB69"])
-#sort(test1[test1$species_in_grids....DB69..==1,]$rownames.species_in_grids.)
+plot(local_fw_MAIORANO[[1]])
+plot(local_fw_MAIORANO[[2000]])
+plot(local_fw_MAIORANO[[3000]])
+plot(local_fw_MAIORANO[[4000]])
+plot(local_fw_MAIORANO[[4501]])
+
+class_list <- list()
+for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
+
+how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
+
+View(how_many_species_df)
+
+local_fw_MAIORANO[["CJ51"]]
+local_fw_MAIORANO[["BC29"]]
+local_fw_MAIORANO[["BO21"]]
+
+plot(local_fw_MAIORANO[["CJ40"]])
+
+#Verify resulting networks XXXXX END
+
+#SAVE
+save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
+
+rownames(species_in_grids)[species_in_grids[,"BO21"] == 1] %in% species_occ_merged_maiorano_grilo_2
+#names(local_fw_MAIORANO)
+#head(local_fw_MAIORANO)
