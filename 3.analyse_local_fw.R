@@ -31,16 +31,12 @@ ToIgraph <- function(community, weight=NULL)
 }
 
 ########################################################################################
-# 1. Iberian Peninsula Example             
+# 1. Pre and after Road           
 ########################################################################################
 
-#Get grids
-ib_grids <- read.csv("grids_ib_pen.csv", header = TRUE)
-ib_grids <- ib_grids$PageName.C.254 
-
 #Get road value on grids
-grids_grilo <- terra::vect("shapes/Nvulnerablegrid50_wgs84_2.shp")
-grids_grilo <- data.frame(grids_grilo$PageName, grids_grilo$kmkm2)
+grids_grilo_shape <- terra::vect("shapes/Nvulnerablegrid50_wgs84_2.shp")
+grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
 #head(grids_grilo)
 
 all_species_vulnerability_2 <- all_species_vulnerability_1[,1:2]
@@ -48,51 +44,99 @@ all_species_vulnerability_2 <- all_species_vulnerability_1[,1:2]
 #head(all_species_vulnerability_2)
 #sort(all_species_vulnerability_2$Median_MAXroad.RM.1000.)
 
-iberian_fw_MAIORANO <- local_fw_MAIORANO[ib_grids]
+local_fw_MAIORANO_REMOVED <- vector(mode = "list", length = length(local_fw_MAIORANO))
+names(local_fw_MAIORANO_REMOVED) <- names(local_fw_MAIORANO)
 
-#length(iberian_fw_MAIORANO)
-#length(ib_grids)
-
+species_loss <- rep(NA, length(local_fw_MAIORANO_REMOVED))
+connectance_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
+compart_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
 
 #Go into a for loop
+for(i in 1:length(local_fw_MAIORANO_REMOVED)){
+  
+cheddar1 <- local_fw_MAIORANO[[i]]
 
-cheddar1 <- iberian_fw_MAIORANO[[2]]
-
-igraph1 <- ToIgraph(cheddar1)
+if(any(!is.na(cheddar1))){
 
 grid_road_density <- grids_grilo[grids_grilo$grids_grilo.PageName == cheddar1$properties$title, ]$grids_grilo.kmkm2
 
 removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
 
-removed_species
+new_title <- paste0("Removed Species ", cheddar1$properties$title)
 
-new_title <- paste0("removed_species_", cheddar1$properties$title)
+if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'cascade')
+if(length(removed_species)==0) cheddar2 <- cheddar1
 
-cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method='cascade')
+local_fw_MAIORANO_REMOVED[[i]] <- cheddar2 #Adding to new list
 
-head(iberian_fw_MAIORANO[[2]]$nodes)
+if(cheddar::NumberOfTrophicLinks(cheddar1)!=0){
+  
+igraph1 <- ToIgraph(cheddar1)
 
 test.graph.adj1 <- get.adjacency(igraph1, sparse = TRUE)
+
+metrics1 <- GenInd(as.matrix(test.graph.adj1))
+
+
+}
+
+if(cheddar::NumberOfTrophicLinks(cheddar2)!=0){
 
 igraph2 <- ToIgraph(cheddar2)
 
 test.graph.adj2 <- get.adjacency(igraph2, sparse = TRUE)
 
-metrics1 <- GenInd(as.matrix(test.graph.adj1))
-
 metrics2 <- GenInd(as.matrix(test.graph.adj2))
+
+
+}
 
 n_species_0 <- nrow(cheddar1$nodes)
 
 n_species_1 <- nrow(cheddar2$nodes)
 
-ratio_species <- n_species_1/n_species_0
+species_loss[i] <- n_species_1/n_species_0
 
-d_connectance <-  metrics2$C - metrics1$C
+if(cheddar::NumberOfTrophicLinks(cheddar1)!=0 && cheddar::NumberOfTrophicLinks(cheddar2)!=0) {
+  
+  connectance_dif[i] <-  metrics2$C - metrics1$C
 
-d_compart <- metrics2$Cbar - metrics1$Cbar
+  compart_dif[i] <- metrics2$Cbar - metrics1$Cbar
+  
+} 
+
+} 
+
+if(any(is.na(cheddar1))) {
+  
+  local_fw_MAIORANO_REMOVED[[i]] <- NA 
+  species_loss[i] <- NA
+  connectance_dif[i] <- NA
+  compart_dif[i] <- NA
+  
+}
+
+message(i)
+
+}
+
+local_fw_MAIORANO_REMOVED
+head(local_fw_MAIORANO_REMOVED)
+
+species_loss
+connectance_dif
+compart_dif
 
 
+result1 <- data.frame(
+  names(local_fw_MAIORANO),
+  species_loss,
+  connectance_dif,
+  compart_dif
+  )
 
+names(result1)[1] <- "grid"
 
+grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result1, by.x="PageName", by.y= "grid")
 
+terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
