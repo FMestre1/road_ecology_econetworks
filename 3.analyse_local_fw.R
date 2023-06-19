@@ -62,7 +62,7 @@ igraph1 <- ToIgraph(cheddar1)
 
 grid_road_density <- grids_grilo[grids_grilo$grids_grilo.PageName == cheddar1$properties$title, ]$grids_grilo.kmkm2
 
-removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.>grid_road_density,]$node
+removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
 
 removed_species
 
