@@ -340,9 +340,9 @@ how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in
 
 View(how_many_species_df)
 
-local_fw_MAIORANO[["CJ51"]]
-local_fw_MAIORANO[["BC29"]]
-local_fw_MAIORANO[["BO21"]]
+#local_fw_MAIORANO[["CJ51"]]
+#local_fw_MAIORANO[["BC29"]]
+#local_fw_MAIORANO[["BO21"]]
 
 plot(local_fw_MAIORANO[["CJ40"]])
 
@@ -354,3 +354,10 @@ save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
 rownames(species_in_grids)[species_in_grids[,"BO21"] == 1] %in% species_occ_merged_maiorano_grilo_2
 #names(local_fw_MAIORANO)
 #head(local_fw_MAIORANO)
+
+
+
+##################################
+
+
+
