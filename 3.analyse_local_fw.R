@@ -140,3 +140,42 @@ names(result1)[1] <- "grid"
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result1, by.x="PageName", by.y= "grid")
 
 terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
+
+####
+
+#Porportion of top, intermediate and basal nodes before and after
+
+fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
+names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
+                                                   "AFTER__top_level", "AFTER_Interm_level", "AFTER_basal_level", "changed?") 
+
+for(i in 1:length(local_fw_MAIORANO)){
+
+before_net <- local_fw_MAIORANO[[i]]
+after_net <- local_fw_MAIORANO_REMOVED[[i]]
+#
+
+if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
+if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
+if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
+#
+if(!is.na(after_net)) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
+if(!is.na(after_net)) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
+if(!is.na(after_net))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
+#
+if(!is.na(before_net) && !is.na(after_net)){
+  if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
+
+fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
+
+  } else fractions_top_intermediate_basal_nodes$`changed?`[i] <- "yes"
+}
+
+message(i)
+
+}
+
+head(fractions_top_intermediate_basal_nodes)
+
+#Save
+#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
