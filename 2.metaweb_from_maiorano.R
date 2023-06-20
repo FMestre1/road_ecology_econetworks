@@ -4,6 +4,7 @@
 library(terra)
 library(stringr)
 library(taxize)
+library(cheddar)
 
 ########################################################################################
 # 0. Species vulnerability from Grilo et al paper             
@@ -327,11 +328,11 @@ for(i in 1:length(local_fw_MAIORANO)){
 ncol(species_in_grids)
 length(local_fw_MAIORANO)
 
-plot(local_fw_MAIORANO[[1]])
-plot(local_fw_MAIORANO[[2000]])
-plot(local_fw_MAIORANO[[3000]])
-plot(local_fw_MAIORANO[[4000]])
-plot(local_fw_MAIORANO[[4501]])
+#plot(local_fw_MAIORANO[[1]])
+#plot(local_fw_MAIORANO[[2000]])
+#plot(local_fw_MAIORANO[[3000]])
+#plot(local_fw_MAIORANO[[4000]])
+#plot(local_fw_MAIORANO[[4501]])
 
 class_list <- list()
 for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
