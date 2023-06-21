@@ -350,7 +350,7 @@ plot(local_fw_MAIORANO[["CJ40"]])
 #Verify resulting networks XXXXX END
 
 #SAVE
-save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
 
 rownames(species_in_grids)[species_in_grids[,"BO21"] == 1] %in% species_occ_merged_maiorano_grilo_2
 #names(local_fw_MAIORANO)
