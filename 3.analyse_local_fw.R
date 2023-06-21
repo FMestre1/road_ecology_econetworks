@@ -186,7 +186,7 @@ head(fractions_top_intermediate_basal_nodes)
 
 #Save
 #save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
-
+#load("fractions_top_intermediate_basal_nodes.RData")
 
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
@@ -195,7 +195,7 @@ head(fractions_top_intermediate_basal_nodes)
 library(ggplot2)
 
 head(fractions_top_intermediate_basal_nodes)
-View(fractions_top_intermediate_basal_nodes)
+#View(fractions_top_intermediate_basal_nodes)
 
 head(fractions_top_intermediate_basal_nodes[,1:4])
 head(fractions_top_intermediate_basal_nodes[,c(1,5,6,7)])
@@ -293,7 +293,7 @@ message(i)
 
 #Save
 #save(removed_position, file = "removed_position.RData")
-
+#load("removed_position.RData")
 
 ################################################################################
 # Plot it...
