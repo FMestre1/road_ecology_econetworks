@@ -134,21 +134,21 @@ species_loss
 connectance_dif
 compart_dif
 
-result1 <- data.frame(
+result_sec_ext <- data.frame(
   names(local_fw_MAIORANO),
   species_loss,
   connectance_dif,
   compart_dif
   )
 
-names(result1)[1] <- "grid"
+names(result_sec_ext)[1] <- "grid"
 
-grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result1, by.x="PageName", by.y= "grid")
+grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext, by.x="PageName", by.y= "grid")
 terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
 
 ####
 
-#Porportion of top, intermediate and basal nodes before and after
+#Proportion of top, intermediate and basal nodes before and after
 
 fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
 names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
@@ -291,7 +291,6 @@ message(i)
 #Save
 #save(removed_position, file = "removed_position.RData")
 
-
 ################################################################################
 # Plot it...
 ################################################################################
@@ -322,7 +321,6 @@ rem_tp2 <- rem_tp + geom_boxplot(aes(fill = level),) +
   scale_fill_manual(values = c("#999999", "#E69F00", "#E80F00"))
 
 rem_tp2
-
 
 ################################################################################
 # Plot vulnerability vs body size (dispersal proxy)
@@ -437,7 +435,6 @@ sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName"
 #terra::writeVector(sp_richness, "sp_richness.shp")
 
 
-
 ################################################################################
 # How many interactions lost? - with secondary extinctions
 ################################################################################
@@ -455,7 +452,6 @@ for(i in 1:nrow(nr_lost_interactions)){
   }
   
 }
-
 
 lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
