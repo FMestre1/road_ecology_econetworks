@@ -7,7 +7,6 @@
 #12-06-2023
 
 library(cheddar)
-library(bipartite)
 library(igraph)
 library(NetIndices)
 library(terra)
@@ -126,6 +125,9 @@ message(i)
 
 }
 
+#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED.RData")
+#load("local_fw_MAIORANO_REMOVED.RData")
+
 local_fw_MAIORANO_REMOVED
 head(local_fw_MAIORANO_REMOVED)
 
@@ -143,7 +145,6 @@ result1 <- data.frame(
 names(result1)[1] <- "grid"
 
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result1, by.x="PageName", by.y= "grid")
-
 terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
 
 ####
