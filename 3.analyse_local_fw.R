@@ -412,3 +412,54 @@ nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
 plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
      species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
 
+
+################################################################################
+# Species in each grid
+################################################################################
+#23-06-2023
+
+#grids_grilo_shape
+#local_fw_MAIORANO
+
+nr_species_per_grid <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(nr_species_per_grid) <- c("grid","sp_richness")
+head(nr_species_per_grid)
+
+for(i in 1:nrow(nr_species_per_grid)){
+
+if(any(!is.na(local_fw_MAIORANO[[i]]))){
+nr_species_per_grid[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
+}
+  
+}
+
+sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
+#terra::writeVector(sp_richness, "sp_richness.shp")
+
+
+
+################################################################################
+# How many interactions lost? - with secondary extinctions
+################################################################################
+#23-06-2023
+
+nr_lost_interactions <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(nr_lost_interactions) <- c("grid","lost_interactions")
+head(nr_lost_interactions)
+
+for(i in 1:nrow(nr_lost_interactions)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_lost_interactions[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions[i,2]<-0
+  }
+  
+}
+
+
+lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
+#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
+
+
+

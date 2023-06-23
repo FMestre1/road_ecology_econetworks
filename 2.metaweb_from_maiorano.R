@@ -175,7 +175,6 @@ names(id_grilo_data)[2] <- "gbif_id"
 head(id_grilo_data)
 
 ##Match table
-
 species_occ_merged_maiorano <- merge(id_ocurrence_species_data, id_maiorano_data, all=TRUE)
 head(species_occ_merged_maiorano)
 species_occ_merged_maiorano_grilo <- merge(species_occ_merged_maiorano, id_grilo_data, all=TRUE)
