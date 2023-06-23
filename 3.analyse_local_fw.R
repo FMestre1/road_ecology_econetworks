@@ -411,3 +411,4 @@ nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
 
 plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
      species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
+
