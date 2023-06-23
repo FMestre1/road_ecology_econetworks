@@ -36,14 +36,17 @@ primary_and_cascading_effects <- merge(x=grids_grilo_shape, y=all_primary_second
 # Figure
 ################################################################################
 
-all_primary_secondary[all_primary_secondary$grid == "BM50",]
+all_primary_secondary[all_primary_secondary$grid == "BW39",]
 
-local_fw_MAIORANO[["BM50"]]
-local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BM50"]]
-local_fw_MAIORANO_REMOVED[["BM50"]]
+local_fw_MAIORANO[["BW39"]]
+local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]]
+local_fw_MAIORANO_REMOVED[["BW39"]]
+
+par(mfrow=c(1,3))
+
+plot(local_fw_MAIORANO[["BW39"]])
+plot(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]])
+plot(local_fw_MAIORANO_REMOVED[["BW39"]])
 
 
-plot(local_fw_MAIORANO[["BM50"]])
-plot(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BM50"]])
-plot(local_fw_MAIORANO_REMOVED[["BM50"]])
 
