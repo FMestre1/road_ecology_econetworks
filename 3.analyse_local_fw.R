@@ -2,7 +2,6 @@
 #                          ROAD ECOLOGY - NETWORK ECOLOGY         
 ########################################################################################
 
-
 #FMestre
 #12-06-2023
 
@@ -10,6 +9,7 @@ library(cheddar)
 library(igraph)
 library(NetIndices)
 library(terra)
+library(taxize)
 
 getwd()
 
@@ -134,22 +134,21 @@ species_loss
 connectance_dif
 compart_dif
 
-
-result1 <- data.frame(
+result_sec_ext <- data.frame(
   names(local_fw_MAIORANO),
   species_loss,
   connectance_dif,
   compart_dif
   )
 
-names(result1)[1] <- "grid"
+names(result_sec_ext)[1] <- "grid"
 
-grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result1, by.x="PageName", by.y= "grid")
+grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext, by.x="PageName", by.y= "grid")
 terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
 
 ####
 
-#Porportion of top, intermediate and basal nodes before and after
+#Proportion of top, intermediate and basal nodes before and after
 
 fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
 names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
@@ -186,7 +185,10 @@ head(fractions_top_intermediate_basal_nodes)
 
 #Save
 #save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
+<<<<<<< HEAD
 #load("fractions_top_intermediate_basal_nodes.RData")
+=======
+>>>>>>> ad183111a4c8222d12754b001848563db5475821
 
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
@@ -199,7 +201,6 @@ head(fractions_top_intermediate_basal_nodes)
 
 head(fractions_top_intermediate_basal_nodes[,1:4])
 head(fractions_top_intermediate_basal_nodes[,c(1,5,6,7)])
-
 
 before_nt <- fractions_top_intermediate_basal_nodes[,1:4]
 after_nt <- fractions_top_intermediate_basal_nodes[,c(1,5,6,7)]
@@ -293,7 +294,10 @@ message(i)
 
 #Save
 #save(removed_position, file = "removed_position.RData")
+<<<<<<< HEAD
 #load("removed_position.RData")
+=======
+>>>>>>> ad183111a4c8222d12754b001848563db5475821
 
 ################################################################################
 # Plot it...
@@ -325,4 +329,140 @@ rem_tp2 <- rem_tp + geom_boxplot(aes(fill = level),) +
   scale_fill_manual(values = c("#999999", "#E69F00", "#E80F00"))
 
 rem_tp2
+
+################################################################################
+# Plot vulnerability vs body size (dispersal proxy)
+################################################################################
+
+#all_species_vulnerability_2
+#species_occ_merged_maiorano_grilo_2
+
+#Load Elton
+mammal_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\MamFuncDat.txt")
+#View(mammal_elton)
+names(mammal_elton)
+head(mammal_elton)
+
+bird_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\BirdFuncDat.txt")
+#View(bird_elton)
+names(bird_elton)
+head(bird_elton)
+
+mammals_elton_gbif_id <- rep(NA, nrow(mammal_elton))
+for(i in 1:nrow(mammal_elton)) {
+  
+id_m  <- taxize::get_gbifid(mammal_elton$Scientific[i],
+                            rank = "species",
+                            )
+
+mammals_elton_gbif_id[i] <- as.numeric(id_m[1])
+
+}
+#
+birds_elton_gbif_id <- rep(NA, nrow(bird_elton))
+for(i in 1:nrow(bird_elton)){ 
+  
+  id_b  <- taxize::get_gbifid(bird_elton$Scientific[i],
+                              rank = "species"
+                              )
+  
+  birds_elton_gbif_id[i] <- as.numeric(id_b[1])
+  
+  
+}
+
+mammals_elton_gbif_id_2 <- data.frame(mammal_elton$Scientific, mammals_elton_gbif_id)
+birds_elton_gbif_id_2 <- data.frame(bird_elton$Scientific, birds_elton_gbif_id)
+View(mammals_elton_gbif_id_2)
+View(birds_elton_gbif_id_2)
+
+birds_elton_gbif_id_2 <- birds_elton_gbif_id_2[complete.cases(birds_elton_gbif_id_2),]
+mammals_elton_gbif_id_2 <- mammals_elton_gbif_id_2[complete.cases(mammals_elton_gbif_id_2),]
+
+names(mammals_elton_gbif_id_2) <- c("species", "gbif_id")
+names(birds_elton_gbif_id_2) <- c("species", "gbif_id")
+
+mammal_elton_2 <- merge(x=mammals_elton_gbif_id_2, y=mammal_elton, by.x="species", by.y="Scientific", all.x=T)
+View(mammal_elton_2)
+
+bird_elton_2 <- merge(x=birds_elton_gbif_id_2, y=bird_elton, by.x="species", by.y="Scientific", all.x=T)
+View(bird_elton_2)
+
+names(mammal_elton_2)
+mammal_elton_3 <- mammal_elton_2[,c(1,2,25)]
+head(mammal_elton_3)
+names(mammal_elton_3)
+
+names(bird_elton_2)
+bird_elton_3 <- bird_elton_2[,c(1,2,37)]
+head(bird_elton_3)
+names(bird_elton_3)
+
+birds_and_mammals_3 <- rbind(bird_elton_3, mammal_elton_3)
+head(birds_and_mammals_3)
+
+###
+
+str(species_occ_merged_maiorano_grilo_2)
+species_occ_merged_maiorano_grilo_2$gbif_id <- as.numeric(species_occ_merged_maiorano_grilo_2$gbif_id)
+species_occ_merged_maiorano_grilo_2_and_bodymass <- merge(x=species_occ_merged_maiorano_grilo_2, y=birds_and_mammals_3, by.x="gbif_id", by.y="gbif_id", all.x=TRUE)
+
+#all_species_vulnerability_2
+species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability <- merge(x=species_occ_merged_maiorano_grilo_2_and_bodymass, y=all_species_vulnerability_2, 
+                                                                            by.x="grilo_data", by.y="Species", all.x=TRUE)
+
+head(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+
+plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
+     species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
+
+
+################################################################################
+# Species in each grid
+################################################################################
+#23-06-2023
+
+#grids_grilo_shape
+#local_fw_MAIORANO
+
+nr_species_per_grid <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(nr_species_per_grid) <- c("grid","sp_richness")
+head(nr_species_per_grid)
+
+for(i in 1:nrow(nr_species_per_grid)){
+
+if(any(!is.na(local_fw_MAIORANO[[i]]))){
+nr_species_per_grid[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
+}
+  
+}
+
+sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
+#terra::writeVector(sp_richness, "sp_richness.shp")
+
+
+################################################################################
+# How many interactions lost? - with secondary extinctions
+################################################################################
+#23-06-2023
+
+nr_lost_interactions <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(nr_lost_interactions) <- c("grid","lost_interactions")
+head(nr_lost_interactions)
+
+for(i in 1:nrow(nr_lost_interactions)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_lost_interactions[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions[i,2]<-0
+  }
+  
+}
+
+lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
+#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
+
+
 

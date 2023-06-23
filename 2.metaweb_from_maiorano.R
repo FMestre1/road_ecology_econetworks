@@ -175,7 +175,6 @@ names(id_grilo_data)[2] <- "gbif_id"
 head(id_grilo_data)
 
 ##Match table
-
 species_occ_merged_maiorano <- merge(id_ocurrence_species_data, id_maiorano_data, all=TRUE)
 head(species_occ_merged_maiorano)
 species_occ_merged_maiorano_grilo <- merge(species_occ_merged_maiorano, id_grilo_data, all=TRUE)
@@ -185,7 +184,6 @@ species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occu
 
 #(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo.RData")
 #View(species_occ_merged_maiorano_grilo)
-
 
 species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complete.cases(species_occ_merged_maiorano_grilo),]
 #View(species_occ_merged_maiorano_grilo_2)
@@ -197,7 +195,6 @@ species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complet
 ####################
 
 # 2.3. Creating local networks
-
 local_fw_MAIORANO <- vector(mode = "list", length = ncol(species_in_grids))
 names(local_fw_MAIORANO) <- colnames(species_in_grids)
 
@@ -328,38 +325,15 @@ for(i in 1:length(local_fw_MAIORANO)){
 ncol(species_in_grids)
 length(local_fw_MAIORANO)
 
-#plot(local_fw_MAIORANO[[1]])
-#plot(local_fw_MAIORANO[[2000]])
-#plot(local_fw_MAIORANO[[3000]])
-#plot(local_fw_MAIORANO[[4000]])
-#plot(local_fw_MAIORANO[[4501]])
-
 class_list <- list()
 for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
 
 how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
 
-View(how_many_species_df)
-
-#local_fw_MAIORANO[["CJ51"]]
-#local_fw_MAIORANO[["BC29"]]
-#local_fw_MAIORANO[["BO21"]]
-
-plot(local_fw_MAIORANO[["CJ40"]])
+#View(how_many_species_df)
 
 #Verify resulting networks XXXXX END
 
 #SAVE
 #save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
 #load("local_fw_MAIORANO.RData")
-
-rownames(species_in_grids)[species_in_grids[,"BO21"] == 1] %in% species_occ_merged_maiorano_grilo_2
-#names(local_fw_MAIORANO)
-#head(local_fw_MAIORANO)
-
-
-
-##################################
-
-
-
