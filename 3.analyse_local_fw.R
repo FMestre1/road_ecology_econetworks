@@ -11,6 +11,7 @@ library(bipartite)
 library(igraph)
 library(NetIndices)
 library(terra)
+library(taxize)
 
 getwd()
 
@@ -132,7 +133,6 @@ species_loss
 connectance_dif
 compart_dif
 
-
 result1 <- data.frame(
   names(local_fw_MAIORANO),
   species_loss,
@@ -186,7 +186,6 @@ head(fractions_top_intermediate_basal_nodes)
 #Save
 #save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
 
-
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
 ################################################################################
@@ -198,7 +197,6 @@ View(fractions_top_intermediate_basal_nodes)
 
 head(fractions_top_intermediate_basal_nodes[,1:4])
 head(fractions_top_intermediate_basal_nodes[,c(1,5,6,7)])
-
 
 before_nt <- fractions_top_intermediate_basal_nodes[,1:4]
 after_nt <- fractions_top_intermediate_basal_nodes[,c(1,5,6,7)]
@@ -325,3 +323,90 @@ rem_tp2 <- rem_tp + geom_boxplot(aes(fill = level),) +
 
 rem_tp2
 
+
+################################################################################
+# Plot vulnerability vs body size (dispersal proxy)
+################################################################################
+
+#all_species_vulnerability_2
+#species_occ_merged_maiorano_grilo_2
+
+#Load Elton
+mammal_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\MamFuncDat.txt")
+#View(mammal_elton)
+names(mammal_elton)
+head(mammal_elton)
+
+bird_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\BirdFuncDat.txt")
+#View(bird_elton)
+names(bird_elton)
+head(bird_elton)
+
+mammals_elton_gbif_id <- rep(NA, nrow(mammal_elton))
+for(i in 1:nrow(mammal_elton)) {
+  
+id_m  <- taxize::get_gbifid(mammal_elton$Scientific[i],
+                            rank = "species",
+                            )
+
+mammals_elton_gbif_id[i] <- as.numeric(id_m[1])
+
+}
+#
+birds_elton_gbif_id <- rep(NA, nrow(bird_elton))
+for(i in 1:nrow(bird_elton)){ 
+  
+  id_b  <- taxize::get_gbifid(bird_elton$Scientific[i],
+                              rank = "species"
+                              )
+  
+  birds_elton_gbif_id[i] <- as.numeric(id_b[1])
+  
+  
+}
+
+mammals_elton_gbif_id_2 <- data.frame(mammal_elton$Scientific, mammals_elton_gbif_id)
+birds_elton_gbif_id_2 <- data.frame(bird_elton$Scientific, birds_elton_gbif_id)
+View(mammals_elton_gbif_id_2)
+View(birds_elton_gbif_id_2)
+
+birds_elton_gbif_id_2 <- birds_elton_gbif_id_2[complete.cases(birds_elton_gbif_id_2),]
+mammals_elton_gbif_id_2 <- mammals_elton_gbif_id_2[complete.cases(mammals_elton_gbif_id_2),]
+
+names(mammals_elton_gbif_id_2) <- c("species", "gbif_id")
+names(birds_elton_gbif_id_2) <- c("species", "gbif_id")
+
+mammal_elton_2 <- merge(x=mammals_elton_gbif_id_2, y=mammal_elton, by.x="species", by.y="Scientific", all.x=T)
+View(mammal_elton_2)
+
+bird_elton_2 <- merge(x=birds_elton_gbif_id_2, y=bird_elton, by.x="species", by.y="Scientific", all.x=T)
+View(bird_elton_2)
+
+names(mammal_elton_2)
+mammal_elton_3 <- mammal_elton_2[,c(1,2,25)]
+head(mammal_elton_3)
+names(mammal_elton_3)
+
+names(bird_elton_2)
+bird_elton_3 <- bird_elton_2[,c(1,2,37)]
+head(bird_elton_3)
+names(bird_elton_3)
+
+birds_and_mammals_3 <- rbind(bird_elton_3, mammal_elton_3)
+head(birds_and_mammals_3)
+
+###
+
+str(species_occ_merged_maiorano_grilo_2)
+species_occ_merged_maiorano_grilo_2$gbif_id <- as.numeric(species_occ_merged_maiorano_grilo_2$gbif_id)
+species_occ_merged_maiorano_grilo_2_and_bodymass <- merge(x=species_occ_merged_maiorano_grilo_2, y=birds_and_mammals_3, by.x="gbif_id", by.y="gbif_id", all.x=TRUE)
+
+#all_species_vulnerability_2
+species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability <- merge(x=species_occ_merged_maiorano_grilo_2_and_bodymass, y=all_species_vulnerability_2, 
+                                                                            by.x="grilo_data", by.y="Species", all.x=TRUE)
+
+head(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+
+plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
+     species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
