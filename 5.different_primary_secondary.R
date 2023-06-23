@@ -30,3 +30,20 @@ head(all_primary_secondary)
 
 primary_and_cascading_effects <- merge(x=grids_grilo_shape, y=all_primary_secondary, by.x="PageName", by.y= "grid")
 #terra::writeVector(primary_and_cascading_effects, "primary_and_cascading_effects.shp")
+
+
+################################################################################
+# Figure
+################################################################################
+
+all_primary_secondary[all_primary_secondary$grid == "BM50",]
+
+local_fw_MAIORANO[["BM50"]]
+local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BM50"]]
+local_fw_MAIORANO_REMOVED[["BM50"]]
+
+
+plot(local_fw_MAIORANO[["BM50"]])
+plot(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BM50"]])
+plot(local_fw_MAIORANO_REMOVED[["BM50"]])
+
