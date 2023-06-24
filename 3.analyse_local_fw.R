@@ -185,10 +185,8 @@ head(fractions_top_intermediate_basal_nodes)
 
 #Save
 #save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
-<<<<<<< HEAD
 #load("fractions_top_intermediate_basal_nodes.RData")
-=======
->>>>>>> ad183111a4c8222d12754b001848563db5475821
+
 
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
@@ -294,10 +292,7 @@ message(i)
 
 #Save
 #save(removed_position, file = "removed_position.RData")
-<<<<<<< HEAD
 #load("removed_position.RData")
-=======
->>>>>>> ad183111a4c8222d12754b001848563db5475821
 
 ################################################################################
 # Plot it...
