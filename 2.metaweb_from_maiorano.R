@@ -18,8 +18,8 @@ library(cheddar)
 
 #https://doi.org/10.1002/fee.2216
 
-birds_vulnerability <- read.csv("9 RankingvulnerableBirds.csv", header = TRUE)
-mammals_vulnerability <- read.csv("10 RankingvulnerableMammals.csv", header = TRUE)
+birds_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\9 RankingvulnerableBirds.csv", header = TRUE)
+mammals_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\10 RankingvulnerableMammals.csv", header = TRUE)
 
 all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
 
@@ -74,11 +74,11 @@ grid_50 <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\gri
 
 # 2.2. Getting the species in each grid ################################################
 
-mammals <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\fernando\\mydf_mammals.csv", header = T)
-birds <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\fernando\\mydf_birds.csv", header = T)
+mammals <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando\\mydf_mammals.csv", header = T)
+birds <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando\\mydf_birds.csv", header = T)
 
-View(mammals)
-View(birds)
+#View(mammals)
+#View(birds)
 
 species <- c(mammals$my_taxa, birds$my_taxa)
 species <- unique(species)
@@ -143,6 +143,8 @@ id_ocurrence_species_data <- data.frame(species, id_ocurrence_species_data)
 names(id_ocurrence_species_data)[2] <- "gbif_id"
 head(id_ocurrence_species_data)
 
+#save(id_ocurrence_species_data, file = "id_ocurrence_species_data_5set2023.RData")
+
 ##Maiorano Metaweb Data
 
 id_maiorano_data <- rep(NA, length(rownames(maiorano_metaweb)))
@@ -155,6 +157,8 @@ for(i in 1:length(id_maiorano_data)){
 id_maiorano_data <- data.frame(rownames(maiorano_metaweb), id_maiorano_data)
 names(id_maiorano_data)[2] <- "gbif_id"
 head(id_maiorano_data)
+
+#save(id_maiorano_data, file = "id_maiorano_data_5set2023.RData")
 
 #id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% focal_sp,]
 #as.character(id_maiorano_data[id_maiorano_data$gbif_id %in% 4265021 , ][1]) 
@@ -173,13 +177,17 @@ id_grilo_data <- data.frame(all_species_vulnerability$Species, id_grilo_data)
 names(id_grilo_data)[2] <- "gbif_id"
 head(id_grilo_data)
 
+#save(id_grilo_data, file = "id_grilo_data_5set2023.RData")
+
 ##Match table
 species_occ_merged_maiorano <- merge(id_ocurrence_species_data, id_maiorano_data, all=TRUE)
 head(species_occ_merged_maiorano)
 species_occ_merged_maiorano_grilo <- merge(species_occ_merged_maiorano, id_grilo_data, all=TRUE)
 names(species_occ_merged_maiorano_grilo) <- c("gbif_id", "species_occurrence", "maiorano_data", "grilo_data")
 
-species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occurrence %in% focal_sp,]
+#save(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo_5set2023.RData")
+
+#species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occurrence %in% focal_sp,]
 
 #(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo.RData")
 #View(species_occ_merged_maiorano_grilo)
@@ -187,6 +195,8 @@ species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occu
 species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complete.cases(species_occ_merged_maiorano_grilo),]
 #View(species_occ_merged_maiorano_grilo_2)
 #nrow(species_occ_merged_maiorano_grilo_2)
+
+#save(species_occ_merged_maiorano_grilo_2, file = "species_occ_merged_maiorano_grilo_2_5set2023.RData")
 
 #species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$species_occurrence==focal_sp,]
 #id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. == focal_sp,]
@@ -318,6 +328,9 @@ for(i in 1:length(local_fw_MAIORANO)){
   #gc()
   
 }#END
+
+#load("local_fw_MAIORANO.RData")
+#local_fw_MAIORANO[[1]]
 
 #Verify resulting networks XXXXX sTART
 

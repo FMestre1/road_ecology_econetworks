@@ -141,6 +141,8 @@ t_similarity <- cheddar::TrophicSimilarity(cheddar_metaweb)
 #save(cheddar_metaweb, file = "cheddar_metaweb.RData")
 #igraph_metaweb <- metaweb_GLOBI
 #save(igraph_metaweb, file = "igraph_metaweb.RData")
+#load("cheddar_metaweb.RData")
+#load("igraph_metaweb.RData")
 ################
 
 

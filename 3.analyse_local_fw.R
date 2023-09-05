@@ -39,7 +39,7 @@ ToIgraph <- function(community, weight=NULL)
 ########################################################################################
 
 #Get road value on grids
-grids_grilo_shape <- terra::vect("shapes/Nvulnerablegrid50_wgs84_2.shp")
+grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
 grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
 #head(grids_grilo)
 
@@ -124,8 +124,8 @@ message(i)
 
 }
 
-#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED.RData")
-#load("local_fw_MAIORANO_REMOVED.RData")
+#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_6se2023.RData")
+#load("local_fw_MAIORANO_REMOVED_6se2023.RData")
 
 local_fw_MAIORANO_REMOVED
 head(local_fw_MAIORANO_REMOVED)

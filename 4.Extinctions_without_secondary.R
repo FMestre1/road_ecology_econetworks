@@ -7,6 +7,7 @@ library(terra)
 library(stringr)
 library(taxize)
 library(cheddar)
+library(NetIndices)
 
 #local_fw_MAIORANO # original local networks
 #local_fw_MAIORANO_REMOVED[[2]]
@@ -85,6 +86,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   message(i)
   
 }
+
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_5set2023.RData")
 
 #local_fw_MAIORANO[[100]]
 #local_fw_MAIORANO_REMOVED[[100]]
