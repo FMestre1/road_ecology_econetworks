@@ -25,7 +25,6 @@ all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
 
 all_species_vulnerability_1 <- merge(x=all_species_vulnerability, id_grilo_data, by.x="Species", by.y="all_species_vulnerability.Species", all=T) #creation of id_grilo_data comes later in the code 
 
-
 #head(birds_vulnerability)
 #head(mammals_vulnerability)
 #head(all_species_vulnerability)

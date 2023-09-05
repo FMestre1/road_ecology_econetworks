@@ -121,9 +121,6 @@ for(i in 1:nrow(nr_lost_interactions)){
   
 }
 
-
 lost_interactions_with_primary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions.shp")
-
-
 

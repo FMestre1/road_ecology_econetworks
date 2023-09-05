@@ -185,10 +185,7 @@ head(fractions_top_intermediate_basal_nodes)
 
 #Save
 #save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes.RData")
-<<<<<<< HEAD
 #load("fractions_top_intermediate_basal_nodes.RData")
-=======
->>>>>>> ad183111a4c8222d12754b001848563db5475821
 
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
@@ -294,10 +291,7 @@ message(i)
 
 #Save
 #save(removed_position, file = "removed_position.RData")
-<<<<<<< HEAD
 #load("removed_position.RData")
-=======
->>>>>>> ad183111a4c8222d12754b001848563db5475821
 
 ################################################################################
 # Plot it...
@@ -417,7 +411,6 @@ nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
 plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
      species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
 
-
 ################################################################################
 # Species in each grid
 ################################################################################
@@ -442,7 +435,6 @@ nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
 sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
 #terra::writeVector(sp_richness, "sp_richness.shp")
 
-
 ################################################################################
 # How many interactions lost? - with secondary extinctions
 ################################################################################
@@ -463,6 +455,3 @@ for(i in 1:nrow(nr_lost_interactions)){
 
 lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
-
-
-
