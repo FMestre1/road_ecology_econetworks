@@ -438,7 +438,7 @@ sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName"
 ################################################################################
 # How many interactions lost? - with secondary extinctions
 ################################################################################
-#23-06-2023
+#23-06-2023 
 
 nr_lost_interactions <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
 names(nr_lost_interactions) <- c("grid","lost_interactions")
