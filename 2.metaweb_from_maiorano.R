@@ -56,7 +56,6 @@ for(i in 1:length(cn)) cn[i] <- spp_maiorano[spp_maiorano$ID == cn[i],]$SPPname
 rownames(maiorano_metaweb) <- rn
 colnames(maiorano_metaweb) <- cn
 #
-
 #View(maiorano_metaweb)
 #save(maiorano_metaweb, file = "maiorano_metaweb.RData")
 #load("maiorano_metaweb.RData")
@@ -65,11 +64,11 @@ colnames(maiorano_metaweb) <- cn
 # 2.Deriving local networks
 ########################################################################################
 
-ssite <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\area_roads_eco_networks.shp")
+ssite <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\area_roads_eco_networks.shp")
 #plot(ssite)
 
 # 2.1. Getting the grids ###############################################################
-grid_50 <- terra::vect("C:\\Users\\fmestre\\road_ecoloy_econetworks\\shapes\\grids.shp")
+grid_50 <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\grids.shp")
 #plot(grid_50)
 
 # 2.2. Getting the species in each grid ################################################
@@ -116,7 +115,7 @@ for(i in 1:nrow(birds)){
 
 species_in_grids[is.na(species_in_grids)] <- 0
 
-View(species_in_grids)
+#View(species_in_grids)
 
 ####################
 
@@ -181,7 +180,7 @@ head(id_grilo_data)
 
 ##Match table
 species_occ_merged_maiorano <- merge(id_ocurrence_species_data, id_maiorano_data, all=TRUE)
-head(species_occ_merged_maiorano)
+head(species_occ_merged_maiorano, 10)
 species_occ_merged_maiorano_grilo <- merge(species_occ_merged_maiorano, id_grilo_data, all=TRUE)
 names(species_occ_merged_maiorano_grilo) <- c("gbif_id", "species_occurrence", "maiorano_data", "grilo_data")
 
@@ -332,7 +331,7 @@ for(i in 1:length(local_fw_MAIORANO)){
 #load("local_fw_MAIORANO.RData")
 #local_fw_MAIORANO[[1]]
 
-#Verify resulting networks XXXXX sTART
+#Verify resulting networks XXXXX START
 
 ncol(species_in_grids)
 length(local_fw_MAIORANO)

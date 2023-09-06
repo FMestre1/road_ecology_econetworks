@@ -26,7 +26,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   
   if(any(!is.na(cheddar1_pex))){
     
-    grid_road_density <- grids_grilo[grids_grilo$grids_grilo.PageName == cheddar1_pex$properties$title, ]$grids_grilo.kmkm2
+    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1_pex$properties$title, ]$grids_grilo_shape.kmkm2
     
     removed_species <- cheddar1_pex$nodes[cheddar1_pex$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
     
@@ -89,9 +89,9 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
 
 #save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_5set2023.RData")
 
-#local_fw_MAIORANO[[100]]
-#local_fw_MAIORANO_REMOVED[[100]]
-#local_fw_MAIORANO_REMOVED_PRIMARY_EX[[100]]
+#local_fw_MAIORANO[[42]]
+#local_fw_MAIORANO_REMOVED[[42]]
+#local_fw_MAIORANO_REMOVED_PRIMARY_EX[[42]]
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EX),
@@ -104,7 +104,6 @@ names(result_prim_ext)[1] <- "grid"
 
 grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageName", by.y= "grid")
 #terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext.shp")
-
 
 ################################################################################
 # How many interactions lost? - with primary extinctions
@@ -126,4 +125,3 @@ for(i in 1:nrow(nr_lost_interactions)){
 
 lost_interactions_with_primary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions.shp")
-

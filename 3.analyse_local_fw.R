@@ -10,11 +10,9 @@ library(igraph)
 library(NetIndices)
 library(terra)
 library(taxize)
-
-getwd()
+library(ggplot2)
 
 #required function
-#Required function
 ToIgraph <- function(community, weight=NULL)
 {
   if(is.null(TLPS(community)))
@@ -62,7 +60,7 @@ cheddar1 <- local_fw_MAIORANO[[i]]
 
 if(any(!is.na(cheddar1))){
 
-grid_road_density <- grids_grilo[grids_grilo$grids_grilo.PageName == cheddar1$properties$title, ]$grids_grilo.kmkm2
+grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1$properties$title, ]$grids_grilo_shape.kmkm2
 
 removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
 
@@ -124,11 +122,13 @@ message(i)
 
 }
 
-#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_6se2023.RData")
-#load("local_fw_MAIORANO_REMOVED_6se2023.RData")
+#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_6set2023.RData")
+#load("local_fw_MAIORANO_REMOVED_6set2023.RData")
 
-local_fw_MAIORANO_REMOVED
-head(local_fw_MAIORANO_REMOVED)
+#local_fw_MAIORANO_REMOVED
+#head(local_fw_MAIORANO_REMOVED)
+local_fw_MAIORANO[[43]]
+local_fw_MAIORANO_REMOVED[[43]]
 
 species_loss
 connectance_dif
@@ -142,14 +142,17 @@ result_sec_ext <- data.frame(
   )
 
 names(result_sec_ext)[1] <- "grid"
+#head(result_sec_ext)
+#max(result_sec_ext$species_loss, na.rm=TRUE)
+#result_sec_ext
+#result_sec_ext
 
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext, by.x="PageName", by.y= "grid")
-terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
+#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road.shp")
 
 ####
 
 #Proportion of top, intermediate and basal nodes before and after
-
 fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
 names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
                                                    "AFTER__top_level", "AFTER_Interm_level", "AFTER_basal_level", "changed?") 
@@ -161,15 +164,15 @@ before_net <- local_fw_MAIORANO[[i]]
 after_net <- local_fw_MAIORANO_REMOVED[[i]]
 #
 
-if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
-if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
-if(!is.na(before_net)) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
+if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
+if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
+if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
 #
-if(!is.na(after_net)) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
-if(!is.na(after_net)) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
-if(!is.na(after_net))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
+if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
+if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
+if(unique(!is.na(after_net)))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
 #
-if(!is.na(before_net) && !is.na(after_net)){
+if(unique(!is.na(before_net)) && unique(!is.na(after_net))){
   if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
 
 fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
@@ -190,8 +193,6 @@ head(fractions_top_intermediate_basal_nodes)
 ################################################################################
 # Boxplots of the fraction of top, intermediate, and basal nodes
 ################################################################################
-
-library(ggplot2)
 
 head(fractions_top_intermediate_basal_nodes)
 #View(fractions_top_intermediate_basal_nodes)
@@ -217,12 +218,14 @@ head(after_nt)
 net_changes <- rbind(before_nt, after_nt)
 net_changes$before_after <- as.factor(net_changes$before_after)
 
+#View(net_changes)
+
 #Reorder factor levels
 net_changes$before_after <- factor(net_changes$before_after,     
                                    c("before", "after"))
 ### Boxplot ###
-names(net_changes)
-str(net_changes)
+#names(net_changes)
+#str(net_changes)
 
 #TOP
 top_box <- ggplot(net_changes, aes(x = before_after, y = top))
@@ -265,7 +268,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   before_net <- local_fw_MAIORANO[[i]]
   after_net <- local_fw_MAIORANO_REMOVED[[i]]
   
-  if(!is.na(before_net) && !is.na(after_net)) {
+  if(unique(!is.na(before_net)) && unique(!is.na(after_net))) {
   
   removed_species <- before_net$nodes$node[!(before_net$nodes$node %in% after_net$nodes$node)]
   
@@ -332,12 +335,12 @@ rem_tp2
 #species_occ_merged_maiorano_grilo_2
 
 #Load Elton
-mammal_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\MamFuncDat.txt")
+mammal_elton <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\elton_traits\\MamFuncDat.txt")
 #View(mammal_elton)
 names(mammal_elton)
 head(mammal_elton)
 
-bird_elton <- read.delim("C:\\Users\\fmestre\\road_ecoloy_econetworks\\elton\\BirdFuncDat.txt")
+bird_elton <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\elton_traits\\BirdFuncDat.txt")
 #View(bird_elton)
 names(bird_elton)
 head(bird_elton)
@@ -367,8 +370,8 @@ for(i in 1:nrow(bird_elton)){
 
 mammals_elton_gbif_id_2 <- data.frame(mammal_elton$Scientific, mammals_elton_gbif_id)
 birds_elton_gbif_id_2 <- data.frame(bird_elton$Scientific, birds_elton_gbif_id)
-View(mammals_elton_gbif_id_2)
-View(birds_elton_gbif_id_2)
+#View(mammals_elton_gbif_id_2)
+#View(birds_elton_gbif_id_2)
 
 birds_elton_gbif_id_2 <- birds_elton_gbif_id_2[complete.cases(birds_elton_gbif_id_2),]
 mammals_elton_gbif_id_2 <- mammals_elton_gbif_id_2[complete.cases(mammals_elton_gbif_id_2),]
@@ -377,10 +380,10 @@ names(mammals_elton_gbif_id_2) <- c("species", "gbif_id")
 names(birds_elton_gbif_id_2) <- c("species", "gbif_id")
 
 mammal_elton_2 <- merge(x=mammals_elton_gbif_id_2, y=mammal_elton, by.x="species", by.y="Scientific", all.x=T)
-View(mammal_elton_2)
+#View(mammal_elton_2)
 
 bird_elton_2 <- merge(x=birds_elton_gbif_id_2, y=bird_elton, by.x="species", by.y="Scientific", all.x=T)
-View(bird_elton_2)
+#View(bird_elton_2)
 
 names(mammal_elton_2)
 mammal_elton_3 <- mammal_elton_2[,c(1,2,25)]
@@ -395,9 +398,12 @@ names(bird_elton_3)
 birds_and_mammals_3 <- rbind(bird_elton_3, mammal_elton_3)
 head(birds_and_mammals_3)
 
+#save(birds_and_mammals_3, file = "birds_and_mammals_3_06set23.RData")
+#load("birds_and_mammals_3_06set23.RData")
+
 ###
 
-str(species_occ_merged_maiorano_grilo_2)
+#str(species_occ_merged_maiorano_grilo_2)
 species_occ_merged_maiorano_grilo_2$gbif_id <- as.numeric(species_occ_merged_maiorano_grilo_2$gbif_id)
 species_occ_merged_maiorano_grilo_2_and_bodymass <- merge(x=species_occ_merged_maiorano_grilo_2, y=birds_and_mammals_3, by.x="gbif_id", by.y="gbif_id", all.x=TRUE)
 
@@ -405,8 +411,8 @@ species_occ_merged_maiorano_grilo_2_and_bodymass <- merge(x=species_occ_merged_m
 species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability <- merge(x=species_occ_merged_maiorano_grilo_2_and_bodymass, y=all_species_vulnerability_2, 
                                                                             by.x="grilo_data", by.y="Species", all.x=TRUE)
 
-head(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
-nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+#head(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
+#nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
 
 plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
      species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
@@ -434,6 +440,7 @@ nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
 
 sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
 #terra::writeVector(sp_richness, "sp_richness.shp")
+#terra::plet(sp_richness, "sp_richness")
 
 ################################################################################
 # How many interactions lost? - with secondary extinctions
@@ -443,6 +450,9 @@ sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName"
 nr_lost_interactions <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
 names(nr_lost_interactions) <- c("grid","lost_interactions")
 head(nr_lost_interactions)
+
+#local_fw_MAIORANO[[100]]
+#local_fw_MAIORANO_REMOVED[[100]]
 
 for(i in 1:nrow(nr_lost_interactions)){
   
@@ -455,3 +465,4 @@ for(i in 1:nrow(nr_lost_interactions)){
 
 lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
+#terra::plet(lost_interactions_with_sec_extinctions, "lost_interactions")

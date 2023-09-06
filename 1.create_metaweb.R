@@ -10,6 +10,7 @@ library(igraph)
 library(rglobi)
 library(taxize)
 library(cheddar)
+library(NetIndices)
 
 #taxize::use_entrez()
 #usethis::edit_r_environ()
@@ -102,16 +103,19 @@ metaweb_GLOBI <- igraph::graph_from_data_frame(df_edges2)
 igraph::V(metaweb_GLOBI)
 igraph::E(metaweb_GLOBI)
 
-igraph::plot.igraph(metaweb_GLOBI,layout=layout.circle)
+igraph::plot.igraph(metaweb_GLOBI,
+                    layout=layout.circle
+                    )
 
-plot.igraph(metaweb_GLOBI,
-           vertex.label.cex=1,
-           vertex.size=3,
-           edge.arrow.size=.25)
+igraph::plot.igraph(metaweb_GLOBI,
+                    vertex.label.cex=1,
+                    vertex.size=3,
+                    edge.arrow.size=.25
+                    )
 
-lay<-matrix(nrow=123,ncol=2) # create a matrix with one column as runif, the other as trophic level
-lay[,1]<-runif(123)
-lay[,2]<-TrophInd(predweb.adj[[1]])$TL-1
+#lay <- matrix(nrow=123,ncol=2) # create a matrix with one column as runif, the other as trophic level
+#lay[,1] <- runif(123)
+#lay[,2] <- TrophInd(predweb.adj[[1]])$TL-1
 
 nodes_c <- data.frame(iucn, vulnerability)
 nodes_c <- nodes_c[,-c(3,4)]
@@ -144,6 +148,3 @@ t_similarity <- cheddar::TrophicSimilarity(cheddar_metaweb)
 #load("cheddar_metaweb.RData")
 #load("igraph_metaweb.RData")
 ################
-
-
-
