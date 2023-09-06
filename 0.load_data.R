@@ -4,6 +4,8 @@
 #FMestre
 #29-05-2023
 
+#Save workspace
+#save.image("C:/Users/asus/Documents/github/road_ecoloy_econetworks/road_ecoloy_econetworks_SAVED.RData")
 
 #load packages
 library(terra)
