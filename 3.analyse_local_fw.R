@@ -127,8 +127,8 @@ message(i)
 
 #local_fw_MAIORANO_REMOVED
 #head(local_fw_MAIORANO_REMOVED)
-local_fw_MAIORANO[[43]]
-local_fw_MAIORANO_REMOVED[[43]]
+#local_fw_MAIORANO[[43]]
+#local_fw_MAIORANO_REMOVED[[43]]
 
 species_loss
 connectance_dif
@@ -257,34 +257,68 @@ basal2
 # Where are the removed species, in which trophic level? 
 ################################################################################
 
-removed_position <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 4, nrow = length(local_fw_MAIORANO)))
-names(removed_position) <- c("grid", "top_level", "interm_level", "basal_level", "changed?") 
+extinctions_levels <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
+names(extinctions_levels) <- c("grid", 
+                             "ORIG_PRI_top_level", 
+                             "ORIG_PRI_interm_level", 
+                             "ORIG_PRI_basal_level", 
+                             "PRI_SEC_top_level",
+                             "PRI_SEC_interm_level",
+                             "PRI_SEC_basal_level"
+                             ) 
+#head(extinctions_levels)
 
-head(removed_position)
+#local_fw_MAIORANO[["BW39"]] # original FW
+#local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]] # primary extinctions FW
+#local_fw_MAIORANO_REMOVED[["BW39"]] # cascading effects FW
 
 #LOOP
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
   before_net <- local_fw_MAIORANO[[i]]
-  after_net <- local_fw_MAIORANO_REMOVED[[i]]
+  prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
+  sec_net <- local_fw_MAIORANO_REMOVED[[i]]
   
-  if(unique(!is.na(before_net)) && unique(!is.na(after_net))) {
+  if(unique(!is.na(before_net)) && unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
   
-  removed_species <- before_net$nodes$node[!(before_net$nodes$node %in% after_net$nodes$node)]
+  removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
+  removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
   
-  if(length(removed_species)){
+  if(length(removed_species_or_prim)!=0){
     
-    tp1 <- cheddar::TopLevelNodes(before_net)
-    it1 <- cheddar::IntermediateNodes(before_net)
-    bs1 <- cheddar::BasalNodes(before_net)
+    #Original networks
+    tp_0 <- length(cheddar::TopLevelNodes(before_net))
+    it_0 <- length(cheddar::IntermediateNodes(before_net))
+    bs_0 <- length(cheddar::BasalNodes(before_net))
+    #Primary extinctions
+    tp_1 <- length(cheddar::TopLevelNodes(prim_net))
+    it_1 <- length(cheddar::IntermediateNodes(prim_net))
+    bs_1 <- length(cheddar::BasalNodes(prim_net))
+
+        #Original to primary
+    extinctions_levels$ORIG_PRI_top_level[i] <- 1-(tp_1/tp_0)
+    extinctions_levels$ORIG_PRI_interm_level[i] <- 1-(it_1/it_0)
+    extinctions_levels$ORIG_PRI_basal_level[i] <- 1-(bs_1/bs_0)
+
+  } 
+  
+  if(length(removed_species_prim_sec)!=0){
     
-    removed_position$top_level[i] <- sum(removed_species %in% tp1)/length(removed_species)
-    removed_position$interm_level[i] <- sum(removed_species %in% it1)/length(removed_species)
-    removed_position$basal_level[i] <- sum(removed_species %in% bs1)/length(removed_species)
+    #Primary extinctions
+    tp_1 <- length(cheddar::TopLevelNodes(prim_net))
+    it_1 <- length(cheddar::IntermediateNodes(prim_net))
+    bs_1 <- length(cheddar::BasalNodes(prim_net))
+    #Cascading effects
+    tp_2 <- length(cheddar::TopLevelNodes(sec_net))
+    it_2 <- length(cheddar::IntermediateNodes(sec_net))
+    bs_2 <- length(cheddar::BasalNodes(sec_net))
     
-    removed_position$`changed?`[i] <- "yes"
+    #Primary to cascading
+    extinctions_levels$PRI_SEC_top_level[i] <- 1-(tp_2/tp_1)
+    extinctions_levels$PRI_SEC_interm_level[i] <- 1-(it_2/it_1)
+    extinctions_levels$PRI_SEC_basal_level[i] <- 1-(bs_2/bs_1)
     
-  } else removed_position$`changed?`[i] <- "no"
+  } 
 
 }
   
@@ -292,40 +326,169 @@ message(i)
 
 }
 
+#View(extinctions_levels)
+
 #Save
-#save(removed_position, file = "removed_position.RData")
-#load("removed_position.RData")
+#save(extinctions_levels, file = "extinctions_levels_07_09_2023.RData")
+#load("extinctions_levels_07_09_2023.RData")
 
-################################################################################
 # Plot it...
-################################################################################
 
-top_rm <- data.frame(removed_position$top_level, "top")
-mid_rm <- data.frame(removed_position$interm_level, "mid")
-basal_rm <- data.frame(removed_position$basal_level, "basal")
+#1. From original to primary extinctions
 
-names(top_rm) <- c("proportion", "level")
-names(mid_rm) <- c("proportion", "level")
-names(basal_rm) <- c("proportion", "level")
+top_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_top_level, "top")
+mid_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_interm_level, "intermediate")
+basal_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_basal_level, "basal")
 
-head(top_rm)
-head(mid_rm)
-head(basal_rm)
+names(top_orig_prim) <- c("rate", "level")
+names(mid_orig_prim) <- c("rate", "level")
+names(basal_orig_prim) <- c("rate", "level")
 
-removed_position <- rbind(top_rm, mid_rm, basal_rm)
+removed_position_orig_prim <- rbind(top_orig_prim, mid_orig_prim, basal_orig_prim)
 
-removed_position$level <- as.factor(removed_position$level)
+removed_position_orig_prim$level <- as.factor(removed_position_orig_prim$level)
 
 #Reorder factor levels
-removed_position$level <- factor(removed_position$level,     
-                                 c("top", "mid", "basal"))
+removed_position_orig_prim$level <- factor(removed_position_orig_prim$level,     
+                                 c("top", "intermediate", "basal"))
 
-rem_tp <- ggplot(removed_position, aes(x = level, y = proportion))
+rem_orig_prim <- ggplot(removed_position_orig_prim, aes(x = level, y = rate))
 
-rem_tp2 <- rem_tp + geom_boxplot(aes(fill = level),) +
-  scale_fill_manual(values = c("#999999", "#E69F00", "#E80F00"))
+rem_orig_prim2 <- rem_orig_prim + geom_boxplot(aes(fill = level),) +
+  ylab("rate of change") +
+  xlab("trophic level") +
+  scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
 
-rem_tp2
+rem_orig_prim2
+
+#2. From primary extinctions to cascading effects
+
+top_prim_sec <- data.frame(extinctions_levels$PRI_SEC_top_level, "top")
+mid_prim_sec <- data.frame(extinctions_levels$PRI_SEC_interm_level, "intermediate")
+basal_prim_sec <- data.frame(extinctions_levels$PRI_SEC_basal_level, "basal")
+
+names(top_prim_sec) <- c("rate", "level")
+names(mid_prim_sec) <- c("rate", "level")
+names(basal_prim_sec) <- c("rate", "level")
+
+removed_position_prim_sec <- rbind(top_prim_sec, mid_prim_sec, basal_prim_sec)
+
+removed_position_prim_sec$level <- as.factor(removed_position_prim_sec$level)
+
+#Reorder factor levels
+removed_position_prim_sec$level <- factor(removed_position_prim_sec$level,     
+                                           c("top", "intermediate", "basal"))
+
+rem_prim_sec <- ggplot(removed_position_prim_sec, aes(x = level, y = rate))
+
+rem_prim_sec2 <- rem_prim_sec + geom_boxplot(aes(fill = level),) +
+  ylab("rate of change") +
+  xlab("trophic level") +
+  scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
+
+rem_prim_sec2
+
+#####################################################################################
+# In each transition, how many species occupied a given position in the starting FW
+#####################################################################################
+#07-09-2023
+
+#AQUI
+
+proportion_previous_level <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
+names(proportion_previous_level) <- c("grid", 
+                               "ORIG_PRI_top_level", 
+                               "ORIG_PRI_interm_level", 
+                               "ORIG_PRI_basal_level", 
+                               "PRI_SEC_top_level",
+                               "PRI_SEC_interm_level",
+                               "PRI_SEC_basal_level"
+)
+
+#LOOP
+for(i in 1:length(local_fw_MAIORANO_REMOVED)){
+  
+  before_net <- local_fw_MAIORANO[[i]]
+  prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
+  sec_net <- local_fw_MAIORANO_REMOVED[[i]]
+  
+  if(unique(!is.na(before_net)) && unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
+    
+    removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
+    removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
+    
+    if(length(removed_species_or_prim)!=0){
+      
+      top_removed <- sum(removed_species_or_prim %in% cheddar::TopLevelNodes(before_net))
+      intermediate_removed <- sum(removed_species_or_prim %in% cheddar::IntermediateNodes(before_net))
+      basal_removed <- sum(removed_species_or_prim %in% cheddar::BasalNodes(before_net))
+      
+      prop_top <- top_removed/length(removed_species_or_prim)
+      prop_interm <- intermediate_removed/length(removed_species_or_prim)
+      prop_basal <- basal_removed/length(removed_species_or_prim)
+      
+      #Original to primary
+      proportion_previous_level$PRI_SEC_top_level[i] <- prop_top
+      proportion_previous_level$PRI_SEC_interm_level[i] <- prop_interm
+      proportion_previous_level$PRI_SEC_basal_level[i] <- prop_basal
+
+    } 
+    
+    if(length(removed_species_prim_sec)!=0){
+      
+      top_removed2 <- sum(removed_species_prim_sec %in% cheddar::TopLevelNodes(before_net))
+      intermediate_removed2 <- sum(removed_species_prim_sec %in% cheddar::IntermediateNodes(before_net))
+      basal_removed2 <- sum(removed_species_prim_sec %in% cheddar::BasalNodes(before_net))
+      
+      prop_top2 <- top_removed2/length(removed_species_prim_sec)
+      prop_interm2 <- intermediate_removed2/length(removed_species_prim_sec)
+      prop_basal2 <- basal_removed2/length(removed_species_prim_sec)
+      
+      #Primary to cascading
+      proportion_previous_level$PRI_SEC_top_level[i] <- prop_top2
+      proportion_previous_level$PRI_SEC_interm_level[i] <- prop_interm2
+      proportion_previous_level$PRI_SEC_basal_level[i] <- prop_basal2
+      
+    } 
+    
+  }
+  
+  message(i)
+  
+}
+
+#save(proportion_previous_level, file = "proportion_previous_level.RData")
+#load("proportion_previous_level.RData")
+
+# Plot it...
+
+#1. From original to primary extinctions
+
+top_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_top_level, "top")
+mid_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_interm_level, "intermediate")
+basal_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_basal_level, "basal")
+
+names(top_orig_prim_v2) <- c("rate", "level")
+names(mid_orig_prim_v2) <- c("rate", "level")
+names(basal_orig_prim_v2) <- c("rate", "level")
+
+removed_position_orig_prim_v2 <- rbind(top_orig_prim_v2, mid_orig_prim_v2, basal_orig_prim_v2)
+
+removed_position_orig_prim_v2$level <- as.factor(removed_position_orig_prim_v2$level)
+
+#Reorder factor levels
+removed_position_orig_prim_v2$level <- factor(removed_position_orig_prim_v2$level,     
+                                           c("top", "intermediate", "basal"))
+
+rem_orig_prim_v2 <- ggplot(removed_position_orig_prim_v2, aes(x = level, y = rate))
+
+rem_orig_prim2_v2 <- rem_orig_prim_v2 + geom_boxplot(aes(fill = level),) +
+  ylab("previous trophic level") +
+  xlab("trophic level") +
+  scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
+
+rem_orig_prim2_v2
+
 
 ################################################################################
 # Plot vulnerability vs body size (dispersal proxy)
