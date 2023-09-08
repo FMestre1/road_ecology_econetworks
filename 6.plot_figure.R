@@ -5,10 +5,6 @@
 #FMestre
 #05-09-23
 
-################################################################################
-# Figure
-################################################################################
-
 #all_primary_secondary[all_primary_secondary$grid == "BW39",]
 #
 #local_fw_MAIORANO[["BW39"]]
@@ -83,35 +79,6 @@ names(local_fw_MAIORANO_REMOVED_IGRAPH) <- names(local_fw_MAIORANO_REMOVED)
 library(cheddar)
 library(igraph)
 
-#Which have rabbit and lynx? none?!
-
-#is_rabbit_lynx <- data.frame(matrix(ncol = 3, nrow = length(local_fw_MAIORANO)))
-#names(is_rabbit_lynx) <- c("LP", "OC", "VV")
-
-#for(i in 1:length(local_fw_MAIORANO)){
-
-#if(cheddar::is.Community(local_fw_MAIORANO[[i]]))
-#{
-#is_rabbit_lynx[i,1] <- ifelse("Lynx pardinus" %in% cheddar::NPS(local_fw_MAIORANO[[i]])$node, "present", "absent")
-#is_rabbit_lynx[i,2] <- ifelse("Oryctolagus cuniculus" %in% cheddar::NPS(local_fw_MAIORANO[[i]])$node, "present", "absent") 
-#is_rabbit_lynx[i,3] <- ifelse("Vulpes vulpes" %in% cheddar::NPS(local_fw_MAIORANO[[i]])$node, "present", "absent") 
-
-#}else{
-#  is_rabbit_lynx[i,1] <- NA 
-#  is_rabbit_lynx[i,2] <- NA
-#  is_rabbit_lynx[i,3] <- NA
-#}
-  
-#message(i)
-
-#}
-
-#which(is_rabbit_lynx$LP == "present")
-#local_fw_MAIORANO[[3660]]
-#cheddar::plot.Community(local_fw_MAIORANO[[3660]], node.labels="node", show.nodes.as="both")
-
-#is_rabbit_lynx[is_rabbit_lynx$VV == "present" & is_rabbit_lynx$OC == "present",]
-
 #Lets use the grids BW39!
 length(cheddar::NPS(local_fw_MAIORANO[["BW39"]])$node)
 length(cheddar::NPS(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]])$node)
@@ -125,12 +92,6 @@ cheddar::BasalNodes(local_fw_MAIORANO[["BW39"]])
 cheddar::BasalNodes(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]])
 cheddar::BasalNodes(local_fw_MAIORANO_REMOVED[["BW39"]])
 
-#cheddar::plot.Community(local_fw_MAIORANO[["BW39"]], node.labels="node", show.nodes.as="both")
-#cheddar::plot.Community(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]], node.labels="node", show.nodes.as="both")
-#cheddar::plot.Community(local_fw_MAIORANO_REMOVED[["BW39"]], node.labels="node", show.nodes.as="both")
-
-#Plot links going and coming from Vulpes vulpes
-#links <- cbind(TLPS(local_fw_MAIORANO[["BW39"]]), colour="#c7c7c788")
 #
 links <- cbind(TLPS(local_fw_MAIORANO[["BW39"]]), colour="#c7c7c788")
 links$colour["Buteo buteo" == links$resource] <- "red"

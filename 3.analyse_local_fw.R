@@ -354,12 +354,19 @@ removed_position_orig_prim$level <- factor(removed_position_orig_prim$level,
 
 rem_orig_prim <- ggplot(removed_position_orig_prim, aes(x = level, y = rate))
 
-rem_orig_prim2 <- rem_orig_prim + geom_boxplot(aes(fill = level),) +
+rem_orig_prim2 <- rem_orig_prim + geom_violin(aes(fill = level),) +
   ylab("rate of change") +
   xlab("trophic level") +
   scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
 
-rem_orig_prim2
+rem_orig_prim2 + labs(fill = "trophic level")
+
+# Compute the analysis of variance
+names(removed_position_orig_prim)
+
+orig_prim_aov <- aov(rate ~ level, data = removed_position_orig_prim)
+# Summary of the analysis
+summary(orig_prim_aov)
 
 #2. From primary extinctions to cascading effects
 
@@ -381,19 +388,25 @@ removed_position_prim_sec$level <- factor(removed_position_prim_sec$level,
 
 rem_prim_sec <- ggplot(removed_position_prim_sec, aes(x = level, y = rate))
 
-rem_prim_sec2 <- rem_prim_sec + geom_boxplot(aes(fill = level),) +
+rem_prim_sec2 <- rem_prim_sec + geom_violin(aes(fill = level),) +
   ylab("rate of change") +
   xlab("trophic level") +
   scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
 
-rem_prim_sec2
+rem_prim_sec2 + labs(fill = "trophic level") 
+#YES
+
+# Compute the analysis of variance
+names(removed_position_prim_sec)
+
+prim_sec_aov <- aov(rate ~ level, data = removed_position_prim_sec)
+# Summary of the analysis
+summary(prim_sec_aov)
 
 #####################################################################################
-# In each transition, how many species occupied a given position in the starting FW
+# In each transition, how many species occupied a given position in the previous FW
 #####################################################################################
 #07-09-2023
-
-#AQUI
 
 proportion_previous_level <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
 names(proportion_previous_level) <- c("grid", 
@@ -405,6 +418,9 @@ names(proportion_previous_level) <- c("grid",
                                "PRI_SEC_basal_level"
 )
 
+#which(names(local_fw_MAIORANO) == "BW39")
+#i = 3461
+
 #LOOP
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
@@ -412,10 +428,9 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
   sec_net <- local_fw_MAIORANO_REMOVED[[i]]
   
-  if(unique(!is.na(before_net)) && unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
+  if(unique(!is.na(before_net)) && unique(!is.na(prim_net))) {
     
     removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
-    removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
     
     if(length(removed_species_or_prim)!=0){
       
@@ -428,11 +443,17 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
       prop_basal <- basal_removed/length(removed_species_or_prim)
       
       #Original to primary
-      proportion_previous_level$PRI_SEC_top_level[i] <- prop_top
-      proportion_previous_level$PRI_SEC_interm_level[i] <- prop_interm
-      proportion_previous_level$PRI_SEC_basal_level[i] <- prop_basal
+      proportion_previous_level$ORIG_PRI_top_level[i] <- prop_top
+      proportion_previous_level$ORIG_PRI_interm_level[i] <- prop_interm
+      proportion_previous_level$ORIG_PRI_basal_level[i] <- prop_basal
 
     } 
+    
+}
+
+  if(unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
+    
+    removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
     
     if(length(removed_species_prim_sec)!=0){
       
@@ -456,6 +477,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   message(i)
   
 }
+
+View(proportion_previous_level)
 
 #save(proportion_previous_level, file = "proportion_previous_level.RData")
 #load("proportion_previous_level.RData")
@@ -482,103 +505,42 @@ removed_position_orig_prim_v2$level <- factor(removed_position_orig_prim_v2$leve
 
 rem_orig_prim_v2 <- ggplot(removed_position_orig_prim_v2, aes(x = level, y = rate))
 
-rem_orig_prim2_v2 <- rem_orig_prim_v2 + geom_boxplot(aes(fill = level),) +
+rem_orig_prim2_v2 <- rem_orig_prim_v2 + geom_violin(aes(fill = level),) +
   ylab("previous trophic level") +
   xlab("trophic level") +
   scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
 
-rem_orig_prim2_v2
 
+rem_orig_prim2_v2 + labs(fill = "trophic level")
+#NOT
 
-################################################################################
-# Plot vulnerability vs body size (dispersal proxy)
-################################################################################
+#2. From primary extinctions to cascading effects
 
-#all_species_vulnerability_2
-#species_occ_merged_maiorano_grilo_2
+top_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_top_level, "top")
+mid_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_interm_level, "intermediate")
+basal_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_basal_level, "basal")
 
-#Load Elton
-mammal_elton <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\elton_traits\\MamFuncDat.txt")
-#View(mammal_elton)
-names(mammal_elton)
-head(mammal_elton)
+names(top_prim_sec_v2) <- c("rate", "level")
+names(mid_prim_sec_v2) <- c("rate", "level")
+names(basal_prim_sec_v2) <- c("rate", "level")
 
-bird_elton <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\elton_traits\\BirdFuncDat.txt")
-#View(bird_elton)
-names(bird_elton)
-head(bird_elton)
+removed_position_prim_sec_v2 <- rbind(top_prim_sec_v2, mid_prim_sec_v2, basal_prim_sec_v2)
 
-mammals_elton_gbif_id <- rep(NA, nrow(mammal_elton))
-for(i in 1:nrow(mammal_elton)) {
-  
-id_m  <- taxize::get_gbifid(mammal_elton$Scientific[i],
-                            rank = "species",
-                            )
+removed_position_prim_sec_v2$level <- as.factor(removed_position_prim_sec_v2$level)
 
-mammals_elton_gbif_id[i] <- as.numeric(id_m[1])
+#Reorder factor levels
+removed_position_prim_sec_v2$level <- factor(removed_position_prim_sec_v2$level,     
+                                          c("top", "intermediate", "basal"))
 
-}
-#
-birds_elton_gbif_id <- rep(NA, nrow(bird_elton))
-for(i in 1:nrow(bird_elton)){ 
-  
-  id_b  <- taxize::get_gbifid(bird_elton$Scientific[i],
-                              rank = "species"
-                              )
-  
-  birds_elton_gbif_id[i] <- as.numeric(id_b[1])
-  
-  
-}
+rem_prim_sec_v2 <- ggplot(removed_position_prim_sec_v2, aes(x = level, y = rate))
 
-mammals_elton_gbif_id_2 <- data.frame(mammal_elton$Scientific, mammals_elton_gbif_id)
-birds_elton_gbif_id_2 <- data.frame(bird_elton$Scientific, birds_elton_gbif_id)
-#View(mammals_elton_gbif_id_2)
-#View(birds_elton_gbif_id_2)
+rem_prim_sec2_v2 <- rem_prim_sec_v2 + geom_violin(aes(fill = level),) +
+  ylab("previous trophic level") +
+  xlab("trophic level") +
+  scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
 
-birds_elton_gbif_id_2 <- birds_elton_gbif_id_2[complete.cases(birds_elton_gbif_id_2),]
-mammals_elton_gbif_id_2 <- mammals_elton_gbif_id_2[complete.cases(mammals_elton_gbif_id_2),]
-
-names(mammals_elton_gbif_id_2) <- c("species", "gbif_id")
-names(birds_elton_gbif_id_2) <- c("species", "gbif_id")
-
-mammal_elton_2 <- merge(x=mammals_elton_gbif_id_2, y=mammal_elton, by.x="species", by.y="Scientific", all.x=T)
-#View(mammal_elton_2)
-
-bird_elton_2 <- merge(x=birds_elton_gbif_id_2, y=bird_elton, by.x="species", by.y="Scientific", all.x=T)
-#View(bird_elton_2)
-
-names(mammal_elton_2)
-mammal_elton_3 <- mammal_elton_2[,c(1,2,25)]
-head(mammal_elton_3)
-names(mammal_elton_3)
-
-names(bird_elton_2)
-bird_elton_3 <- bird_elton_2[,c(1,2,37)]
-head(bird_elton_3)
-names(bird_elton_3)
-
-birds_and_mammals_3 <- rbind(bird_elton_3, mammal_elton_3)
-head(birds_and_mammals_3)
-
-#save(birds_and_mammals_3, file = "birds_and_mammals_3_06set23.RData")
-#load("birds_and_mammals_3_06set23.RData")
-
-###
-
-#str(species_occ_merged_maiorano_grilo_2)
-species_occ_merged_maiorano_grilo_2$gbif_id <- as.numeric(species_occ_merged_maiorano_grilo_2$gbif_id)
-species_occ_merged_maiorano_grilo_2_and_bodymass <- merge(x=species_occ_merged_maiorano_grilo_2, y=birds_and_mammals_3, by.x="gbif_id", by.y="gbif_id", all.x=TRUE)
-
-#all_species_vulnerability_2
-species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability <- merge(x=species_occ_merged_maiorano_grilo_2_and_bodymass, y=all_species_vulnerability_2, 
-                                                                            by.x="grilo_data", by.y="Species", all.x=TRUE)
-
-#head(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
-#nrow(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability)
-
-plot(species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$BodyMass.Value, 
-     species_occ_merged_maiorano_grilo_2_and_bodymass_and_vulnerability$Median_MAXroad.RM.1000.)
+rem_prim_sec2_v2
+#NOT
 
 ################################################################################
 # Species in each grid
@@ -604,6 +566,31 @@ nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
 sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
 #terra::writeVector(sp_richness, "sp_richness.shp")
 #terra::plet(sp_richness, "sp_richness")
+
+################################################################################
+# Species in each grid
+################################################################################
+#08-09-2023
+
+#grids_grilo_shape
+#local_fw_MAIORANO
+
+connectance_original_networks <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(connectance_original_networks) <- c("grid","connectance")
+head(connectance_original_networks)
+
+for(i in 1:nrow(connectance_original_networks)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    connectance_original_networks[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    connectance_original_networks[i,2] <- DirectedConnectance(local_fw_MAIORANO[[i]])
+  }
+  
+}
+
+connectance_original <- merge(x=grids_grilo_shape, y=connectance_original_networks, by.x="PageName", by.y="grid")
+#terra::writeVector(connectance_original, "connectance_08set23.shp")
+#terra::plet(connectance_original, "connectance")
 
 ################################################################################
 # How many interactions lost? - with secondary extinctions
