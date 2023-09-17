@@ -5,7 +5,8 @@
 #Loading packages
 library(cheddar)
 library(terra)
-  
+library(tidyverse)
+
 #Having
 local_fw_MAIORANO #the initial FW structures
 
@@ -101,4 +102,125 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
 #lost_interactions_with_sec_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageName", by.y="grid")
 #terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE.shp")
 #terra::plet(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_relative")
+
+
+################################################################################
+#The trophic level of removed and remaining species in the two extinction steps
+################################################################################
+#FMestre
+#17-09-23
+
+#local_fw_MAIORANO[["BW39"]] # original FW
+#local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]] # primary extinctions FW
+#local_fw_MAIORANO_REMOVED[["BW39"]] # cascading effects FW
+
+previous_tl <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 4, nrow = length(local_fw_MAIORANO)))
+names(previous_tl) <- c("grid", 
+                        "averaged_tl_original_networks_of_removed_in_prim_ext", 
+                        "averaged_tl_original_networks_of_removed_in_sec_ext", 
+                        "averaged_tl_original_networks_of_remaining_in_prim_ext", 
+                        "averaged_tl_original_networks_of_remaining_in_sec_ext" 
+) 
+
+#LOOP
+for(i in 1:length(local_fw_MAIORANO)){
+  
+  if(any(class(local_fw_MAIORANO[[i]]) == "Community")){#is this position a community #START
+  before_net <- local_fw_MAIORANO[[i]]
+  prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
+  sec_net <- local_fw_MAIORANO_REMOVED[[i]]
+  
+  averagedTL_before <- data.frame(ChainAveragedTrophicLevel(before_net, include.isolated=TRUE))
+  averagedTL_primary <- data.frame(ChainAveragedTrophicLevel(prim_net, include.isolated=TRUE))
+  averagedTL_secondary <- data.frame(ChainAveragedTrophicLevel(sec_net, include.isolated=TRUE))
+  
+  averagedTL_before <- data.frame(rownames(averagedTL_before),averagedTL_before)
+  rownames(averagedTL_before) <- 1:nrow(averagedTL_before)
+  names(averagedTL_before) <- c("species", "av_tl")
+  #
+  averagedTL_primary <- data.frame(rownames(averagedTL_primary),averagedTL_primary)
+  rownames(averagedTL_primary) <- 1:nrow(averagedTL_primary)
+  names(averagedTL_primary) <- c("species", "av_tl")
+  #
+  #averagedTL_secondary <- data.frame(rownames(averagedTL_secondary),averagedTL_secondary)
+  #rownames(averagedTL_secondary) <- 1:nrow(averagedTL_secondary)
+  #names(averagedTL_secondary) <- c("species", "av_tl")
+  
+  if(unique(!is.na(before_net)) && unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
+    
+    removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
+    removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
+    
+    if(length(removed_species_or_prim)!=0){
+      
+      df_tl_removed_species <- averagedTL_before[averagedTL_before$species %in% removed_species_or_prim,]
+      previous_tl[i,2] <- mean(df_tl_removed_species[,2])
+      #
+      df_tl_remaining_species <- averagedTL_before[!(averagedTL_before$species %in% removed_species_or_prim),]
+      previous_tl[i,4] <- mean(df_tl_remaining_species[,2])
+      
+      
+    } 
+    
+    if(length(removed_species_prim_sec)!=0){
+      
+      df_tl_removed_species2 <- averagedTL_primary[averagedTL_primary$species %in% removed_species_prim_sec,]
+      previous_tl[i,3] <- mean(df_tl_removed_species2[,2])
+      #
+      df_tl_remaining_species2 <- averagedTL_primary[!(averagedTL_primary$species %in% removed_species_prim_sec),]
+      previous_tl[i,5] <- mean(df_tl_remaining_species2[,2])
+    } 
+    
+  }
+  }#is this position a community #END
+  message(i)
+  
+}
+
+#View(previous_tl)
+
+#Arrange o plot
+removed_p <- data.frame(previous_tl$averaged_tl_original_networks_of_removed_in_prim_ext, rep("removed primary", nrow(previous_tl)))
+removed_s <- data.frame(previous_tl$averaged_tl_original_networks_of_removed_in_sec_ext, rep("removed secondary", nrow(previous_tl)))
+remaining_p <- data.frame(previous_tl$averaged_tl_original_networks_of_remaining_in_prim_ext, rep("remaining primary", nrow(previous_tl)))
+remaining_s <- data.frame(previous_tl$averaged_tl_original_networks_of_remaining_in_sec_ext, rep("remaining secondary", nrow(previous_tl)))
+#
+names(removed_p) <- c("tl", "group")
+names(removed_s) <- c("tl", "group")
+names(remaining_p) <- c("tl", "group")
+names(remaining_s) <- c("tl", "group")
+
+tl_positions <- rbind(removed_p, removed_s, remaining_p, remaining_s)
+
+tl_positions$group <- as.factor(tl_positions$group)
+
+tl_positions$group
+
+tl_positions$group <- factor(tl_positions$group, 
+                             levels = c("remaining primary", 
+                                      "removed primary", 
+                                      "remaining secondary", 
+                                      "removed secondary"
+                                      )
+                              )
+
+
+
+#Plot
+tl_previous_nr <- ggplot(tl_positions, aes(x = group, y = tl))
+
+tl_previous_nr2 <- tl_previous_nr + geom_violin(aes(fill = group),) +
+  ylab("Trophic position") +
+  xlab("Removed and remaining species in each step") +
+  scale_fill_manual(values = c("#008B00", "#8B1A1A", "#008B00", "#8B1A1A"))
+
+tl_previous_nr2
+
+# Use dplyr to calculate the mean of 'Value' by 'Group'
+result <- tl_positions %>%
+  group_by(group) %>%
+  summarize(Mean_Value = mean(tl, na.rm = TRUE))
+
+# Print the result
+print(result)
 

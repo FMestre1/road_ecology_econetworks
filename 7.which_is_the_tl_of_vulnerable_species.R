@@ -89,6 +89,8 @@ tl_vuln2 <- tl_vuln + geom_violin(aes(fill = tl),) +
 
 tl_vuln2 + labs(fill = "trophic level")
 
+#save(vuln_tl_table, file = "vuln_tl_table_fig2a.RData")
+
 # Compute the analysis of variance
 names(vuln_tl_table)
 
