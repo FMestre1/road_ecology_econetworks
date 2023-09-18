@@ -56,70 +56,70 @@ compart_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
 #LOOP
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
-cheddar1 <- local_fw_MAIORANO[[i]]
-
-if(any(!is.na(cheddar1))){
-
-grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1$properties$title, ]$grids_grilo_shape.kmkm2
-
-removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
-
-new_title <- paste0("Removed Species ", cheddar1$properties$title)
-
-if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'cascade')
-if(length(removed_species)==0) cheddar2 <- cheddar1
-
-local_fw_MAIORANO_REMOVED[[i]] <- cheddar2 #Adding to new list
-
-if(cheddar::NumberOfTrophicLinks(cheddar1)!=0){
+  cheddar1 <- local_fw_MAIORANO[[i]]
   
-igraph1 <- ToIgraph(cheddar1)
-
-test.graph.adj1 <- get.adjacency(igraph1, sparse = TRUE)
-
-metrics1 <- GenInd(as.matrix(test.graph.adj1))
-
-
-}
-
-if(cheddar::NumberOfTrophicLinks(cheddar2)!=0){
-
-igraph2 <- ToIgraph(cheddar2)
-
-test.graph.adj2 <- get.adjacency(igraph2, sparse = TRUE)
-
-metrics2 <- GenInd(as.matrix(test.graph.adj2))
-
-
-}
-
-n_species_0 <- nrow(cheddar1$nodes)
-
-n_species_1 <- nrow(cheddar2$nodes)
-
-species_loss[i] <- n_species_1/n_species_0
-
-if(cheddar::NumberOfTrophicLinks(cheddar1)!=0 && cheddar::NumberOfTrophicLinks(cheddar2)!=0) {
+  if(any(!is.na(cheddar1))){
+    
+    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1$properties$title, ]$grids_grilo_shape.kmkm2
+    
+    removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
+    
+    new_title <- paste0("Removed Species ", cheddar1$properties$title)
+    
+    if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'cascade')
+    if(length(removed_species)==0) cheddar2 <- cheddar1
+    
+    local_fw_MAIORANO_REMOVED[[i]] <- cheddar2 #Adding to new list
+    
+    if(cheddar::NumberOfTrophicLinks(cheddar1)!=0){
+      
+      igraph1 <- ToIgraph(cheddar1)
+      
+      test.graph.adj1 <- get.adjacency(igraph1, sparse = TRUE)
+      
+      metrics1 <- GenInd(as.matrix(test.graph.adj1))
+      
+      
+    }
+    
+    if(cheddar::NumberOfTrophicLinks(cheddar2)!=0){
+      
+      igraph2 <- ToIgraph(cheddar2)
+      
+      test.graph.adj2 <- get.adjacency(igraph2, sparse = TRUE)
+      
+      metrics2 <- GenInd(as.matrix(test.graph.adj2))
+      
+      
+    }
+    
+    n_species_0 <- nrow(cheddar1$nodes)
+    
+    n_species_1 <- nrow(cheddar2$nodes)
+    
+    species_loss[i] <- n_species_1/n_species_0
+    
+    if(cheddar::NumberOfTrophicLinks(cheddar1)!=0 && cheddar::NumberOfTrophicLinks(cheddar2)!=0) {
+      
+      connectance_dif[i] <-  metrics2$C - metrics1$C
+      
+      compart_dif[i] <- metrics2$Cbar - metrics1$Cbar
+      
+    } 
+    
+  } 
   
-  connectance_dif[i] <-  metrics2$C - metrics1$C
-
-  compart_dif[i] <- metrics2$Cbar - metrics1$Cbar
+  if(any(is.na(cheddar1))) {
+    
+    local_fw_MAIORANO_REMOVED[[i]] <- NA 
+    species_loss[i] <- NA
+    connectance_dif[i] <- NA
+    compart_dif[i] <- NA
+    
+  }
   
-} 
-
-} 
-
-if(any(is.na(cheddar1))) {
+  message(i)
   
-  local_fw_MAIORANO_REMOVED[[i]] <- NA 
-  species_loss[i] <- NA
-  connectance_dif[i] <- NA
-  compart_dif[i] <- NA
-  
-}
-
-message(i)
-
 }
 
 #save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_6set2023.RData")
@@ -139,7 +139,7 @@ result_sec_ext <- data.frame(
   species_loss,
   connectance_dif,
   compart_dif
-  )
+)
 
 names(result_sec_ext)[1] <- "grid"
 #head(result_sec_ext)
@@ -159,29 +159,29 @@ names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "
 
 #LOOP
 for(i in 1:length(local_fw_MAIORANO)){
-
-before_net <- local_fw_MAIORANO[[i]]
-after_net <- local_fw_MAIORANO_REMOVED[[i]]
-#
-
-if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
-if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
-if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
-#
-if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
-if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
-if(unique(!is.na(after_net)))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
-#
-if(unique(!is.na(before_net)) && unique(!is.na(after_net))){
-  if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
-
-fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
-
-  } else fractions_top_intermediate_basal_nodes$`changed?`[i] <- "yes"
-}
-
-message(i)
-
+  
+  before_net <- local_fw_MAIORANO[[i]]
+  after_net <- local_fw_MAIORANO_REMOVED[[i]]
+  #
+  
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
+  #
+  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
+  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
+  if(unique(!is.na(after_net)))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
+  #
+  if(unique(!is.na(before_net)) && unique(!is.na(after_net))){
+    if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
+      
+      fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
+      
+    } else fractions_top_intermediate_basal_nodes$`changed?`[i] <- "yes"
+  }
+  
+  message(i)
+  
 }
 
 head(fractions_top_intermediate_basal_nodes)
@@ -259,13 +259,13 @@ basal2
 
 extinctions_levels <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
 names(extinctions_levels) <- c("grid", 
-                             "ORIG_PRI_top_level", 
-                             "ORIG_PRI_interm_level", 
-                             "ORIG_PRI_basal_level", 
-                             "PRI_SEC_top_level",
-                             "PRI_SEC_interm_level",
-                             "PRI_SEC_basal_level"
-                             ) 
+                               "ORIG_PRI_top_level", 
+                               "ORIG_PRI_interm_level", 
+                               "ORIG_PRI_basal_level", 
+                               "PRI_SEC_top_level",
+                               "PRI_SEC_interm_level",
+                               "PRI_SEC_basal_level"
+) 
 #head(extinctions_levels)
 
 #local_fw_MAIORANO[["BW39"]] # original FW
@@ -280,50 +280,50 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   sec_net <- local_fw_MAIORANO_REMOVED[[i]]
   
   if(unique(!is.na(before_net)) && unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
-  
-  removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
-  removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
-  
-  if(length(removed_species_or_prim)!=0){
     
-    #Original networks
-    tp_0 <- length(cheddar::TopLevelNodes(before_net))
-    it_0 <- length(cheddar::IntermediateNodes(before_net))
-    bs_0 <- length(cheddar::BasalNodes(before_net))
-    #Primary extinctions
-    tp_1 <- length(cheddar::TopLevelNodes(prim_net))
-    it_1 <- length(cheddar::IntermediateNodes(prim_net))
-    bs_1 <- length(cheddar::BasalNodes(prim_net))
-
-        #Original to primary
-    extinctions_levels$ORIG_PRI_top_level[i] <- 1-(tp_1/tp_0)
-    extinctions_levels$ORIG_PRI_interm_level[i] <- 1-(it_1/it_0)
-    extinctions_levels$ORIG_PRI_basal_level[i] <- 1-(bs_1/bs_0)
-
-  } 
+    removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
+    removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
+    
+    if(length(removed_species_or_prim)!=0){
+      
+      #Original networks
+      tp_0 <- length(cheddar::TopLevelNodes(before_net))
+      it_0 <- length(cheddar::IntermediateNodes(before_net))
+      bs_0 <- length(cheddar::BasalNodes(before_net))
+      #Primary extinctions
+      tp_1 <- length(cheddar::TopLevelNodes(prim_net))
+      it_1 <- length(cheddar::IntermediateNodes(prim_net))
+      bs_1 <- length(cheddar::BasalNodes(prim_net))
+      
+      #Original to primary
+      extinctions_levels$ORIG_PRI_top_level[i] <- 1-(tp_1/tp_0)
+      extinctions_levels$ORIG_PRI_interm_level[i] <- 1-(it_1/it_0)
+      extinctions_levels$ORIG_PRI_basal_level[i] <- 1-(bs_1/bs_0)
+      
+    } 
+    
+    if(length(removed_species_prim_sec)!=0){
+      
+      #Primary extinctions
+      tp_1 <- length(cheddar::TopLevelNodes(prim_net))
+      it_1 <- length(cheddar::IntermediateNodes(prim_net))
+      bs_1 <- length(cheddar::BasalNodes(prim_net))
+      #Cascading effects
+      tp_2 <- length(cheddar::TopLevelNodes(sec_net))
+      it_2 <- length(cheddar::IntermediateNodes(sec_net))
+      bs_2 <- length(cheddar::BasalNodes(sec_net))
+      
+      #Primary to cascading
+      extinctions_levels$PRI_SEC_top_level[i] <- 1-(tp_2/tp_1)
+      extinctions_levels$PRI_SEC_interm_level[i] <- 1-(it_2/it_1)
+      extinctions_levels$PRI_SEC_basal_level[i] <- 1-(bs_2/bs_1)
+      
+    } 
+    
+  }
   
-  if(length(removed_species_prim_sec)!=0){
-    
-    #Primary extinctions
-    tp_1 <- length(cheddar::TopLevelNodes(prim_net))
-    it_1 <- length(cheddar::IntermediateNodes(prim_net))
-    bs_1 <- length(cheddar::BasalNodes(prim_net))
-    #Cascading effects
-    tp_2 <- length(cheddar::TopLevelNodes(sec_net))
-    it_2 <- length(cheddar::IntermediateNodes(sec_net))
-    bs_2 <- length(cheddar::BasalNodes(sec_net))
-    
-    #Primary to cascading
-    extinctions_levels$PRI_SEC_top_level[i] <- 1-(tp_2/tp_1)
-    extinctions_levels$PRI_SEC_interm_level[i] <- 1-(it_2/it_1)
-    extinctions_levels$PRI_SEC_basal_level[i] <- 1-(bs_2/bs_1)
-    
-  } 
-
-}
+  message(i)
   
-message(i)
-
 }
 
 #View(extinctions_levels)
@@ -350,7 +350,7 @@ removed_position_orig_prim$level <- as.factor(removed_position_orig_prim$level)
 
 #Reorder factor levels
 removed_position_orig_prim$level <- factor(removed_position_orig_prim$level,     
-                                 c("top", "intermediate", "basal"))
+                                           c("top", "intermediate", "basal"))
 
 rem_orig_prim <- ggplot(removed_position_orig_prim, aes(x = level, y = rate))
 
@@ -387,7 +387,7 @@ removed_position_prim_sec$level <- as.factor(removed_position_prim_sec$level)
 
 #Reorder factor levels
 removed_position_prim_sec$level <- factor(removed_position_prim_sec$level,     
-                                           c("top", "intermediate", "basal"))
+                                          c("top", "intermediate", "basal"))
 
 rem_prim_sec <- ggplot(removed_position_prim_sec, aes(x = level, y = rate))
 
@@ -415,12 +415,12 @@ summary(prim_sec_aov)
 
 proportion_previous_level <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
 names(proportion_previous_level) <- c("grid", 
-                               "ORIG_PRI_top_level", 
-                               "ORIG_PRI_interm_level", 
-                               "ORIG_PRI_basal_level", 
-                               "PRI_SEC_top_level",
-                               "PRI_SEC_interm_level",
-                               "PRI_SEC_basal_level"
+                                      "ORIG_PRI_top_level", 
+                                      "ORIG_PRI_interm_level", 
+                                      "ORIG_PRI_basal_level", 
+                                      "PRI_SEC_top_level",
+                                      "PRI_SEC_interm_level",
+                                      "PRI_SEC_basal_level"
 )
 
 #which(names(local_fw_MAIORANO) == "BW39")
@@ -451,11 +451,11 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
       proportion_previous_level$ORIG_PRI_top_level[i] <- prop_top
       proportion_previous_level$ORIG_PRI_interm_level[i] <- prop_interm
       proportion_previous_level$ORIG_PRI_basal_level[i] <- prop_basal
-
+      
     } 
     
-}
-
+  }
+  
   if(unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
     
     removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
@@ -506,7 +506,7 @@ removed_position_orig_prim_v2$level <- as.factor(removed_position_orig_prim_v2$l
 
 #Reorder factor levels
 removed_position_orig_prim_v2$level <- factor(removed_position_orig_prim_v2$level,     
-                                           c("top", "intermediate", "basal"))
+                                              c("top", "intermediate", "basal"))
 
 rem_orig_prim_v2 <- ggplot(removed_position_orig_prim_v2, aes(x = level, y = rate))
 
@@ -535,7 +535,7 @@ removed_position_prim_sec_v2$level <- as.factor(removed_position_prim_sec_v2$lev
 
 #Reorder factor levels
 removed_position_prim_sec_v2$level <- factor(removed_position_prim_sec_v2$level,     
-                                          c("top", "intermediate", "basal"))
+                                             c("top", "intermediate", "basal"))
 
 rem_prim_sec_v2 <- ggplot(removed_position_prim_sec_v2, aes(x = level, y = rate))
 
@@ -560,11 +560,11 @@ names(nr_species_per_grid) <- c("grid","sp_richness")
 head(nr_species_per_grid)
 
 for(i in 1:nrow(nr_species_per_grid)){
-
-if(any(!is.na(local_fw_MAIORANO[[i]]))){
-nr_species_per_grid[i,1] <- local_fw_MAIORANO[[i]]$properties$title
-nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
-}
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_species_per_grid[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    nr_species_per_grid[i,2] <- nrow(local_fw_MAIORANO[[i]]$nodes)
+  }
   
 }
 
