@@ -204,8 +204,6 @@ tl_positions$group <- factor(tl_positions$group,
                                       )
                               )
 
-
-
 #Plot
 tl_previous_nr <- ggplot(tl_positions, aes(x = group, y = tl))
 
@@ -223,5 +221,3 @@ result <- tl_positions %>%
 
 # Print the result
 print(result)
-
-
