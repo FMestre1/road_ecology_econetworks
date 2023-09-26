@@ -7,6 +7,10 @@ local_fw_MAIORANO # original FW
 local_fw_MAIORANO_REMOVED_PRIMARY_EX # primary extinctions FW
 local_fw_MAIORANO_REMOVED # cascading effects FW
 
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_original.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX,  file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX.RData")
+#save(local_fw_MAIORANO_REMOVED,  file = "local_fw_MAIORANO_REMOVED_CASCADING.RData")
+
 result_prim_ext
 result_sec_ext
 
