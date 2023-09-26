@@ -82,6 +82,9 @@ birds <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\
 #View(mammals)
 #View(birds)
 
+#save(mammals, file = "mammals_occ.RData")
+#save(birds, file = "birds_occ.RData")
+
 species <- c(mammals$my_taxa, birds$my_taxa)
 species <- unique(species)
 #length(species)
@@ -210,7 +213,6 @@ local_fw_MAIORANO <- vector(mode = "list", length = ncol(species_in_grids))
 names(local_fw_MAIORANO) <- colnames(species_in_grids)
 
 #head(local_fw_MAIORANO)
-
 #species_occ_merged_maiorano_grilo_2
 
 for(i in 1:length(local_fw_MAIORANO)){
@@ -334,10 +336,8 @@ for(i in 1:length(local_fw_MAIORANO)){
 #load("local_fw_MAIORANO.RData")
 #local_fw_MAIORANO[[1]]
 
-#Verify resulting networks XXXXX START
-
-ncol(species_in_grids)
-length(local_fw_MAIORANO)
+#ncol(species_in_grids)
+#length(local_fw_MAIORANO)
 
 class_list <- list()
 for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
