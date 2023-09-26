@@ -34,6 +34,7 @@ names(v_mammal)[3] <- "bm"
 names(v_bird)[3] <- "bm"
 
 vulnerability <- data.frame(rbind(v_bird, v_mammal))
+#save(vulnerability, file = "vulnerability_grilo.RData")
 
 i_mammal <- data.frame(vuln_mammals[,c(1,5)], "mammal")
 i_bird <- data.frame(vuln_birds[,c(1,5)],"bird")

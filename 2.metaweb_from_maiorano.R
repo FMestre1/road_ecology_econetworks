@@ -25,6 +25,8 @@ all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
 
 all_species_vulnerability_1 <- merge(x=all_species_vulnerability, id_grilo_data, by.x="Species", by.y="all_species_vulnerability.Species", all=T) #creation of id_grilo_data comes later in the code 
 
+#save(all_species_vulnerability_1, file = "all_species_vulnerability_1_grilo.RData")
+
 #head(birds_vulnerability)
 #head(mammals_vulnerability)
 #head(all_species_vulnerability)
@@ -38,6 +40,7 @@ maiorano_metaweb <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_
 rownames(maiorano_metaweb) <- maiorano_metaweb$X
 maiorano_metaweb <- maiorano_metaweb[,-1]
 #View(maiorano_metaweb)
+#save(maiorano_metaweb, file = "maiorano_metaweb.Rdata")
 
 maiorano_groups <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_webs_tetrapods_europe\\dataset\\SBMgroups_spp.csv", sep=";", header = T)
 #head(maiorano_groups)
