@@ -1,16 +1,20 @@
-########################################################################################
-# 0. Species vulnerability from Grilo et al paper             
-########################################################################################
-
+################################################################################
+################################################################################
+#                    SCRIPT 1 - DERIVING LOCAL FOOD WEBS
+################################################################################
+################################################################################
 #FMestre
-#12-06-2023
+#September 2023
 
+#Load packages
 library(terra)
 library(stringr)
 library(taxize)
 library(cheddar)
 
-#Reference:
+################################################################################
+# 0. Species vulnerability from Grilo et al paper             
+################################################################################
 
 #Grilo, C., Koroleva, E., Andrášik, R., Bíl, M., & González‐Suárez, M. (2020).
 #Roadkill risk and population vulnerability in European birds and mammals. 
@@ -32,18 +36,12 @@ mammals <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\dat
 birds <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\matrix_occurrence_birds.csv")
 mammals <- mammals[,-2]
 birds <- birds[,-2]
-#
-#mammals <- mammals[,-c(213, 214)]
-#birds <- birds[,-c(424, 425)]
-#colnames(mammals)
-#colnames(birds)
 
 all_species <- merge(x=birds,
       y=mammals,
       by.x="PageNumber",
       by.y="PageNumber",
       all = TRUE)
-
 
 colnames(mammals)[-1] <- stringr::str_replace(colnames(mammals)[-c(1)], "\\.", " ")
 colnames(birds)[-1] <- stringr::str_replace(colnames(birds)[-c(1)], "\\.", " ")
@@ -100,9 +98,9 @@ iucn <- data.frame(rbind(i_bird, i_mammal))
 #tail(iucn)
 #View(iucn)
 
-########################################################################################
+################################################################################
 # 1. Maiorano et al European Metaweb of trophic interactions             
-########################################################################################
+################################################################################
 
 #Maiorano, L., Montemaggiori, A., Ficetola, G. F., O’connor, L., & Thuiller, W. (2020). 
 #TETRA‐EU 1.0: a species‐level trophic metaweb of European tetrapods.
@@ -114,18 +112,9 @@ maiorano_metaweb <- maiorano_metaweb[,-1]
 #View(maiorano_metaweb)
 #save(maiorano_metaweb, file = "maiorano_metaweb.Rdata")
 
-#maiorano_groups <- read.csv("C:\\Users\\fmestre\\road_ecoloy_econetworks\\food_webs_tetrapods_europe\\dataset\\SBMgroups_spp.csv", sep=";", header = T)
-#head(maiorano_groups)
-
-#spp_maiorano <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Spp_Id.txt")
-#spp_maiorano$SPPname <- stringr::str_replace(spp_maiorano$SPPname,"_", " ")
-#head(spp_maiorano)
-
 #Replace the codes by the species names
 rn <- rownames(maiorano_metaweb)
 cn <- colnames(maiorano_metaweb)
-#
-#use rownames(maiorano_metaweb) instead of spp_maiorano
 #
 for(i in 1:length(rn)) rn[i] <- spp_maiorano[spp_maiorano$ID == rn[i],]$SPPname
 for(i in 1:length(cn)) cn[i] <- spp_maiorano[spp_maiorano$ID == cn[i],]$SPPname
@@ -137,133 +126,14 @@ colnames(maiorano_metaweb) <- cn
 #save(maiorano_metaweb, file = "maiorano_metaweb.RData")
 #load("maiorano_metaweb.RData")
 
-########################################################################################
-# 2.Deriving local networks
-########################################################################################
-
-ssite <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\area_roads_eco_networks.shp")
-#plot(ssite)
-# 2.1. Getting the grids ###############################################################
-#grid_50 <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\grids.shp")
-#plot(grid_50)
-
-# 2.2. Getting the species in each grid ################################################
-#mammals2 <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando\\mydf_mammals.csv", header = T)
-#birds2 <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando\\mydf_birds.csv", header = T)
-#View(mammals2)
-#View(birds2)
-#save(mammals, file = "mammals_occ.RData")
-#save(birds, file = "birds_occ.RData")
-#species <- c(mammals$my_taxa, birds$my_taxa)
-#species <- unique(species)
-#length(species)
-#grids <- unique(c(mammals$PageName, birds$PageName))
-#length(grids)
-
-#Create data frame species x grids with 0 and 1 (species presence per grid)
-
-#length(all_species$PageNumber)
-#length(template_grilo$PageNumber)
-
-#species_in_grids <- as.data.frame(matrix(ncol = length(template_grilo$PageNumber), nrow = length(species)))
-
-#rownames(species_in_grids) <- species
-#colnames(species_in_grids) <- template_grilo$PageNumber
-#View(species_in_grids)
-
-#for(i in 1:nrow(mammals)+1){
-  
-#  species1 <- colnames(mammals)[i+1]
-  #grid1 <- mammals$PageNumber
-  
-#  species_in_grids[species1, grid1] <- 1
-  
-#  message(i)
-#}
-  
-#for(i in 1:nrow(birds)){
-  
-#  row_bird <- birds[i,]
-#  species2 <- row_bird$my_taxa
-#  grid2 <- row_bird$PageName
-  
-#  species_in_grids[species2, grid2] <- 1
-  
-#  message(i)
-#}
-
-#species_in_grids[is.na(species_in_grids)] <- 0
-
-#View(species_in_grids)
-
-####################
-
-#Create a matched table of scientific names across the datasets in use
-
-species #co-occurrence dataset
-rownames(maiorano_metaweb) #maiorano metaweb
-all_species_vulnerability$Species #vulnerability from Clara et al paper
-
-#save(species, file = "species.RData")
-#save(maiorano_metaweb, file = "maiorano_metaweb_15june23.RData")
-#save(all_species_vulnerability, file = "all_species_vulnerability_15june23.RData")
-
-## Occurrence data
-#id_ocurrence_species_data <- rep(NA, length(species))
-
-#for(i in 1:length(id_ocurrence_species_data)){
-#  spe1_id <- get_gbifid(sci= species[i])
-#  id_ocurrence_species_data[i] <- spe1_id[1]
-#}
-
-#id_ocurrence_species_data <- data.frame(species, id_ocurrence_species_data)
-#names(id_ocurrence_species_data)[2] <- "gbif_id"
-#head(id_ocurrence_species_data)
-
-#save(id_ocurrence_species_data, file = "id_ocurrence_species_data_5set2023.RData")
-
-##Maiorano Metaweb Data
-
-#save(id_maiorano_data, file = "id_maiorano_data_5set2023.RData")
-
-#id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. %in% focal_sp,]
-#as.character(id_maiorano_data[id_maiorano_data$gbif_id %in% 4265021 , ][1]) 
-#focal_sp
-
-#save(id_grilo_data, file = "id_grilo_data_5set2023.RData")
-#load("id_grilo_data_5set2023.RData")
-
-##Match table
-
-#save(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo_5set2023.RData")
-
-#species_occ_merged_maiorano_grilo[species_occ_merged_maiorano_grilo$species_occurrence %in% focal_sp,]
-
-#(species_occ_merged_maiorano_grilo, file = "species_occ_merged_maiorano_grilo.RData")
-#View(species_occ_merged_maiorano_grilo)
-
-#species_occ_merged_maiorano_grilo_2 <- species_occ_merged_maiorano_grilo[complete.cases(species_occ_merged_maiorano_grilo),]
-#View(species_occ_merged_maiorano_grilo_2)
-#nrow(species_occ_merged_maiorano_grilo_2)
-
-#save(species_occ_merged_maiorano_grilo_2, file = "species_occ_merged_maiorano_grilo_2_5set2023.RData")
-
-#species_occ_merged_maiorano_grilo_2[species_occ_merged_maiorano_grilo_2$species_occurrence==focal_sp,]
-#id_maiorano_data[id_maiorano_data$rownames.maiorano_metaweb. == focal_sp,]
-
 ################################################################################
+# 2.Create a matched table of scientific names across the datasets in use# 2.Deriving local networks
 ################################################################################
 
-#Having...
-#... occurrences
-species_in_grids <- t(all_species) 
-#View(species_in_grids)
+#rownames(maiorano_metaweb) #maiorano metaweb
+#all_species_vulnerability$Species #vulnerability from Clara et al paper
 
-#Creating a matched table by the GBIG id
-#...interactions
-maiorano_metaweb
-
-#Getting the id for the Maiorano Metaweb
+#2.1 Getting the id for the Maiorano Metaweb
 id_maiorano_data <- rep(NA, length(rownames(maiorano_metaweb)))
 
 for(i in 1:length(id_maiorano_data)){
@@ -275,7 +145,7 @@ id_maiorano_data <- data.frame(rownames(maiorano_metaweb), id_maiorano_data)
 names(id_maiorano_data)[2] <- "gbif_id"
 #head(id_maiorano_data)
 
-#Getting the GBIF id for the Grilo vulnerability data
+#2.2 Getting the GBIF id for the Grilo vulnerability data
 id_grilo_data <- rep(NA, length(all_species_vulnerability$Species))
 
 for(i in 1:length(id_grilo_data)){
@@ -287,22 +157,23 @@ id_grilo_data <- data.frame(all_species_vulnerability$Species, id_grilo_data)
 names(id_grilo_data)[2] <- "gbif_id"
 head(id_grilo_data)
 
-#Using these ids to merge the dataset
+#2.3. Using these ids to merge the dataset
 species_grilo_merged_maiorano <- merge(id_maiorano_data, id_grilo_data, all=TRUE)
-#any(id_maiorano_data$rownames.maiorano_metaweb. == "Rattus rattus")
-#any(id_grilo_data$all_species_vulnerability.Species == "Rattus rattus")
 
 species_grilo_merged_maiorano_complete <- species_grilo_merged_maiorano[complete.cases(species_grilo_merged_maiorano),]
 names(species_grilo_merged_maiorano_complete) <- c("gbif_id", "maiorano", "grilo")
-#in both datasets
+
+#species in both datasets
 nrow(species_grilo_merged_maiorano_complete)
-#in grilo, not maiorano
+#species in grilo, not maiorano
 table(is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & !is.na(species_grilo_merged_maiorano$all_species_vulnerability.Species)) 
-#in maiorano, not grilo 
+#species in maiorano, not grilo 
 table(!is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & is.na(species_grilo_merged_maiorano$all_species_vulnerability.Species)) 
 
-#AQUI
-# 2.3. Creating local networks
+################################################################################
+# 3. Creating local networks
+################################################################################
+
 local_fw_MAIORANO <- vector(mode = "list", length = length(template_grilo$PageNumber))
 names(local_fw_MAIORANO) <- template_grilo$PageNumber
 
@@ -432,28 +303,12 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
   
 }#END LOCAL
 
-
-#AQUI!
-
-
-
-
-#load("local_fw_MAIORANO.RData")
-#local_fw_MAIORANO[[1]]
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
-
-#ncol(species_in_grids)
-#length(local_fw_MAIORANO)
+#Load & Save
+#load("local_fw_MAIORANO_28SET23.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_28SET23.RData")
 
 class_list <- list()
 for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
 
 how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
-
 #View(how_many_species_df)
-
-#Verify resulting networks XXXXX END
-
-#SAVE
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO.RData")
-#load("local_fw_MAIORANO.RData")
