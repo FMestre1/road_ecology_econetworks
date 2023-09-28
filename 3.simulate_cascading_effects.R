@@ -1,10 +1,13 @@
-########################################################################################
-#                          ROAD ECOLOGY - NETWORK ECOLOGY         
-########################################################################################
+################################################################################
+################################################################################
+#                    SCRIPT 2 - ANALYSING LOCAL FOOD WEBS
+################################################################################
+################################################################################
 
 #FMestre
-#12-06-2023
+#28-09-2023
 
+#Load packages
 library(cheddar)
 library(igraph)
 library(NetIndices)
@@ -12,7 +15,7 @@ library(terra)
 library(taxize)
 library(ggplot2)
 
-#required function
+#Required function
 ToIgraph <- function(community, weight=NULL)
 {
   if(is.null(TLPS(community)))
@@ -32,9 +35,9 @@ ToIgraph <- function(community, weight=NULL)
   }
 }
 
-########################################################################################
-# 1. Pre and after Road           
-########################################################################################
+################################################################################
+# 1. Simulate Cascading effects of primary extinctions         
+################################################################################
 
 #Get road value on grids
 grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
@@ -44,27 +47,33 @@ grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
 all_species_vulnerability_2 <- all_species_vulnerability_1[,1:2]
 #head(all_species_vulnerability_1)
 #head(all_species_vulnerability_2)
-#sort(all_species_vulnerability_2$Median_MAXroad.RM.1000.)
 
+#To save the networks after primary extinctions
 local_fw_MAIORANO_REMOVED <- vector(mode = "list", length = length(local_fw_MAIORANO))
 names(local_fw_MAIORANO_REMOVED) <- names(local_fw_MAIORANO)
 
+#To save results...
 species_loss <- rep(NA, length(local_fw_MAIORANO_REMOVED))
 connectance_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
 compart_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
 
-#LOOP
+#Pair pagenumber with pagename
+pair_pagenumber_pagename <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
+pair_pagenumber_pagename <- pair_pagenumber_pagename[,1:2]
+pair_pagenumber_pagename <- as.data.frame(pair_pagenumber_pagename)
+
+#Simulate cascading effects of extinctions
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
   cheddar1 <- local_fw_MAIORANO[[i]]
-  
+  fw_pagenumber <- as.numeric(names(local_fw_MAIORANO)[i])
+  fw_pagename <- pair_pagenumber_pagename[as.numeric(pair_pagenumber_pagename$PageNumber) == fw_pagenumber, ][,1]
+
   if(any(!is.na(cheddar1))){
     
-    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1$properties$title, ]$grids_grilo_shape.kmkm2
-    
-    removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
-    
-    new_title <- paste0("Removed Species ", cheddar1$properties$title)
+    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == fw_pagename, ]$grids_grilo_shape.kmkm2
+    removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000. <= grid_road_density,]$node #Species to remove
+    new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
     
     if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'cascade')
     if(length(removed_species)==0) cheddar2 <- cheddar1
@@ -79,7 +88,6 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
       
       metrics1 <- GenInd(as.matrix(test.graph.adj1))
       
-      
     }
     
     if(cheddar::NumberOfTrophicLinks(cheddar2)!=0){
@@ -89,8 +97,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
       test.graph.adj2 <- get.adjacency(igraph2, sparse = TRUE)
       
       metrics2 <- GenInd(as.matrix(test.graph.adj2))
-      
-      
+    
     }
     
     n_species_0 <- nrow(cheddar1$nodes)
@@ -122,18 +129,15 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
 }
 
-#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_6set2023.RData")
-#load("local_fw_MAIORANO_REMOVED_6set2023.RData")
+#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_CASCADING_EFF_28set2023.RData")
+#load("local_fw_MAIORANO_REMOVED_CASCADING_EFF_28set2023.RData")
 
-#local_fw_MAIORANO_REMOVED
-#head(local_fw_MAIORANO_REMOVED)
-#local_fw_MAIORANO[[43]]
-#local_fw_MAIORANO_REMOVED[[43]]
-
+#Check results
 species_loss
 connectance_dif
 compart_dif
 
+#Create data frame
 result_sec_ext <- data.frame(
   names(local_fw_MAIORANO),
   species_loss,
