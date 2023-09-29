@@ -1,13 +1,22 @@
 ################################################################################
-# Extinctions without secondary extinctions
 ################################################################################
-#23-06-2023
+#                    SCRIPT 1 - DERIVING LOCAL FOOD WEBS
+################################################################################
+################################################################################
 
+#FMestre
+#September 2023
+
+#Load packages
 library(terra)
 library(stringr)
 library(taxize)
 library(cheddar)
 library(NetIndices)
+
+################################################################################
+# 1. Simulate extinctions without secondary extinctions
+################################################################################
 
 #local_fw_MAIORANO # original local networks
 #local_fw_MAIORANO_REMOVED[[2]]
@@ -19,18 +28,18 @@ species_loss_prim_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_PRIMARY_EX))
 connectance_dif_prim_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_PRIMARY_EX))
 compart_dif_prim_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_PRIMARY_EX))
 
-#LOOP
+#Simulate primary extinctions
 for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   
   cheddar1_pex <- local_fw_MAIORANO[[i]]
+  fw_pagenumber <- as.numeric(names(local_fw_MAIORANO)[i])
+  fw_pagename <- pair_pagenumber_pagename[as.numeric(pair_pagenumber_pagename$PageNumber) == fw_pagenumber, ][,1]
   
   if(any(!is.na(cheddar1_pex))){
     
-    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == cheddar1_pex$properties$title, ]$grids_grilo_shape.kmkm2
-    
+    grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == fw_pagename, ]$grids_grilo_shape.kmkm2
     removed_species <- cheddar1_pex$nodes[cheddar1_pex$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
-    
-    new_title <- paste0("Removed Species ", cheddar1_pex$properties$title)
+    new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
     
     if(length(removed_species)!=0) cheddar2_pex <- RemoveNodes(cheddar1_pex, remove = removed_species, title = new_title, method = 'direct')
     if(length(removed_species)==0) cheddar2_pex <- cheddar1_pex
@@ -87,11 +96,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   
 }
 
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_5set2023.RData")
-
-#local_fw_MAIORANO[[42]]
-#local_fw_MAIORANO_REMOVED[[42]]
-#local_fw_MAIORANO_REMOVED_PRIMARY_EX[[42]]
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_29set2023.RData")
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EX),
@@ -101,6 +106,8 @@ result_prim_ext <- data.frame(
 )
 
 names(result_prim_ext)[1] <- "grid"
+
+View(result_prim_ext)
 
 grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageName", by.y= "grid")
 #terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext.shp")
