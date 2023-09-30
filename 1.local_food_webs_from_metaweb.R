@@ -128,7 +128,7 @@ colnames(maiorano_metaweb) <- cn
 #load("maiorano_metaweb.RData")
 
 ################################################################################
-# 2.Create a matched table of scientific names across the datasets in use# 2.Deriving local networks
+#   2.Create a matched table of scientific names across the datasets in use
 ################################################################################
 
 #rownames(maiorano_metaweb) #maiorano metaweb

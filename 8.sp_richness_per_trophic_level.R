@@ -1,19 +1,16 @@
 ################################################################################
 ################################################################################
-#                             SCRIPT 8 - xxxx
+#                 SCRIPT 8 - SPECIES RICHNNESS PER TROPHIC LEVEL 
 ################################################################################
 ################################################################################
 
 #FMestre
-#28-09-2023
-
-################################################################################
-#                 MAPS OF SPECIES RICHNESS PER TROPHIC LEVEL
-################################################################################
+#30-09-2023
 
 #Loading packages
 library(cheddar)
 library(terra)
+library(dplyr)
 library(tidyverse)
 
 #Having
@@ -38,23 +35,18 @@ for(i in 1:nrow(nr_species_per_grid_per_tl)){
   message(i)
 }
 
-View(nr_species_per_grid_per_tl)
+#View(nr_species_per_grid_per_tl)
 
 #saving as shapefile
-#Get road value on grids
-grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
-
-#sp_richness_per_trophic_level <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl, by.x="PageName", by.y="grid")
-#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level.shp")
-#terra::plet(sp_richness_per_trophic_level, "top")
-#terra::plet(sp_richness_per_trophic_level, "intermediate")
-#terra::plet(sp_richness_per_trophic_level, "basal")
+sp_richness_per_trophic_level <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl, by.x="PageNumber", by.y="grid")
+#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level_30SET23.shp")
+terra::plet(sp_richness_per_trophic_level, "top")
+terra::plet(sp_richness_per_trophic_level, "intermediate")
+terra::plet(sp_richness_per_trophic_level, "basal")
 
 ################################################################################
-#               Creating map o relative loss of interactions 
+#             1. Creating map o relative loss of interactions 
 ################################################################################
-#FMestre
-#16-09-2023
 
 local_fw_MAIORANO #the initial FW structures
 local_fw_MAIORANO_REMOVED_PRIMARY_EX #priamary extinctions
@@ -63,7 +55,7 @@ local_fw_MAIORANO_REMOVED #cascading effect
 #Primary
 nr_lost_interactions_prim_RELATIVE <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED_PRIMARY_EX), ncol = 2))
 names(nr_lost_interactions_prim_RELATIVE) <- c("grid","lost_interactions_relative")
-head(nr_lost_interactions_prim_RELATIVE)
+#head(nr_lost_interactions_prim_RELATIVE)
 
 for(i in 1:nrow(nr_lost_interactions_prim_RELATIVE)){
   
@@ -80,16 +72,15 @@ for(i in 1:nrow(nr_lost_interactions_prim_RELATIVE)){
   
 }
 
-#lost_interactions_with_primary_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim_RELATIVE, by.x="PageName", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE.shp")
-terra::plet(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_relative")
+lost_interactions_with_primary_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim_RELATIVE, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE_30_SET23.shp")
+#terra::plet(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_relative")
 
 
 #Cascading
 nr_lost_interactions_cascading_RELATIVE <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
 names(nr_lost_interactions_cascading_RELATIVE) <- c("grid","lost_interactions_relative")
-head(nr_lost_interactions_cascading_RELATIVE)
-
+#head(nr_lost_interactions_cascading_RELATIVE)
 
 for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
   
@@ -108,20 +99,13 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
   
 }
 
-#lost_interactions_with_sec_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageName", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE.shp")
+lost_interactions_with_sec_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE_30SET23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_relative")
 
-
 ################################################################################
-#The trophic level of removed and remaining species in the two extinction steps
+# 2.The trophic level of removed and remaining species in the two extinction steps
 ################################################################################
-#FMestre
-#17-09-23
-
-#local_fw_MAIORANO[["BW39"]] # original FW
-#local_fw_MAIORANO_REMOVED_PRIMARY_EX[["BW39"]] # primary extinctions FW
-#local_fw_MAIORANO_REMOVED[["BW39"]] # cascading effects FW
 
 previous_tl <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 4, nrow = length(local_fw_MAIORANO)))
 names(previous_tl) <- c("grid", 

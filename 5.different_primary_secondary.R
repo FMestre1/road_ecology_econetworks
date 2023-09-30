@@ -1,16 +1,11 @@
 ################################################################################
 ################################################################################
-#                             SCRIPT 5 - xxxx
+#   SCRIPT 5 - Differences between primary extinctions and cascading effects
 ################################################################################
 ################################################################################
 
 #FMestre
 #28-09-2023
-
-################################################################################
-# Differences between primary extinctions and cascading effects
-################################################################################
-#23-06-2023
 
 local_fw_MAIORANO # original FW
 local_fw_MAIORANO_REMOVED_PRIMARY_EX # primary extinctions FW
@@ -20,8 +15,8 @@ local_fw_MAIORANO_REMOVED # cascading effects FW
 #save(local_fw_MAIORANO_REMOVED_PRIMARY_EX,  file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX.RData")
 #save(local_fw_MAIORANO_REMOVED,  file = "local_fw_MAIORANO_REMOVED_CASCADING.RData")
 
-result_prim_ext
-result_sec_ext
+head(result_prim_ext)
+head(result_sec_ext)
 
 all_primary_secondary <- data.frame(result_prim_ext,
                                     result_sec_ext)
@@ -38,13 +33,11 @@ names(all_primary_secondary) <- c("grid",
                                      "cascading_compart",
                                      "diff_species_persistence")
 
-head(all_primary_secondary)
+#head(all_primary_secondary)
 #View(all_primary_secondary)
 
 #Save
-#save(all_primary_secondary, file = "all_primary_secondary_6se23.RData")
-#save(grids_grilo_shape, file = "grids_grilo_shape_6se23.RData")
+#save(all_primary_secondary, file = "all_primary_secondary_30SET23.RData")
 
-primary_and_cascading_effects <- merge(x=grids_grilo_shape, y=all_primary_secondary, by.x="PageName", by.y= "grid")
-#terra::writeVector(primary_and_cascading_effects, "primary_and_cascading_effects.shp")
-
+primary_and_cascading_effects <- merge(x=grids_grilo_shape, y=all_primary_secondary, by.x="PageNumber", by.y= "grid")
+#terra::writeVector(primary_and_cascading_effects, "primary_and_cascading_effects30SET23.shp")

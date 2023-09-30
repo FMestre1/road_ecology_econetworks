@@ -1,24 +1,20 @@
 ################################################################################
 ################################################################################
-#                             SCRIPT 7 - xxxx
+#               SCRIPT 7 - TROPHIC LEVEL OF MOST VULNERABLE SPECIES
 ################################################################################
 ################################################################################
 
 #FMestre
 #28-09-2023
 
-################################################################################
-#      What is the vulnerability of the species in each trophic level?
-################################################################################
-#FMestre
-#06-09-2023
-
+#Load packages
 library(cheddar)
 library(ggplot2)
+library(dplyr)
 
 vuln_tl_table <- data.frame(matrix(nrow = length(local_fw_MAIORANO), ncol = 3))
 names(vuln_tl_table) <- c("top_vuln", "intermediate_vuln", "basal_vuln")
-head(vuln_tl_table)
+#head(vuln_tl_table)
 
 for(j in 1:length(local_fw_MAIORANO)){
 
@@ -69,9 +65,9 @@ message(j)
 
 }
 
-nrow(vuln_tl_table)
-str(vuln_tl_table)
-head(vuln_tl_table)
+#nrow(vuln_tl_table)
+#str(vuln_tl_table)
+#head(vuln_tl_table)
 
 top1 <- data.frame(vuln_tl_table$top_vuln, rep("top", nrow(vuln_tl_table)))
 int1 <- data.frame(vuln_tl_table$intermediate_vuln, rep("intermediate", nrow(vuln_tl_table)))
@@ -100,9 +96,7 @@ tl_vuln2 + labs(fill = "trophic level")
 
 #save(vuln_tl_table, file = "vuln_tl_table_fig2a.RData")
 
-# Compute the analysis of variance
-names(vuln_tl_table)
-
+# Compute an analysis of variance
 vulnerability_tl_aov <- aov(vulnerability ~ tl, data = vuln_tl_table)
 # Summary of the analysis
 summary(vulnerability_tl_aov)

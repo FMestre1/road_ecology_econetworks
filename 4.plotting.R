@@ -445,11 +445,11 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
   
   if(any(!is.na(local_fw_MAIORANO[[i]]))){
     nr_lost_interactions_cascading_RELATIVE[i,1] <- local_fw_MAIORANO[[i]]$properties$title
-    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_cascading_RELATIVE[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_cascading_RELATIVE[i,2]<-0
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_cascading_RELATIVE[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_cascading_RELATIVE[i,2] <- 0
   }
   
 }
 
-lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions, by.x="PageName", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions.shp")
+lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_30SET23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions, "lost_interactions")
