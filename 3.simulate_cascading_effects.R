@@ -158,41 +158,25 @@ names(result_sec_ext_pair_pagenumber_pagename)
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pair_pagenumber_pagename, by.x="PageName", by.y= "PageName")
 #terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_29set23.shp")
 
-#Proportion of top, intermediate and basal nodes before and after
-fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
-names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
-                                                   "AFTER__top_level", "AFTER_Interm_level", "AFTER_basal_level", "changed?") 
+################################################################################
+# 2. How many interactions lost? - with primary extinctions
+################################################################################
 
-#LOOP
-for(i in 1:length(local_fw_MAIORANO)){
+nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED), ncol = 2))
+names(nr_lost_interactions_sec) <- c("grid","lost_interactions")
+#head(nr_lost_interactions_prim)
+
+for(i in 1:nrow(nr_lost_interactions_sec)){
   
-  before_net <- local_fw_MAIORANO[[i]]
-  after_net <- local_fw_MAIORANO_REMOVED[[i]]
-  #
-  
-  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
-  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
-  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
-  #
-  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
-  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
-  if(unique(!is.na(after_net)))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
-  #
-  if(unique(!is.na(before_net)) && unique(!is.na(after_net))){
-    if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
-      
-      fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
-      
-    } else fractions_top_intermediate_basal_nodes$`changed?`[i] <- "yes"
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_lost_interactions_sec[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_prim[i,2]<-0
   }
-  
-  message(i)
   
 }
 
-#head(fractions_top_intermediate_basal_nodes)
-#View(fractions_top_intermediate_basal_nodes)
+names(grids_grilo_shape)
+names(nr_lost_interactions_sec)
 
-#Load & Save
-#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_29set23.RData")
-#load("fractions_top_intermediate_basal_nodes_29set23.RData")
+lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_30SET23.shp")

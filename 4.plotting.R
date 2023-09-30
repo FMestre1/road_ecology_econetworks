@@ -14,8 +14,44 @@ library(ggplot2)
 # 1. Boxplots of the fraction of top, intermediate, and basal nodes
 ################################################################################
 
-head(fractions_top_intermediate_basal_nodes)
+#Proportion of top, intermediate and basal nodes before and after
+fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
+names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
+                                                   "AFTER__top_level", "AFTER_Interm_level", "AFTER_basal_level", "changed?") 
+
+#LOOP
+for(i in 1:length(local_fw_MAIORANO)){
+  
+  before_net <- local_fw_MAIORANO[[i]]#before disturbance
+  after_net <- local_fw_MAIORANO_REMOVED[[i]]#after cascading effects
+  #
+  
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_top_level[i] <- cheddar::FractionTopLevelNodes(before_net)
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_Interm_level[i] <- cheddar::FractionIntermediateNodes(before_net)
+  if(unique(!is.na(before_net))) fractions_top_intermediate_basal_nodes$BEFORE_basal_level[i] <- cheddar::FractionBasalNodes(before_net)
+  #
+  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER__top_level[i] <- cheddar::FractionTopLevelNodes(after_net)
+  if(unique(!is.na(after_net))) fractions_top_intermediate_basal_nodes$AFTER_Interm_level[i] <- cheddar::FractionIntermediateNodes(after_net)
+  if(unique(!is.na(after_net)))fractions_top_intermediate_basal_nodes$AFTER_basal_level[i] <- cheddar::FractionBasalNodes(after_net)
+  #
+  if(unique(!is.na(before_net)) && unique(!is.na(after_net))){
+    if(cheddar::NumberOfNodes(before_net) == cheddar::NumberOfNodes(after_net)) {
+      
+      fractions_top_intermediate_basal_nodes$`changed?`[i] <- "no"
+      
+    } else fractions_top_intermediate_basal_nodes$`changed?`[i] <- "yes"
+  }
+  
+  message(i)
+  
+}
+#head(fractions_top_intermediate_basal_nodes)
 #View(fractions_top_intermediate_basal_nodes)
+
+#Load & Save
+#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_30set23.RData")
+#load("fractions_top_intermediate_basal_nodes_30set23.RData")
+
 
 before_nt <- fractions_top_intermediate_basal_nodes[,1:4]
 after_nt <- fractions_top_intermediate_basal_nodes[,c(1,5,6,7)]
@@ -63,7 +99,7 @@ basal2 <- basal + geom_boxplot(aes(fill = before_after),) +
 basal2
 
 ################################################################################
-# 3. In which trophic level are the removed species? 
+# 2. In which trophic level are the removed species? 
 ################################################################################
 
 extinctions_levels <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
@@ -75,7 +111,7 @@ names(extinctions_levels) <- c("grid",
                                "PRI_SEC_interm_level",
                                "PRI_SEC_basal_level"
 ) 
-#AQUI
+
 #LOOP
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
@@ -129,17 +165,15 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   message(i)
   
 }
-
 #View(extinctions_levels)
 
-#Save
-#save(extinctions_levels, file = "extinctions_levels_07_09_2023.RData")
-#load("extinctions_levels_07_09_2023.RData")
+#Save & Load
+#save(extinctions_levels, file = "extinctions_levels_30SET23.RData")
+#load("extinctions_levels_30SET23.RData")
 
 # Plot it...
 
 #1. From original to primary extinctions
-
 top_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_top_level, "top")
 mid_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_interm_level, "intermediate")
 basal_orig_prim <- data.frame(extinctions_levels$ORIG_PRI_basal_level, "basal")
@@ -166,7 +200,7 @@ rem_orig_prim2 <- rem_orig_prim + geom_violin(aes(fill = level),) +
 rem_orig_prim2 + labs(fill = "trophic level")
 #YES
 
-#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b.RData")
+#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b_30SET23.RData")
 
 # Compute the analysis of variance
 names(removed_position_orig_prim)
@@ -176,7 +210,6 @@ orig_prim_aov <- aov(rate ~ level, data = removed_position_orig_prim)
 summary(orig_prim_aov)
 
 #2. From primary extinctions to cascading effects
-
 top_prim_sec <- data.frame(extinctions_levels$PRI_SEC_top_level, "top")
 mid_prim_sec <- data.frame(extinctions_levels$PRI_SEC_interm_level, "intermediate")
 basal_prim_sec <- data.frame(extinctions_levels$PRI_SEC_basal_level, "basal")
@@ -203,7 +236,7 @@ rem_prim_sec2 <- rem_prim_sec + geom_violin(aes(fill = level),) +
 rem_prim_sec2 + labs(fill = "trophic level") 
 #YES
 
-#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c.RData")
+#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c_30SET23.RData")
 
 # Compute the analysis of variance
 names(removed_position_prim_sec)
@@ -213,9 +246,8 @@ prim_sec_aov <- aov(rate ~ level, data = removed_position_prim_sec)
 summary(prim_sec_aov)
 
 #####################################################################################
-# 4. In each transition, how many species occupied a given position in the previous FW?
+# 3. In each transition, how many species occupied a given position in the previous FW?
 #####################################################################################
-#07-09-2023
 
 proportion_previous_level <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
 names(proportion_previous_level) <- c("grid", 
@@ -286,16 +318,14 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   message(i)
   
 }
+#View(proportion_previous_level)
 
-View(proportion_previous_level)
-
-#save(proportion_previous_level, file = "proportion_previous_level.RData")
-#load("proportion_previous_level.RData")
+#save(proportion_previous_level, file = "proportion_previous_level_30SET23.RData")
+#load("proportion_previous_level_30SET23.RData")
 
 # Plot it...
 
 #1. From original to primary extinctions
-
 top_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_top_level, "top")
 mid_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_interm_level, "intermediate")
 basal_orig_prim_v2 <- data.frame(proportion_previous_level$ORIG_PRI_basal_level, "basal")
@@ -324,7 +354,6 @@ rem_orig_prim2_v2 + labs(fill = "trophic level")
 #NOT
 
 #2. From primary extinctions to cascading effects
-
 top_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_top_level, "top")
 mid_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_interm_level, "intermediate")
 basal_prim_sec_v2 <- data.frame(proportion_previous_level$PRI_SEC_basal_level, "basal")
@@ -352,7 +381,7 @@ rem_prim_sec2_v2
 #NOT
 
 ################################################################################
-# 5. Species in each grid
+# 4. Species in each grid
 ################################################################################
 
 #grids_grilo_shape
@@ -371,21 +400,23 @@ for(i in 1:nrow(nr_species_per_grid)){
   
 }
 
-sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageName", by.y="grid")
-#terra::writeVector(sp_richness, "sp_richness.shp")
+names(grids_grilo_shape)
+names(nr_species_per_grid)
+
+sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageNumber", by.y="grid")
+#terra::writeVector(sp_richness, "sp_richness_30SET23.shp")
 #terra::plet(sp_richness, "sp_richness")
 
 ################################################################################
-# Species in each grid
+# 5. Coonectance
 ################################################################################
-#08-09-2023
 
 #grids_grilo_shape
 #local_fw_MAIORANO
 
 connectance_original_networks <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
 names(connectance_original_networks) <- c("grid","connectance")
-head(connectance_original_networks)
+#head(connectance_original_networks)
 
 for(i in 1:nrow(connectance_original_networks)){
   
@@ -396,27 +427,25 @@ for(i in 1:nrow(connectance_original_networks)){
   
 }
 
-connectance_original <- merge(x=grids_grilo_shape, y=connectance_original_networks, by.x="PageName", by.y="grid")
-#terra::writeVector(connectance_original, "connectance_08set23.shp")
+connectance_original <- merge(x=grids_grilo_shape, y=connectance_original_networks, by.x="PageNumber", by.y="grid")
+#terra::writeVector(connectance_original, "connectance_30set23.shp")
 #terra::plet(connectance_original, "connectance")
 
 ################################################################################
-# How many interactions lost? - with secondary extinctions
+# 6. How many interactions lost? - with secondary extinctions
 ################################################################################
-#23-06-2023 
 
-nr_lost_interactions <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
-names(nr_lost_interactions) <- c("grid","lost_interactions")
-head(nr_lost_interactions)
+nr_lost_interactions_cascading_RELATIVE <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
+names(nr_lost_interactions_cascading_RELATIVE) <- c("grid","lost_interactions")
 
 #local_fw_MAIORANO[[100]]
 #local_fw_MAIORANO_REMOVED[[100]]
 
-for(i in 1:nrow(nr_lost_interactions)){
+for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
   
   if(any(!is.na(local_fw_MAIORANO[[i]]))){
-    nr_lost_interactions[i,1] <- local_fw_MAIORANO[[i]]$properties$title
-    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions[i,2]<-0
+    nr_lost_interactions_cascading_RELATIVE[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_cascading_RELATIVE[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_cascading_RELATIVE[i,2]<-0
   }
   
 }

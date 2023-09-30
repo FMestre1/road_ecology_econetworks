@@ -106,20 +106,20 @@ result_prim_ext <- data.frame(
 )
 
 names(result_prim_ext)[1] <- "grid"
+#View(result_prim_ext)
+names(grids_grilo_shape)
+names(result_prim_ext)
 
-View(result_prim_ext)
-
-grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageName", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext.shp")
+grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
+#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_30SET23.shp")
 
 ################################################################################
-# How many interactions lost? - with primary extinctions
+# 2. How many interactions lost? - with primary extinctions
 ################################################################################
-#23-06-2023
 
 nr_lost_interactions_prim <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED_PRIMARY_EX), ncol = 2))
 names(nr_lost_interactions_prim) <- c("grid","lost_interactions")
-head(nr_lost_interactions_prim)
+#head(nr_lost_interactions_prim)
 
 for(i in 1:nrow(nr_lost_interactions)){
   
@@ -130,5 +130,8 @@ for(i in 1:nrow(nr_lost_interactions)){
   
 }
 
-lost_interactions_with_primary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim, by.x="PageName", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions.shp")
+names(grids_grilo_shape)
+names(nr_lost_interactions_prim)
+
+lost_interactions_with_primary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_30SET23.shp")
