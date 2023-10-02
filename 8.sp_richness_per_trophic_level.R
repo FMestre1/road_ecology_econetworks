@@ -200,6 +200,7 @@ tl_positions$group <- factor(tl_positions$group,
 #Plot
 tl_previous_nr <- ggplot(tl_positions, aes(x = group, y = tl))
 
+#Fig4
 tl_previous_nr2 <- tl_previous_nr + geom_violin(aes(fill = group),) +
   ylab("Trophic position") +
   xlab("Removed and remaining species in each step") +

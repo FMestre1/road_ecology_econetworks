@@ -133,5 +133,5 @@ for(i in 1:nrow(nr_lost_interactions_prim)){
 #names(grids_grilo_shape)
 #names(nr_lost_interactions_prim)
 
-lost_interactions_with_primary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_30SET23.shp")
+lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
+terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_30SET23_version_2.shp")
