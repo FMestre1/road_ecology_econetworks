@@ -200,7 +200,7 @@ rem_orig_prim2 <- rem_orig_prim + geom_violin(aes(fill = level),) +
 rem_orig_prim2 + labs(fill = "trophic level")
 #YES
 
-#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b_30SET23.RData")
+#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b_30SET23_NEW.RData")
 
 # Compute the analysis of variance
 names(removed_position_orig_prim)
@@ -236,7 +236,7 @@ rem_prim_sec2 <- rem_prim_sec + geom_violin(aes(fill = level),) +
 rem_prim_sec2 + labs(fill = "trophic level") 
 #YES
 
-#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c_30SET23.RData")
+#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c_30SET23_NEW.RData")
 
 # Compute the analysis of variance
 names(removed_position_prim_sec)

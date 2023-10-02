@@ -94,7 +94,7 @@ tl_vuln2 <- tl_vuln + geom_violin(aes(fill = tl),) +
 
 tl_vuln2 + labs(fill = "trophic level")
 
-#save(vuln_tl_table, file = "vuln_tl_table_fig2a.RData")
+#save(vuln_tl_table, file = "vuln_tl_table_fig2a_NEW.RData")
 
 # Compute an analysis of variance
 vulnerability_tl_aov <- aov(vulnerability ~ tl, data = vuln_tl_table)
