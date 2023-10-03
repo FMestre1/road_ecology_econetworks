@@ -215,3 +215,29 @@ result <- tl_positions %>%
 
 # Print the result
 print(result)
+
+################################################################################
+# 3.Creating map of initial number of interactions
+################################################################################
+
+#Networks
+local_fw_MAIORANO
+#Grids
+template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\template_grilo.shp")
+
+
+nr_interactions <- data.frame(matrix(ncol = 2, nrow = length(local_fw_MAIORANO)))
+names(nr_interactions) <- c("grid", "nr_interactions")
+
+for(i in 1:length(local_fw_MAIORANO)){
+  nr_interactions[i,1]  <- local_fw_MAIORANO[[i]]$properties$title
+  nr_interactions[i,2]  <- cheddar::NumberOfTrophicLinks(local_fw_MAIORANO[[i]])
+  message(i)
+}
+
+nr_interactions_spatial <- merge(x = template_grilo,
+      y = nr_interactions,
+      by.x = "PageNumber",
+      by.y = "grid")
+
+#terra::writeVector(nr_interactions_spatial, "nr_interactions_spatial_03SET23.shp")
