@@ -13,6 +13,7 @@ library(stringr)
 library(taxize)
 library(cheddar)
 library(NetIndices)
+library(igraph)
 
 ################################################################################
 # 1. Simulate extinctions without secondary extinctions
@@ -38,7 +39,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   if(any(!is.na(cheddar1_pex))){
     
     grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == fw_pagename, ]$grids_grilo_shape.kmkm2
-    removed_species <- cheddar1_pex$nodes[cheddar1_pex$nodes$Median_MAXroad.RM.1000.<=grid_road_density,]$node #Species to remove
+    removed_species <- cheddar1_pex$nodes[cheddar1_pex$nodes$Median_MAXroad.RM.1000. <= grid_road_density,]$node #Species to remove
     new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
     
     if(length(removed_species)!=0) cheddar2_pex <- RemoveNodes(cheddar1_pex, remove = removed_species, title = new_title, method = 'direct')
@@ -96,6 +97,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
   
 }
 
+#Load & Save
+#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_29set2023.RData")
 #save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_29set2023.RData")
 
 result_prim_ext <- data.frame(
