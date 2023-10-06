@@ -59,6 +59,8 @@ overall_basal <- cheddar::BasalNodes(maiorano_cheddar)
 overall_intermediate <- cheddar::IntermediateNodes(maiorano_cheddar)
 overall_top <- cheddar::TopLevelNodes(maiorano_cheddar)
 
+maiorano_cheddar
+#save(maiorano_cheddar, file = "maiorano_cheddar_06OUT23.RData")
 #save(overall_basal, file = "overall_basal.RData")
 #save(overall_intermediate, file = "overall_intermediate.RData")
 #save(overall_top, file = "overall_top.RData")
