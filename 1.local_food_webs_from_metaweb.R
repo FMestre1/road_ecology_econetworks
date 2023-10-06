@@ -305,8 +305,8 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
 }#END LOCAL
 
 #Load & Save
-#load("local_fw_MAIORANO_28SET23.RData")
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_28SET23.RData")
+#load("local_fw_MAIORANO_06OUT23.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_06OUT23.RData")
 
 class_list <- list()
 for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]

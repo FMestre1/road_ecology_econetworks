@@ -21,15 +21,10 @@ library(gridExtra)
 #TETRA‐EU 1.0: a species‐level trophic metaweb of European tetrapods.
 #Global Ecology and Biogeography, 29(9), 1452-1457.
 
-maiorano_metaweb <- read.csv("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
-rownames(maiorano_metaweb) <- maiorano_metaweb$X
-maiorano_metaweb <- maiorano_metaweb[,-1]
-#View(maiorano_metaweb)
-
 #CREATE IGRAPH NETWORK
 
 maiorano_igraph <- igraph::graph_from_adjacency_matrix(as.matrix(t(maiorano_metaweb)), mode = "directed")
-plot(maiorano_igraph)
+#plot(maiorano_igraph)
 #igraph::vertex(maiorano_igraph)
 
 gorder(maiorano_igraph) #nr nodes
@@ -63,6 +58,10 @@ maiorano_cheddar <- cheddar::Community(nodes, properties = list(title = "MMetawe
 overall_basal <- cheddar::BasalNodes(maiorano_cheddar)
 overall_intermediate <- cheddar::IntermediateNodes(maiorano_cheddar)
 overall_top <- cheddar::TopLevelNodes(maiorano_cheddar)
+
+#save(overall_basal, file = "overall_basal.RData")
+#save(overall_intermediate, file = "overall_intermediate.RData")
+#save(overall_top, file = "overall_top.RData")
 
 overall_basal_2 <- data.frame(overall_basal, rep("basal", length(overall_basal)))
 overall_intermediate_2 <- data.frame(overall_intermediate, rep("intermediate", length(overall_intermediate)))
@@ -205,7 +204,7 @@ for(i in 1:nrow(relative_tl_effects)){
 #View(relative_tl_effects)
 
 #Save & Load
-#save(relative_tl_effects, file = "relative_tl_effects_05OUT23.RData")
+#save(relative_tl_effects, file = "relative_tl_effects_06OUT23.RData")
 #load("relative_tl_effects_05OUT23.RData")
 
 # Plot it...
@@ -274,9 +273,9 @@ grid.arrange(tl_vuln2_v2,
              nrow = 3)
 
 #Save data
-#save(all_species_vulnerability_maiorano_position, file = "fig2a_05OUT23.RData")
-#save(removed_position_orig_prim2, file = "fig2b_05OUT23.RData")
-#save(removed_position_prim_casc2, file = "fig2c_05OUT23.RData")
+#save(all_species_vulnerability_maiorano_position, file = "fig2a_06OUT23.RData")
+#save(removed_position_orig_prim2, file = "fig2b_06OUT23.RData")
+#save(removed_position_prim_casc2, file = "fig2c_06OUT23.RData")
 
 ################################################################################
 #    New figure with the absolute number of species per trophic level
@@ -332,8 +331,8 @@ species_tl_step_plot2 <- species_tl_step_plot + geom_violin(aes(fill = level_ste
   ylab("Number of Species per Trophic Level") +
   xlab("Trophic level - Time step") +
   scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E",
-                               "#DA8585", "#CAC658", "#78C369",
-                               "#C6AAAE", "#DCDCD0", "#C4D2C4")) +
+                               "#E70F00", "#E69F00", "#1E811E",
+                               "#E70F00", "#E69F00", "#1E811E")) +
   ggtitle("Number of Species")
 
 species_tl_step_plot2
@@ -342,7 +341,7 @@ species_tl_step_plot2
 # Plot per trophic level
 ################################################################################
 
-levels(species_tl_step$level_step)
+#levels(species_tl_step$level_step)
 
 top_tl_species <- species_tl_step[species_tl_step$level_step %in% c("top_start", "top_prim" , "top_sec"), ]      
 mid_tl_species <- species_tl_step[species_tl_step$level_step %in% c("intermediate_start", "intermediate_prim" , "intermediate_sec"), ]      

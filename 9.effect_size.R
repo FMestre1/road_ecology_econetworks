@@ -31,9 +31,9 @@ par(mar=c(4,8,1,1))
 x=c(1,2,3)
 
 #Values for point estimate and CI
-avg=c(0.03,0.04,-0.04)
-lower=c(-0.01,-0.01,-0.08)
-upper=c(0.07,0.08,-0.00)
+avg=c(0.02,0.06,-0.05)
+lower=c(-0.02,0.02,-0.09)
+upper=c(0.06,0.10,-0.01)
 
 #Plot
 plot(1, type="n", ylab="", yaxt="n", xlab="Cohen's d (IC95%)", xlim=c(-0.5, .5), ylim=c(0, 4), main="")

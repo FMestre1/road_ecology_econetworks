@@ -49,8 +49,8 @@ for(i in 1:length(local_fw_MAIORANO)){
 #View(fractions_top_intermediate_basal_nodes)
 
 #Load & Save
-#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_30set23.RData")
-#load("fractions_top_intermediate_basal_nodes_30set23.RData")
+#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_06OUT23.RData")
+#load("fractions_top_intermediate_basal_nodes_06OUT23.RData")
 
 
 before_nt <- fractions_top_intermediate_basal_nodes[,1:4]
@@ -168,8 +168,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
 #View(extinctions_levels)
 
 #Save & Load
-#save(extinctions_levels, file = "extinctions_levels_30SET23.RData")
-#load("extinctions_levels_30SET23.RData")
+#save(extinctions_levels, file = "extinctions_levels_06OUT23.RData")
+#load("extinctions_levels_06OUT23.RData")
 
 # Plot it...
 
@@ -320,8 +320,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
 }
 #View(proportion_previous_level)
 
-#save(proportion_previous_level, file = "proportion_previous_level_30SET23.RData")
-#load("proportion_previous_level_30SET23.RData")
+#save(proportion_previous_level, file = "proportion_previous_level_06OUT23.RData")
+#load("proportion_previous_level_06OUT23.RData")
 
 # Plot it...
 
@@ -404,7 +404,7 @@ names(grids_grilo_shape)
 names(nr_species_per_grid)
 
 sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageNumber", by.y="grid")
-#terra::writeVector(sp_richness, "sp_richness_30SET23.shp")
+#terra::writeVector(sp_richness, "sp_richness_06OUT23.shp")
 #terra::plet(sp_richness, "sp_richness")
 
 ################################################################################
@@ -428,7 +428,7 @@ for(i in 1:nrow(connectance_original_networks)){
 }
 
 connectance_original <- merge(x=grids_grilo_shape, y=connectance_original_networks, by.x="PageNumber", by.y="grid")
-#terra::writeVector(connectance_original, "connectance_30set23.shp")
+#terra::writeVector(connectance_original, "connectance_06OUT23.shp")
 #terra::plet(connectance_original, "connectance")
 
 ################################################################################
@@ -451,5 +451,5 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
 }
 
 lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_30SET23.shp")
+#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_06OUT23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions, "lost_interactions")

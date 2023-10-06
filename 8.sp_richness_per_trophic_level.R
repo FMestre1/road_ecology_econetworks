@@ -39,10 +39,10 @@ for(i in 1:nrow(nr_species_per_grid_per_tl)){
 
 #saving as shapefile
 sp_richness_per_trophic_level <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl, by.x="PageNumber", by.y="grid")
-#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level_30SET23.shp")
-terra::plet(sp_richness_per_trophic_level, "top")
-terra::plet(sp_richness_per_trophic_level, "intermediate")
-terra::plet(sp_richness_per_trophic_level, "basal")
+#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level_06OUT23.shp")
+#terra::plet(sp_richness_per_trophic_level, "top")
+#terra::plet(sp_richness_per_trophic_level, "intermediate")
+#terra::plet(sp_richness_per_trophic_level, "basal")
 
 ################################################################################
 #             1. Creating map o relative loss of interactions 
@@ -73,7 +73,7 @@ for(i in 1:nrow(nr_lost_interactions_prim_RELATIVE)){
 }
 
 lost_interactions_with_primary_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE_30_SET23.shp")
+#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE_06OUT23.shp")
 #terra::plet(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_relative")
 
 
@@ -100,7 +100,7 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
 }
 
 lost_interactions_with_sec_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE_30SET23.shp")
+#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE_06OUT23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_relative")
 
 ################################################################################
@@ -225,7 +225,6 @@ local_fw_MAIORANO
 #Grids
 template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\template_grilo.shp")
 
-
 nr_interactions <- data.frame(matrix(ncol = 2, nrow = length(local_fw_MAIORANO)))
 names(nr_interactions) <- c("grid", "nr_interactions")
 
@@ -240,4 +239,4 @@ nr_interactions_spatial <- merge(x = template_grilo,
       by.x = "PageNumber",
       by.y = "grid")
 
-#terra::writeVector(nr_interactions_spatial, "nr_interactions_spatial_03SET23.shp")
+#terra::writeVector(nr_interactions_spatial, "nr_interactions_spatial_06OUT23.shp")

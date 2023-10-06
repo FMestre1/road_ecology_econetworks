@@ -74,7 +74,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
     removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000. <= grid_road_density,]$node #Species to remove
     new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
     
-    if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'cascade')
+    if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'secondary')
     if(length(removed_species)==0) cheddar2 <- cheddar1
     
     local_fw_MAIORANO_REMOVED[[i]] <- cheddar2 #Adding to new list
@@ -156,7 +156,7 @@ result_sec_ext_pair_pagenumber_pagename <- merge(x = pair_pagenumber_pagename,
 names(result_sec_ext_pair_pagenumber_pagename)
 
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pair_pagenumber_pagename, by.x="PageName", by.y= "PageName")
-#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_29set23.shp")
+#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_06out23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -170,7 +170,7 @@ for(i in 1:nrow(nr_lost_interactions_sec)){
   
   if(any(!is.na(local_fw_MAIORANO[[i]]))){
     nr_lost_interactions_sec[i,1] <- local_fw_MAIORANO[[i]]$properties$title
-    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_prim[i,2]<-0
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_prim[i,2] <- 0
   }
   
 }
@@ -179,4 +179,4 @@ names(grids_grilo_shape)
 names(nr_lost_interactions_sec)
 
 lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_30SET23.shp")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_06OUT23.shp")

@@ -98,8 +98,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
 }
 
 #Load & Save
-#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_29set2023.RData")
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_29set2023.RData")
+#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_06OUT2023.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_06OUT2023.RData")
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EX),
