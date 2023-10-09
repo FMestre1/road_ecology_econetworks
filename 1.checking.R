@@ -7,6 +7,13 @@
 #FMestre
 #09-10-2023
 
+################################# 1. Metaweb ###################################
+
+#Cheddar metaweb
+maiorano_cheddar
+
+############################### 2. Redes locais ################################ 
+
 #Look into a few networks
 rede0 <- local_fw_MAIORANO[[6]] #initial network
 rede1 <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[6]] #after primary extinctions
