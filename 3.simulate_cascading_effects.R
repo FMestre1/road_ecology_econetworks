@@ -136,6 +136,32 @@ species_loss
 connectance_dif
 compart_dif
 
+################################################################################
+#CHECK
+#Look into a few networks
+rede0 <- local_fw_MAIORANO[[6]]
+rede1 <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[6]]
+rede2 <- local_fw_MAIORANO_REMOVED[[6]]
+
+plot(local_fw_MAIORANO[[6]])
+plot(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[6]])
+plot(local_fw_MAIORANO_REMOVED[[6]])
+
+length(rede0$nodes$node)
+length(rede1$nodes$node)
+length(rede2$nodes$node)
+
+#Extintas em primary ext.
+rede0$nodes$node[!(rede0$nodes$node %in% rede1$nodes$node)]
+
+#Extintas em secondary ext.
+rede1$nodes$node[!(rede1$nodes$node %in% rede2$nodes$node)]
+
+#Espécies com threshold mais baixo
+head(rede0$nodes[order(rede0$nodes$Median_MAXroad.RM.1000.), ], 5)
+
+################################################################################
+
 #Create data frame
 result_sec_ext <- data.frame(
   names(local_fw_MAIORANO),

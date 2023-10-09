@@ -40,7 +40,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
     
     grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == fw_pagename, ]$grids_grilo_shape.kmkm2
     removed_species <- cheddar1_pex$nodes[cheddar1_pex$nodes$Median_MAXroad.RM.1000. <= grid_road_density,]$node #Species to remove
-    new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
+    new_title <- paste0("Removed Species ", cheddar1_pex$properties$title, "_", fw_pagename)
     
     if(length(removed_species)!=0) cheddar2_pex <- RemoveNodes(cheddar1_pex, remove = removed_species, title = new_title, method = 'direct')
     if(length(removed_species)==0) cheddar2_pex <- cheddar1_pex
@@ -98,8 +98,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
 }
 
 #Load & Save
-#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_06OUT2023.RData")
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_06OUT2023.RData")
+#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_09OUT2023.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_09OUT2023.RData")
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EX),
@@ -114,7 +114,7 @@ names(result_prim_ext)[1] <- "grid"
 #names(result_prim_ext)
 
 grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_30SET23.shp")
+#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_09OUT23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -137,4 +137,4 @@ for(i in 1:nrow(nr_lost_interactions_prim)){
 #names(nr_lost_interactions_prim)
 
 lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
-terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_30SET23_version_2.shp")
+#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_09OUT23_version_2.shp")
