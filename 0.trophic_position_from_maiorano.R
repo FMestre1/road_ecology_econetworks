@@ -21,16 +21,7 @@ library(gridExtra)
 #TETRA‐EU 1.0: a species‐level trophic metaweb of European tetrapods.
 #Global Ecology and Biogeography, 29(9), 1452-1457.
 
-#CREATE IGRAPH NETWORK
-
-maiorano_igraph <- igraph::graph_from_adjacency_matrix(as.matrix(t(maiorano_metaweb)), mode = "directed")
-#plot(maiorano_igraph)
-#igraph::vertex(maiorano_igraph)
-
-gorder(maiorano_igraph) #nr nodes
-gsize(maiorano_igraph) #nr interactions
-
-#CREATE CHEDDAR NETWORK
+#1.CREATE CHEDDAR NETWORK
 
 nodes <- as.data.frame(colnames(maiorano_metaweb))
 colnames(nodes) <- "node"
@@ -77,11 +68,40 @@ overall_previous_positions <- rbind(overall_top_2,
                                     overall_intermediate_2,
                                     overall_basal_2)
 
-
 #Compute trophic height
 #cheddar::TrophicHeight(maiorano_cheddar, include.isolated=TRUE)
 #ERROR
 #This network has a lot of paths, possibly too many to compute
+
+
+#2.CREATE IGRAPH NETWORK
+#Required function
+
+ToIgraph <- function(community, weight=NULL)
+{
+  if(is.null(TLPS(community)))
+  {
+    stop('The community has no trophic links')
+  }
+  else
+  {
+    tlps <- TLPS(community, link.properties=weight)
+    if(!is.null(weight))
+    {
+      tlps$weight <- tlps[,weight]
+    }
+    return (graph.data.frame(tlps,
+                             vertices=NPS(community),
+                             directed=TRUE))
+  }
+}
+
+maiorano_igraph <- ToIgraph(maiorano_cheddar)
+#plot(maiorano_igraph)
+#igraph::vertex(maiorano_igraph)
+
+gorder(maiorano_igraph) #nr nodes
+gsize(maiorano_igraph) #nr interactions
 
 ################################################################################
 #                                   NEW FIG2
@@ -340,7 +360,7 @@ species_tl_step_plot2 <- species_tl_step_plot + geom_violin(aes(fill = level_ste
 species_tl_step_plot2
 
 ################################################################################
-# Plot per trophic level
+#                             Plot per trophic level
 ################################################################################
 
 #levels(species_tl_step$level_step)

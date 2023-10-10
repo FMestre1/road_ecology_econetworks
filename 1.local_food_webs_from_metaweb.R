@@ -100,7 +100,7 @@ iucn <- data.frame(rbind(i_bird, i_mammal))
 #View(iucn)
 
 ################################################################################
-# 1. Maiorano et al European Metaweb of trophic interactions             
+# 1. Maiorano et al. European Metaweb of trophic interactions             
 ################################################################################
 
 #Maiorano, L., Montemaggiori, A., Ficetola, G. F., O’connor, L., & Thuiller, W. (2020). 
@@ -171,8 +171,77 @@ table(is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & !is.na(s
 #species in maiorano, not grilo 
 table(!is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & is.na(species_grilo_merged_maiorano$all_species_vulnerability.Species)) 
 
+
 ################################################################################
-# 3. Creating local networks
+#   3.Create a table species taxonomy
+################################################################################
+#AQUI
+head(species_grilo_merged_maiorano_complete) #common species in both datasets matched by GBIFid
+head(all_species_vulnerability_1) #species vulnerability
+
+tax_table <- merge(x=all_species_vulnerability_1,
+                   y=species_grilo_merged_maiorano_complete,
+                   by.x="gbif_id",
+                   by.y="gbif_id",
+                   all=TRUE
+  )
+
+#View(tax_table)
+
+tax_table_2 <- tax_table[complete.cases(tax_table),]
+tax_table_2 <- tax_table_2[,-c(2,4:5)]
+#View(tax_table_2)
+
+#Get class, order, family
+
+tax_table_2_class <- c()
+tax_table_2_order <- c()
+tax_table_2_family <- c()
+
+for(i in 1:nrow(tax_table_2)){
+
+  sp_m <- tax_table_2$maiorano[i]
+  sp_g <- tax_table_2$grilo[i]
+  
+  if(!identical(sp_m, sp_g)){
+    
+    df_tax_m <- taxize::tax_name(sp_m, get = c("class", "order", "family"), db = 'itis')
+    df_tax_g <- taxize::tax_name(sp_g, get = c("class", "order", "family"), db = 'itis')
+    
+    class_m <- df_tax_m$class
+    order_m <- df_tax_m$order
+    family_m <- df_tax_m$family
+    class_g <- df_tax_g$class
+    order_g <- df_tax_g$order
+    family_g <- df_tax_g$family
+    
+    if(is.na(class_m) && !is.na(class_g)) class_mg <- class_g
+    if(!is.na(class_m) && is.na(class_g)) class_mg <- class_m
+    
+    if(is.na(family_m) && !is.na(family_g)) family_mg <- family_g 
+    if(!is.na(family_m) && is.na(family_g)) family_mg <- family_m
+    
+    if(is.na(order_m) && !is.na(order_g)) order_mg <- order_g
+    if(!is.na(order_m) && is.na(order_g)) order_mg <- order_m
+    
+    tax_table_2_class[i] <- class_mg
+    tax_table_2_order[i] <- order_mg
+    tax_table_2_family[i] <- family_mg
+    
+  }
+  
+  df_tax <- taxize::tax_name(sp_m, get = c("class", "order", "family"), db = 'itis')
+  
+  tax_table_2_class[i] <- df_tax$class
+  tax_table_2_order[i] <- df_tax$order
+  tax_table_2_family[i] <- df_tax$family
+  
+  message(i)
+  
+    }
+
+################################################################################
+#   3.Creating local networks
 ################################################################################
 
 local_fw_MAIORANO <- vector(mode = "list", length = length(template_grilo$PageNumber))
