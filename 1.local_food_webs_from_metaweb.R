@@ -240,13 +240,16 @@ for(i in 1:nrow(tax_table_2)){
   
 }
 
-tax_table_2 <- data.frame(tax_table_2, 
+tax_table_3 <- data.frame(tax_table_2, 
                           tax_table_2_class, 
                           tax_table_2_order, 
                           tax_table_2_family
                           )
 
-names(tax_table_2)
+names(tax_table_3) <- c("gbif_id", "grilo_threshold", "IUCN_status_grilo", "species_maiorano",
+                        "species_grilo", "class", "order", "family")
+
+#View(tax_table_3)
 
 #Save
 #save(tax_table_3, file = "tax_table_3_10OUT23.RData")
