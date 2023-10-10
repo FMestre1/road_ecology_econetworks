@@ -171,7 +171,6 @@ table(is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & !is.na(s
 #species in maiorano, not grilo 
 table(!is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & is.na(species_grilo_merged_maiorano$all_species_vulnerability.Species)) 
 
-
 ################################################################################
 #   3.Create a table species taxonomy
 ################################################################################
@@ -250,12 +249,13 @@ names(tax_table_3) <- c("gbif_id", "grilo_threshold", "IUCN_status_grilo", "spec
                         "species_grilo", "class", "order", "family")
 
 #View(tax_table_3)
+#head(tax_table_3)
 
 #Save
 #save(tax_table_3, file = "tax_table_3_10OUT23.RData")
 
 ################################################################################
-#   3.Creating local networks
+#   4.Creating local networks
 ################################################################################
 
 local_fw_MAIORANO <- vector(mode = "list", length = length(template_grilo$PageNumber))
@@ -286,6 +286,23 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
     names(nodes1)[1] <- "node"
     rownames(nodes1) <- 1:nrow(nodes1)
     
+    nodes1_maiorano_names <- species_grilo_merged_maiorano_complete[species_grilo_merged_maiorano_complete$grilo %in% nodes1$node,]$maiorano
+    tl_modes1 <- metaweb_TL[metaweb_TL$species %in% nodes1_maiorano_names,]
+    tl_nodes1_join_grilo_names <- merge(x=species_grilo_merged_maiorano_complete,
+          y=tl_modes1,
+          by.x="maiorano",
+          by.y="species"
+    )
+    
+nodes1 <- merge(x=nodes1,
+      y=tl_nodes1_join_grilo_names,
+      by.x="node",
+      by.y="grilo")
+
+head(nodes1)
+nodes1 <- nodes1[,-c(3,4,6)]
+names(nodes1)[5] <- "gbif_id"
+
     for(x in 1:nrow(nodes1)){#Replace the name from that in the occurrence dataset to that in the metaweb - START
             #using this table species_grilo_merged_maiorano_complete
       node1_0 <- unique(data.frame(which(nodes1$gbif_id[x] == species_grilo_merged_maiorano_complete$gbif_id, arr.ind = TRUE))[,1])
@@ -396,3 +413,4 @@ for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO
 
 how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
 #View(how_many_species_df)
+

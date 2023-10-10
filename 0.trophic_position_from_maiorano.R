@@ -103,6 +103,25 @@ maiorano_igraph <- ToIgraph(maiorano_cheddar)
 gorder(maiorano_igraph) #nr nodes
 gsize(maiorano_igraph) #nr interactions
 
+
+################################################################################
+#                 Computing trophic height in the Metaweb
+################################################################################
+
+
+library(NetIndices)
+
+maiorano_cheddar_matrix <- cheddar::PredationMatrix(maiorano_cheddar)
+metaweb_TL <- NetIndices::TrophInd(maiorano_cheddar_matrix)
+metaweb_TL <- data.frame(rownames(metaweb_TL), metaweb_TL$TL)
+names(metaweb_TL) <- c("species", "TL")
+head(metaweb_TL)
+head(metaweb_TL[order(metaweb_TL$TL, decreasing = TRUE), ], 30)
+
+#TrophicHeight(local_fw_MAIORANO[[1]])
+#ChainAveragedTrophicLevel(local_fw_MAIORANO[[1]])
+#TrophicHeight(maiorano_cheddar)
+
 ################################################################################
 #                                   NEW FIG2
 ################################################################################
