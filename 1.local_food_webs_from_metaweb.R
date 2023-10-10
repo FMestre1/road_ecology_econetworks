@@ -238,7 +238,18 @@ for(i in 1:nrow(tax_table_2)){
   
   message(i)
   
-    }
+}
+
+tax_table_2 <- data.frame(tax_table_2, 
+                          tax_table_2_class, 
+                          tax_table_2_order, 
+                          tax_table_2_family
+                          )
+
+names(tax_table_2)
+
+#Save
+#save(tax_table_3, file = "tax_table_3_10OUT23.RData")
 
 ################################################################################
 #   3.Creating local networks
