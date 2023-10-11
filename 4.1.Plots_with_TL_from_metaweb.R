@@ -22,15 +22,17 @@ head(local_fw_MAIORANO[[1]]$nodes) # original FW
 head(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[1]]$nodes) # primary extinctions FW
 head(local_fw_MAIORANO_REMOVED[[1]]$nodes) # cascading effects FW
 #
+#save(new_properties_ORIGINAL, file = "new_properties_ORIGINAL.RData")
+#save(new_properties_PRIMARY, file = "new_properties_PRIMARY.RData")
+#save(new_properties_SECONDARY, file = "new_properties_SECONDARY.RData")
+#
+#overall_previous_positions #categorical classification of the TL
+#head(metaweb_TL) #TLevel
+#head(tax_table_3)
 
 new_properties_ORIGINAL <- vector(mode='list', length=length(local_fw_MAIORANO))
 new_properties_PRIMARY <- vector(mode='list', length=length(local_fw_MAIORANO_REMOVED_PRIMARY_EX))
 new_properties_SECONDARY <- vector(mode='list', length=length(local_fw_MAIORANO_REMOVED))
-
-overall_previous_positions #categorical classification of the TL
-head(metaweb_TL) #TLevel
-head(tax_table_3)
-
 
 for(i in 1:length(local_fw_MAIORANO)){
 
@@ -56,6 +58,19 @@ message(i)
 names(new_properties_ORIGINAL) <- names(local_fw_MAIORANO)
 names(new_properties_PRIMARY) <- names(local_fw_MAIORANO_REMOVED_PRIMARY_EX)
 names(new_properties_SECONDARY) <- names(local_fw_MAIORANO_REMOVED)
+#
+plot(local_fw_MAIORANO[[3]]) # original FW
+plot(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[3]]) # primary extinctions FW
+plot(local_fw_MAIORANO_REMOVED[[3]]) # cascading effects FW
+#
+View(local_fw_MAIORANO[[3]]$nodes) # original FW
+View(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[3]]$nodes) # primary extinctions FW
+View(local_fw_MAIORANO_REMOVED[[3]]$nodes) # cascading effects FW
+#
+View(new_properties_ORIGINAL[[1]])
+View(new_properties_PRIMARY[[1]])
+View(new_properties_SECONDARY[[1]])
+
 
 ################################################################################
 # FIGURE 1 - MAP OF NR OF NODES, NR OF INTERACTIONS, ROAD DENSITY, LOST INTERACTIONS (SECONDARY)

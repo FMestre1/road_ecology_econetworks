@@ -12,6 +12,7 @@ library(igraph)
 library(cheddar)
 library(ggplot2)
 library(gridExtra)
+library(NetIndices)
 
 ################################################################################
 #                       Loading Maiorano´s dataset
@@ -108,9 +109,6 @@ gsize(maiorano_igraph) #nr interactions
 ################################################################################
 #                 Computing trophic height in the Metaweb
 ################################################################################
-
-
-library(NetIndices)
 
 maiorano_cheddar_matrix <- cheddar::PredationMatrix(maiorano_cheddar)
 metaweb_TL <- NetIndices::TrophInd(maiorano_cheddar_matrix)
