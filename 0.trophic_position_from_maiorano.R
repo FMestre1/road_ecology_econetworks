@@ -68,7 +68,7 @@ overall_previous_positions <- rbind(overall_top_2,
                                     overall_intermediate_2,
                                     overall_basal_2)
 
-save(overall_previous_positions, file = "overall_previous_positions_11OUT23.RData")
+#save(overall_previous_positions, file = "overall_previous_positions_11OUT23.RData")
 
 #Compute trophic height
 #cheddar::TrophicHeight(maiorano_cheddar, include.isolated=TRUE)

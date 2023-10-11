@@ -155,11 +155,18 @@ for(i in 1:length(id_grilo_data)){
 }
 
 id_grilo_data <- data.frame(all_species_vulnerability$Species, id_grilo_data)
+#head(id_grilo_data)
+
 names(id_grilo_data)[2] <- "gbif_id"
+
 head(id_grilo_data)
+head(id_maiorano_data)
 
 #2.3. Using these ids to merge the dataset
 species_grilo_merged_maiorano <- merge(id_maiorano_data, id_grilo_data, all=TRUE)
+#save(species_grilo_merged_maiorano, file = "species_grilo_merged_maiorano.RData")
+#load("species_grilo_merged_maiorano.RData")
+#View(species_grilo_merged_maiorano)
 
 species_grilo_merged_maiorano_complete <- species_grilo_merged_maiorano[complete.cases(species_grilo_merged_maiorano),]
 names(species_grilo_merged_maiorano_complete) <- c("gbif_id", "maiorano", "grilo")

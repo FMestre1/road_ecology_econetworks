@@ -84,8 +84,6 @@ View(new_properties_SECONDARY[[1]])
 
 ####################### LOST INTERACTIONS (SECONDARY) ##########################
 
-
-
 ################################################################################
 #     FIGURE 2 - VULNERABILITY, PRIMARY AND SECONDARY EXTINCTIONS PER TL
 ################################################################################
@@ -107,23 +105,25 @@ ggplot(TL_VULN, aes(x=TL, y=grilo_threshold)) + geom_point()
 
 ########################## TL OF PRIMARY EXTINCTIONS ###########################
 
-proportion_previous_level_METAWEB <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 6, nrow = length(local_fw_MAIORANO)))
-names(proportion_previous_level) <- c("grid", 
-                                      "ORIG_PRI_top_level", 
-                                      "ORIG_PRI_interm_level", 
-                                      "ORIG_PRI_basal_level", 
-                                      "PRI_SEC_top_level",
-                                      "PRI_SEC_interm_level",
-                                      "PRI_SEC_basal_level"
-)
-
+proportion_previous_level_METAWEB <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 4, nrow = length(local_fw_MAIORANO)))
+names(proportion_previous_level_METAWEB) <- c("grid", 
+                                      "ORIG_PRI_TL_remaining_sp", 
+                                      "ORIG_PRI_TL_extinct_sp", 
+                                      "PRI_SEC__TL_remaining_sp",
+                                      "PRI_SEC_extinct_sp"
+                                      )
+head(proportion_previous_level_METAWEB)
 
 #LOOP
-for(i in 1:length(local_fw_MAIORANO_REMOVED)){
+for(i in 1:length(local_fw_MAIORANO)){
   
   before_net <- local_fw_MAIORANO[[i]]
   prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
   sec_net <- local_fw_MAIORANO_REMOVED[[i]]
+  
+  #before_net <- new_properties_ORIGINAL[[i]]
+  #prim_net <- new_properties_PRIMARY[[i]]
+  #sec_net <- new_properties_SECONDARY[[i]]
   
   if(unique(!is.na(before_net)) && unique(!is.na(prim_net))) {
     
@@ -131,19 +131,21 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
     
     if(length(removed_species_or_prim)!=0){
       
-      top_removed <- sum(removed_species_or_prim %in% cheddar::TopLevelNodes(before_net))
-      intermediate_removed <- sum(removed_species_or_prim %in% cheddar::IntermediateNodes(before_net))
-      basal_removed <- sum(removed_species_or_prim %in% cheddar::BasalNodes(before_net))
+      #top_removed <- sum(removed_species_or_prim %in% cheddar::TopLevelNodes(before_net))
+      #intermediate_removed <- sum(removed_species_or_prim %in% cheddar::IntermediateNodes(before_net))
+      #basal_removed <- sum(removed_species_or_prim %in% cheddar::BasalNodes(before_net))
       
-      prop_top <- top_removed/length(removed_species_or_prim)
-      prop_interm <- intermediate_removed/length(removed_species_or_prim)
-      prop_basal <- basal_removed/length(removed_species_or_prim)
+      #prop_top <- top_removed/length(removed_species_or_prim)
+      #prop_interm <- intermediate_removed/length(removed_species_or_prim)
+      #prop_basal <- basal_removed/length(removed_species_or_prim)
+      
+      av_removed <- mean(before_net$nodes[before_net$nodes$node %in% removed_species_or_prim,]$TL)
+      av_remaining <- mean(before_net$nodes[!(before_net$nodes$node %in% removed_species_or_prim),]$TL)
       
       #Original to primary
-      proportion_previous_level$ORIG_PRI_top_level[i] <- prop_top
-      proportion_previous_level$ORIG_PRI_interm_level[i] <- prop_interm
-      proportion_previous_level$ORIG_PRI_basal_level[i] <- prop_basal
-      
+      proportion_previous_level_METAWEB$ORIG_PRI_TL_remaining_sp[i] <- av_remaining
+      proportion_previous_level_METAWEB$ORIG_PRI_TL_extinct_sp[i] <- av_removed
+
     } 
     
   }
@@ -178,12 +180,9 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
 
 ########################## TL OF SECONDARY EXTINCTIONS #########################
 
-
 ################################################################################
 #                             FIGURE 3 - EFFECT SIZE
 ################################################################################
-
-
 
 ################################################################################
 #               FIGURE 4 - TL OF REMAINING AND LOST SPECIES
