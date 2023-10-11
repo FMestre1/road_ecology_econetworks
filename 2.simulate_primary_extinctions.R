@@ -15,6 +15,10 @@ library(cheddar)
 library(NetIndices)
 library(igraph)
 
+#Get road value on grids
+grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
+template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\template_grilo.shp")
+
 ################################################################################
 # 1. Simulate extinctions without secondary extinctions
 ################################################################################
@@ -98,8 +102,10 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EX)){
 }
 
 #Load & Save
-#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_09OUT2023.RData")
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_09OUT2023.RData")
+#load("local_fw_MAIORANO_REMOVED_PRIMARY_EX_with_metaweb_TL_11OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_with_metaweb_TL_11OUT23.RData")
+
+#local_fw_MAIORANO_REMOVED_PRIMARY_EX[[1]]$nodes
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EX),
@@ -113,8 +119,8 @@ names(result_prim_ext)[1] <- "grid"
 #names(grids_grilo_shape)
 #names(result_prim_ext)
 
-grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_09OUT23.shp")
+#grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
+#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_11OUT23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -137,4 +143,4 @@ for(i in 1:nrow(nr_lost_interactions_prim)){
 #names(nr_lost_interactions_prim)
 
 lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_09OUT23_version_2.shp")
+#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_11OUT23_version_2.shp", overwrite=TRUE)

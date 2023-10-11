@@ -50,7 +50,6 @@ overall_basal <- cheddar::BasalNodes(maiorano_cheddar)
 overall_intermediate <- cheddar::IntermediateNodes(maiorano_cheddar)
 overall_top <- cheddar::TopLevelNodes(maiorano_cheddar)
 
-maiorano_cheddar
 #save(maiorano_cheddar, file = "maiorano_cheddar_06OUT23.RData")
 #save(overall_basal, file = "overall_basal.RData")
 #save(overall_intermediate, file = "overall_intermediate.RData")
@@ -67,6 +66,8 @@ names(overall_top_2) <- c("species", "position")
 overall_previous_positions <- rbind(overall_top_2,
                                     overall_intermediate_2,
                                     overall_basal_2)
+
+save(overall_previous_positions, file = "overall_previous_positions_11OUT23.RData")
 
 #Compute trophic height
 #cheddar::TrophicHeight(maiorano_cheddar, include.isolated=TRUE)
@@ -115,8 +116,10 @@ maiorano_cheddar_matrix <- cheddar::PredationMatrix(maiorano_cheddar)
 metaweb_TL <- NetIndices::TrophInd(maiorano_cheddar_matrix)
 metaweb_TL <- data.frame(rownames(metaweb_TL), metaweb_TL$TL)
 names(metaweb_TL) <- c("species", "TL")
-head(metaweb_TL)
-head(metaweb_TL[order(metaweb_TL$TL, decreasing = TRUE), ], 30)
+#head(metaweb_TL)
+#head(metaweb_TL[order(metaweb_TL$TL, decreasing = TRUE), ], 30)
+
+#save(metaweb_TL, file = "metaweb_TL_11OUT23.RData")
 
 #TrophicHeight(local_fw_MAIORANO[[1]])
 #ChainAveragedTrophicLevel(local_fw_MAIORANO[[1]])

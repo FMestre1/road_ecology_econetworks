@@ -11,15 +11,13 @@ local_fw_MAIORANO # original FW
 local_fw_MAIORANO_REMOVED_PRIMARY_EX # primary extinctions FW
 local_fw_MAIORANO_REMOVED # cascading effects FW
 
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_original_06OUT23.RData")
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EX,  file = "local_fw_MAIORANO_REMOVED_PRIMARY_EX_06OUT23.RData")
-#save(local_fw_MAIORANO_REMOVED,  file = "local_fw_MAIORANO_REMOVED_CASCADING_06OUT23.RData")
-
 #head(result_prim_ext)
 #head(result_sec_ext)
 
 all_primary_secondary <- data.frame(result_prim_ext,
                                     result_sec_ext)
+
+#head(all_primary_secondary)
 
 all_primary_secondary <- all_primary_secondary[,-5]
 
@@ -37,7 +35,7 @@ names(all_primary_secondary) <- c("grid",
 #View(all_primary_secondary)
 
 #Save
-#save(all_primary_secondary, file = "all_primary_secondary_06OUT23.RData")
+#save(all_primary_secondary, file = "all_primary_secondary_11OUT23.RData")
 
 primary_and_cascading_effects <- merge(x=grids_grilo_shape, y=all_primary_secondary, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(primary_and_cascading_effects, "primary_and_cascading_effects06OUT23.shp")
+#terra::writeVector(primary_and_cascading_effects, "primary_and_cascading_effects11OUT23.shp")

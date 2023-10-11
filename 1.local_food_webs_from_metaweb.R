@@ -405,12 +405,13 @@ names(nodes1)[5] <- "gbif_id"
 }#END LOCAL
 
 #Load & Save
-#load("local_fw_MAIORANO_06OUT23.RData")
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_06OUT23.RData")
+#load("local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
 
-class_list <- list()
-for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
+#head(local_fw_MAIORANO[[1]]$nodes)
 
-how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
+#class_list <- list()
+#for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
+#how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
 #View(how_many_species_df)
 

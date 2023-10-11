@@ -39,7 +39,7 @@ for(i in 1:nrow(nr_species_per_grid_per_tl)){
 
 #saving as shapefile
 sp_richness_per_trophic_level <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl, by.x="PageNumber", by.y="grid")
-#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level_06OUT23.shp")
+#terra::writeVector(sp_richness_per_trophic_level, "sp_richness_per_trophic_level_11OUT23.shp")
 #terra::plet(sp_richness_per_trophic_level, "top")
 #terra::plet(sp_richness_per_trophic_level, "intermediate")
 #terra::plet(sp_richness_per_trophic_level, "basal")
@@ -73,7 +73,7 @@ for(i in 1:nrow(nr_lost_interactions_prim_RELATIVE)){
 }
 
 lost_interactions_with_primary_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_prim_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE_06OUT23.shp")
+#terra::writeVector(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_with_primary_extinctions_RELATIVE_11OUT23.shp")
 #terra::plet(lost_interactions_with_primary_extinctions_RELATIVE, "lost_interactions_relative")
 
 
@@ -100,7 +100,7 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
 }
 
 lost_interactions_with_sec_extinctions_RELATIVE <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE_06OUT23.shp")
+#terra::writeVector(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_with_sec_extinctions_RELATIVE_11OUT23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions_RELATIVE, "lost_interactions_relative")
 
 ################################################################################
@@ -239,4 +239,4 @@ nr_interactions_spatial <- merge(x = template_grilo,
       by.x = "PageNumber",
       by.y = "grid")
 
-#terra::writeVector(nr_interactions_spatial, "nr_interactions_spatial_06OUT23.shp")
+#terra::writeVector(nr_interactions_spatial, "nr_interactions_spatial_11OUT23.shp")

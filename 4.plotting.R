@@ -18,7 +18,6 @@ library(ggplot2)
 fractions_top_intermediate_basal_nodes <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 7, nrow = length(local_fw_MAIORANO)))
 names(fractions_top_intermediate_basal_nodes) <- c("grid", "BEFORE_top_level", "BEFORE_Interm_level", "BEFORE_basal_level", 
                                                    "AFTER__top_level", "AFTER_Interm_level", "AFTER_basal_level", "changed?") 
-
 #LOOP
 for(i in 1:length(local_fw_MAIORANO)){
   
@@ -49,8 +48,8 @@ for(i in 1:length(local_fw_MAIORANO)){
 #View(fractions_top_intermediate_basal_nodes)
 
 #Load & Save
-#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_06OUT23.RData")
-#load("fractions_top_intermediate_basal_nodes_06OUT23.RData")
+#save(fractions_top_intermediate_basal_nodes, file = "fractions_top_intermediate_basal_nodes_11OUT23.RData")
+#load("fractions_top_intermediate_basal_nodes_11OUT23.RData")
 
 
 before_nt <- fractions_top_intermediate_basal_nodes[,1:4]
@@ -112,6 +111,8 @@ names(extinctions_levels) <- c("grid",
                                "PRI_SEC_basal_level"
 ) 
 
+#head(extinctions_levels)
+
 #LOOP
 for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
@@ -168,8 +169,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
 #View(extinctions_levels)
 
 #Save & Load
-#save(extinctions_levels, file = "extinctions_levels_06OUT23.RData")
-#load("extinctions_levels_06OUT23.RData")
+#save(extinctions_levels, file = "extinctions_levels_11OUT23.RData")
+#load("extinctions_levels_11OUT23.RData")
 
 # Plot it...
 
@@ -200,7 +201,7 @@ rem_orig_prim2 <- rem_orig_prim + geom_violin(aes(fill = level),) +
 rem_orig_prim2 + labs(fill = "trophic level")
 #YES
 
-#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b_30SET23_NEW.RData")
+#save(removed_position_orig_prim, file = "removed_position_orig_prim_fig2b_11OUT23_NEW.RData")
 
 # Compute the analysis of variance
 names(removed_position_orig_prim)
@@ -236,7 +237,7 @@ rem_prim_sec2 <- rem_prim_sec + geom_violin(aes(fill = level),) +
 rem_prim_sec2 + labs(fill = "trophic level") 
 #YES
 
-#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c_30SET23_NEW.RData")
+#save(removed_position_prim_sec, file = "removed_position_prim_sec_fig2c_11OUT23_NEW.RData")
 
 # Compute the analysis of variance
 names(removed_position_prim_sec)
@@ -320,8 +321,8 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
 }
 #View(proportion_previous_level)
 
-#save(proportion_previous_level, file = "proportion_previous_level_06OUT23.RData")
-#load("proportion_previous_level_06OUT23.RData")
+#save(proportion_previous_level, file = "proportion_previous_level_11OUT23.RData")
+#load("proportion_previous_level_11OUT23.RData")
 
 # Plot it...
 
@@ -404,7 +405,7 @@ names(grids_grilo_shape)
 names(nr_species_per_grid)
 
 sp_richness <- merge(x=grids_grilo_shape, y=nr_species_per_grid, by.x="PageNumber", by.y="grid")
-#terra::writeVector(sp_richness, "sp_richness_06OUT23.shp")
+#terra::writeVector(sp_richness, "sp_richness_11OUT23.shp")
 #terra::plet(sp_richness, "sp_richness")
 
 ################################################################################
@@ -428,7 +429,7 @@ for(i in 1:nrow(connectance_original_networks)){
 }
 
 connectance_original <- merge(x=grids_grilo_shape, y=connectance_original_networks, by.x="PageNumber", by.y="grid")
-#terra::writeVector(connectance_original, "connectance_06OUT23.shp")
+#terra::writeVector(connectance_original, "connectance_11OUT23.shp")
 #terra::plet(connectance_original, "connectance")
 
 ################################################################################
@@ -451,5 +452,5 @@ for(i in 1:nrow(nr_lost_interactions_cascading_RELATIVE)){
 }
 
 lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_cascading_RELATIVE, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_06OUT23.shp")
+terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_11OUT23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions, "lost_interactions")

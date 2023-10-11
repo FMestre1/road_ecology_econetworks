@@ -128,14 +128,15 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
 }
 
-#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_CASCADING_EFF_28set2023.RData")
-#load("local_fw_MAIORANO_REMOVED_CASCADING_EFF_28set2023.RData")
+#local_fw_MAIORANO_REMOVED[[1]]$nodes
+
+#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_CASCADING_EFF_with_metaweb_TL_11OUT23.RData")
+#load("local_fw_MAIORANO_REMOVED_CASCADING_EFF_with_metaweb_TL_11OUT23.RData")
 
 #Check results
 species_loss
 connectance_dif
 compart_dif
-
 
 #Create data frame
 result_sec_ext <- data.frame(
@@ -157,7 +158,7 @@ result_sec_ext_pair_pagenumber_pagename <- merge(x = pair_pagenumber_pagename,
 names(result_sec_ext_pair_pagenumber_pagename)
 
 grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pair_pagenumber_pagename, by.x="PageName", by.y= "PageName")
-#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_06out23.shp")
+#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_11out23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -165,7 +166,6 @@ grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pa
 
 nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED), ncol = 2))
 names(nr_lost_interactions_sec) <- c("grid","lost_interactions")
-#head(nr_lost_interactions_prim)
 
 for(i in 1:nrow(nr_lost_interactions_sec)){
   
@@ -176,8 +176,9 @@ for(i in 1:nrow(nr_lost_interactions_sec)){
   
 }
 
-names(grids_grilo_shape)
-names(nr_lost_interactions_sec)
+#head(nr_lost_interactions_sec)
+#names(grids_grilo_shape)
+#names(nr_lost_interactions_sec)
 
 lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_06OUT23.shp")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_11OUT23.shp")
