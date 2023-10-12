@@ -1,6 +1,6 @@
 ################################################################################
 ################################################################################
-#           SCRIPT 0 - DERIVING NODE TROPHIC LEVEL FROM MAIORANO
+#           SCRIPT 0 - 
 ################################################################################
 ################################################################################
 
@@ -8,115 +8,6 @@
 #September 2023
 
 #Load packages
-library(igraph)
-library(cheddar)
-library(ggplot2)
-library(gridExtra)
-library(NetIndices)
-
-################################################################################
-#                       Loading Maiorano´s dataset
-################################################################################
-
-#Maiorano, L., Montemaggiori, A., Ficetola, G. F., O’connor, L., & Thuiller, W. (2020). 
-#TETRA‐EU 1.0: a species‐level trophic metaweb of European tetrapods.
-#Global Ecology and Biogeography, 29(9), 1452-1457.
-
-#1.CREATE CHEDDAR NETWORK
-
-nodes <- as.data.frame(colnames(maiorano_metaweb))
-colnames(nodes) <- "node"
-
-trophiclinks <- data.frame(matrix(ncol = 2))
-colnames(trophiclinks) <- c("resource", "consumer")
-
-for(i in 1:nrow(maiorano_metaweb)){
-  
-  row1 <- maiorano_metaweb[i,]
-  predator1 <- rownames(row1)
-  preys1 <- colnames(row1[,which(row1 == 1)])
-  predator2 <- rep(predator1, length(preys1))
-  df1 <- data.frame(preys1, predator2)
-  if(nrow(df1)!=0) {colnames(df1) <- c("resource", "consumer")
-  trophiclinks <- rbind(trophiclinks, df1)}
-}
-
-trophiclinks <- trophiclinks[-1,]
-
-maiorano_cheddar <- cheddar::Community(nodes, properties = list(title = "MMetaweb"), trophic.links = trophiclinks)
-#plot(maiorano_cheddar)
-
-#Overall positions
-overall_basal <- cheddar::BasalNodes(maiorano_cheddar)
-overall_intermediate <- cheddar::IntermediateNodes(maiorano_cheddar)
-overall_top <- cheddar::TopLevelNodes(maiorano_cheddar)
-
-#save(maiorano_cheddar, file = "maiorano_cheddar_06OUT23.RData")
-#save(overall_basal, file = "overall_basal.RData")
-#save(overall_intermediate, file = "overall_intermediate.RData")
-#save(overall_top, file = "overall_top.RData")
-
-overall_basal_2 <- data.frame(overall_basal, rep("basal", length(overall_basal)))
-overall_intermediate_2 <- data.frame(overall_intermediate, rep("intermediate", length(overall_intermediate)))
-overall_top_2 <- data.frame(overall_top, rep("top", length(overall_top)))
-
-names(overall_basal_2) <- c("species", "position")
-names(overall_intermediate_2) <- c("species", "position")
-names(overall_top_2) <- c("species", "position")
-
-overall_previous_positions <- rbind(overall_top_2,
-                                    overall_intermediate_2,
-                                    overall_basal_2)
-
-#save(overall_previous_positions, file = "overall_previous_positions_11OUT23.RData")
-
-
-#2.CREATE IGRAPH NETWORK
-#Required function
-
-ToIgraph <- function(community, weight=NULL)
-{
-  if(is.null(TLPS(community)))
-  {
-    stop('The community has no trophic links')
-  }
-  else
-  {
-    tlps <- TLPS(community, link.properties=weight)
-    if(!is.null(weight))
-    {
-      tlps$weight <- tlps[,weight]
-    }
-    return (graph.data.frame(tlps,
-                             vertices=NPS(community),
-                             directed=TRUE))
-  }
-}
-
-maiorano_igraph <- ToIgraph(maiorano_cheddar)
-#plot(maiorano_igraph)
-#igraph::vertex(maiorano_igraph)
-
-gorder(maiorano_igraph) #nr nodes
-gsize(maiorano_igraph) #nr interactions
-
-
-################################################################################
-#                 Computing trophic height in the Metaweb
-################################################################################
-
-maiorano_cheddar_matrix <- cheddar::PredationMatrix(maiorano_cheddar)
-metaweb_TL <- NetIndices::TrophInd(maiorano_cheddar_matrix)
-metaweb_TL <- data.frame(rownames(metaweb_TL), metaweb_TL$TL)
-names(metaweb_TL) <- c("species", "TL")
-#head(metaweb_TL)
-#head(metaweb_TL[order(metaweb_TL$TL, decreasing = TRUE), ], 30)
-
-#save(metaweb_TL, file = "metaweb_TL_11OUT23.RData")
-
-#TrophicHeight(local_fw_MAIORANO[[1]])
-#ChainAveragedTrophicLevel(local_fw_MAIORANO[[1]])
-#TrophicHeight(maiorano_cheddar)
 
 ################################################################################
 #                                   NEW FIG2
