@@ -202,16 +202,22 @@ hist(TL_VULN$TL)
 
 ggplot(TL_VULN, aes(x=TL, y=grilo_threshold)) + geom_point()
 
-########################## TL OF PRIMARY EXTINCTIONS ###########################
+################### TL OF PRIMARY AND SECONDARY EXTINCTIONS ####################
 
-proportion_previous_level_METAWEB <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 4, nrow = length(local_fw_MAIORANO)))
+proportion_previous_level_METAWEB <- data.frame(names(local_fw_MAIORANO), matrix(ncol = 10, nrow = length(local_fw_MAIORANO)))
 names(proportion_previous_level_METAWEB) <- c("grid", 
                                       "ORIG_PRI_TL_remaining_sp", 
                                       "ORIG_PRI_TL_extinct_sp", 
                                       "PRI_SEC__TL_remaining_sp",
-                                      "PRI_SEC_extinct_sp"
+                                      "PRI_SEC_extinct_sp",
+                                      "proportion_top_removed_orig_prim",
+                                      "proportion_intermediate_removed_orig_prim",
+                                      "proportion_basal_removed_orig_prim",
+                                      "proportion_top_removed_prim_sec",
+                                      "proportion_intermediate_removed_prim_sec",
+                                      "proportion_basal_removed_prim_sec"
                                       )
-head(proportion_previous_level_METAWEB)
+#head(proportion_previous_level_METAWEB)
 
 #LOOP
 for(i in 1:length(local_fw_MAIORANO)){
@@ -220,23 +226,33 @@ for(i in 1:length(local_fw_MAIORANO)){
   prim_net <- local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]
   sec_net <- local_fw_MAIORANO_REMOVED[[i]]
   
-  #before_net <- new_properties_ORIGINAL[[i]]
-  #prim_net <- new_properties_PRIMARY[[i]]
-  #sec_net <- new_properties_SECONDARY[[i]]
+  before_net_props <- new_properties_ORIGINAL[[i]]
+  prim_net_props <- new_properties_PRIMARY[[i]]
+  sec_net_props <- new_properties_SECONDARY[[i]]
   
+  top_species_nt <- subset(before_net_props, position == "top")
+  top_species_nt <- top_species_nt$node
+  
+  mid_species_nt <- subset(before_net_props, position == "intermediate")
+  mid_species_nt <- mid_species_nt$node  
+  
+  basal_species_nt <- subset(before_net_props, position == "basal")
+  basal_species_nt <- basal_species_nt$node
+  
+  #PRIMARY
   if(unique(!is.na(before_net)) && unique(!is.na(prim_net))) {
     
     removed_species_or_prim <- before_net$nodes$node[!(before_net$nodes$node %in% prim_net$nodes$node)]
     
     if(length(removed_species_or_prim)!=0){
       
-      #top_removed <- sum(removed_species_or_prim %in% cheddar::TopLevelNodes(before_net))
-      #intermediate_removed <- sum(removed_species_or_prim %in% cheddar::IntermediateNodes(before_net))
-      #basal_removed <- sum(removed_species_or_prim %in% cheddar::BasalNodes(before_net))
+      top_removed <- sum(removed_species_or_prim %in% top_species_nt)
+      intermediate_removed <- sum(removed_species_or_prim %in% mid_species_nt)
+      basal_removed <- sum(removed_species_or_prim %in% basal_species_nt)
       
-      #prop_top <- top_removed/length(removed_species_or_prim)
-      #prop_interm <- intermediate_removed/length(removed_species_or_prim)
-      #prop_basal <- basal_removed/length(removed_species_or_prim)
+      prop_top <- top_removed/length(removed_species_or_prim)
+      prop_interm <- intermediate_removed/length(removed_species_or_prim)
+      prop_basal <- basal_removed/length(removed_species_or_prim)
       
       av_removed <- mean(before_net$nodes[before_net$nodes$node %in% removed_species_or_prim,]$TL)
       av_remaining <- mean(before_net$nodes[!(before_net$nodes$node %in% removed_species_or_prim),]$TL)
@@ -244,40 +260,81 @@ for(i in 1:length(local_fw_MAIORANO)){
       #Original to primary
       proportion_previous_level_METAWEB$ORIG_PRI_TL_remaining_sp[i] <- av_remaining
       proportion_previous_level_METAWEB$ORIG_PRI_TL_extinct_sp[i] <- av_removed
+      proportion_previous_level_METAWEB$proportion_top_removed_orig_prim[i] <- prop_top
+      proportion_previous_level_METAWEB$proportion_intermediate_removed_orig_prim[i] <- prop_interm
+      proportion_previous_level_METAWEB$proportion_basal_removed_orig_prim[i] <- prop_basal
 
     } 
     
   }
   
+  #SECONDARY
   if(unique(!is.na(prim_net)) && unique(!is.na(sec_net))) {
     
     removed_species_prim_sec <- prim_net$nodes$node[!(prim_net$nodes$node %in% sec_net$nodes$node)]
     
     if(length(removed_species_prim_sec)!=0){
       
-      top_removed2 <- sum(removed_species_prim_sec %in% cheddar::TopLevelNodes(before_net))
-      intermediate_removed2 <- sum(removed_species_prim_sec %in% cheddar::IntermediateNodes(before_net))
-      basal_removed2 <- sum(removed_species_prim_sec %in% cheddar::BasalNodes(before_net))
+      top_removed2 <- sum(removed_species_prim_sec %in% top_species_nt)
+      intermediate_removed2 <- sum(removed_species_prim_sec %in% mid_species_nt)
+      basal_removed2 <- sum(removed_species_prim_sec %in% basal_species_nt)
       
       prop_top2 <- top_removed2/length(removed_species_prim_sec)
       prop_interm2 <- intermediate_removed2/length(removed_species_prim_sec)
       prop_basal2 <- basal_removed2/length(removed_species_prim_sec)
       
-      #Primary to cascading
-      proportion_previous_level$PRI_SEC_top_level[i] <- prop_top2
-      proportion_previous_level$PRI_SEC_interm_level[i] <- prop_interm2
-      proportion_previous_level$PRI_SEC_basal_level[i] <- prop_basal2
+      av_removed2 <- mean(prim_net$nodes[prim_net$nodes$node %in% removed_species_prim_sec,]$TL)
+      av_remaining2 <- mean(prim_net$nodes[!(prim_net$nodes$node %in% removed_species_prim_sec),]$TL)
       
-    } 
+      #Original to primary
+      proportion_previous_level_METAWEB$PRI_SEC__TL_remaining_sp[i] <- av_remaining2
+      proportion_previous_level_METAWEB$PRI_SEC_extinct_sp[i] <- av_removed2
+      proportion_previous_level_METAWEB$proportion_top_removed_prim_sec[i] <- prop_top2
+      proportion_previous_level_METAWEB$proportion_intermediate_removed_prim_sec[i] <- prop_interm2
+      proportion_previous_level_METAWEB$proportion_basal_removed_prim_sec[i] <- prop_basal2
+ 
+    }
     
   }
   
   message(i)
   
 }
-#View(proportion_previous_level)
 
-########################## TL OF SECONDARY EXTINCTIONS #########################
+View(proportion_previous_level_METAWEB)
+
+
+#PROPORTION OF SPECIES REMOVED PER TROPHIC LEVEL IN EACH EXTINCTION
+
+  #Primaary
+top_orig_prim_metaweb <- data.frame(proportion_previous_level_METAWEB$proportion_top_removed_orig_prim, "top")
+mid_orig_prim_metaweb <- data.frame(proportion_previous_level_METAWEB$proportion_intermediate_removed_orig_prim, "intermediate")
+basal_orig_prim_metaweb <- data.frame(proportion_previous_level_METAWEB$proportion_basal_removed_orig_prim, "basal")
+
+names(top_orig_prim_metaweb) <- c("proportion", "level")
+names(mid_orig_prim_metaweb) <- c("proportion", "level")
+names(basal_orig_prim_metaweb) <- c("proportion", "level")
+
+removed_position_orig_prim_metaweb <- rbind(top_orig_prim_metaweb, mid_orig_prim_metaweb, basal_orig_prim_metaweb)
+
+removed_position_orig_prim_metaweb$level <- as.factor(removed_position_orig_prim_metaweb$level)
+
+#Reorder factor levels
+removed_position_orig_prim_metaweb$level <- factor(removed_position_orig_prim_metaweb$level,     
+                                           c("top", "intermediate", "basal"))
+
+rem_orig_prim_metaweb <- ggplot(removed_position_orig_prim_metaweb, aes(x = level, y = proportion))
+
+rem_orig_prim2_metaweb <- rem_orig_prim_metaweb + geom_violin(aes(fill = level),) +
+  ylab("proportion of removed species") +
+  xlab("trophic level") +
+  scale_fill_manual(values = c("#E70F00", "#E69F00", "#1E811E"))
+
+rem_orig_prim2_metaweb + labs(fill = "trophic level")
+
+
+#TROPHIC HEIGHT OF REMAINING AND REMOVED SPECIES
+
 
 ################################################################################
 #                             FIGURE 3 - EFFECT SIZE

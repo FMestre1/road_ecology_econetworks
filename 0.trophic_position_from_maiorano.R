@@ -70,11 +70,6 @@ overall_previous_positions <- rbind(overall_top_2,
 
 #save(overall_previous_positions, file = "overall_previous_positions_11OUT23.RData")
 
-#Compute trophic height
-#cheddar::TrophicHeight(maiorano_cheddar, include.isolated=TRUE)
-#ERROR
-#This network has a lot of paths, possibly too many to compute
-
 
 #2.CREATE IGRAPH NETWORK
 #Required function

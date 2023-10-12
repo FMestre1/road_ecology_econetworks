@@ -427,3 +427,25 @@ links0$colour["Hieraaetus pennatus" == links0$consumer] <- "blue"
 
 cheddar::plot.Community(local_fw_MAIORANO[["BW39"]], node.labels="node", show.nodes.as="both", link.col=links$colour)
 cheddar::plot.Community(local_fw_MAIORANO[["BW39"]], link.col=links0$colour)
+
+
+
+################################################################################
+################################################################################
+
+View(species_grilo_merged_maiorano)
+View(tax_table_3)
+
+species_grilo_merged_maiorano_tax <- merge(
+  x = species_grilo_merged_maiorano,
+  y = tax_table_3,
+  by.x = "gbif_id",
+  by.y = "gbif_id",
+  all =TRUE
+)
+
+View(species_grilo_merged_maiorano_tax)
+
+write.csv(species_grilo_merged_maiorano, file = "species_grilo_merged_maiorano.csv")
+write.csv(species_grilo_merged_maiorano_tax, file = "species_grilo_merged_maiorano_tax.csv")
+write.csv(tax_table_3, file = "tax_table_3.csv")
