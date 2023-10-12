@@ -27,7 +27,7 @@ library(cheddar)
 birds_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\9 RankingvulnerableBirds.csv", header = TRUE)
 mammals_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\10 RankingvulnerableMammals.csv", header = TRUE)
 all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
-all_species_vulnerability_1 <- merge(x=all_species_vulnerability, id_grilo_data, by.x="Species", by.y="all_species_vulnerability.Species", all=T) #creation of id_grilo_data comes later in the code 
+#all_species_vulnerability_1 <- merge(x=all_species_vulnerability, id_grilo_data, by.x="Species", by.y="all_species_vulnerability.Species", all=T) #creation of id_grilo_data comes later in the code 
 #save(all_species_vulnerability_1, file = "all_species_vulnerability_1_grilo.RData")
 #nrow(all_species_vulnerability)
 #nrow(all_species_vulnerability_1)
@@ -43,6 +43,8 @@ all_species <- merge(x=birds,
       by.x="PageNumber",
       by.y="PageNumber",
       all = TRUE)
+
+View(all_species)
 
 colnames(mammals)[-1] <- stringr::str_replace(colnames(mammals)[-c(1)], "\\.", " ")
 colnames(birds)[-1] <- stringr::str_replace(colnames(birds)[-c(1)], "\\.", " ")
@@ -66,35 +68,53 @@ template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_net
 #head(data.frame(template_grilo))
 
 #Create table of species information
-species <- c(birds_vulnerability$Species, mammals_vulnerability$Species)
-species_FAMILY <- tax_name(species, get = 'family', db = 'itis')
-species_GENUS <- tax_name(species, get = 'genus', db = 'itis')
-#
-species_df <- data.frame(species,
-                         species_GENUS,
-                         species_FAMILY
-)
+#species <- c(birds_vulnerability$Species, mammals_vulnerability$Species)
 
-species_df <- species_df[,-c(2:3,5,6)]
+#species_FAMILY <- tax_name(species, get = 'family', db = 'itis')
+#species_GENUS <- tax_name(species, get = 'genus', db = 'itis')
+#
+#species_df <- data.frame(species,
+#                         species_GENUS,
+#                         species_FAMILY
+#)
+
+#species_df <- species_df[,-c(2:3,5,6)]
 #head(species_df)
 #save(species_df, file = "species_df.RData")
 
-v_mammal <- data.frame(mammals_vulnerability[,1:2], "mammal")
-v_bird <- data.frame(birds_vulnerability[,1:2],"bird")
+match_table <- read.csv("match_datasets_master_table.csv", sep = ";")
+#View(match_table)
 
-names(v_mammal)[3] <- "bm"
-names(v_bird)[3] <- "bm"
+head(match_table)
+head(all_species_vulnerability)
 
-vulnerability <- data.frame(rbind(v_bird, v_mammal))
+master_table_vuln <- merge(x = match_table,
+      y = all_species_vulnerability,
+      by.x = "Species_grilo",
+      by.y = "Species"
+      )
+
+names(master_table_vuln)[9] <- "grilo_threshold"
+master_table_vuln <- master_table_vuln[,-c(10:12)] 
+head(master_table_vuln)
+#master_table_vuln$grilo_threshold
+
+#v_mammal <- data.frame(mammals_vulnerability[,1:2], "mammal")
+#v_bird <- data.frame(birds_vulnerability[,1:2],"bird")
+
+#names(v_mammal)[3] <- "bm"
+#names(v_bird)[3] <- "bm"
+
+#vulnerability <- data.frame(rbind(v_bird, v_mammal))
 #save(vulnerability, file = "vulnerability_grilo.RData")
 
-i_mammal <- data.frame(vuln_mammals[,c(1,5)], "mammal")
-i_bird <- data.frame(vuln_birds[,c(1,5)],"bird")
+#i_mammal <- data.frame(vuln_mammals[,c(1,5)], "mammal")
+#i_bird <- data.frame(vuln_birds[,c(1,5)],"bird")
 
-names(i_mammal)[3] <- "bm"
-names(i_bird)[3] <- "bm"
+#names(i_mammal)[3] <- "bm"
+#names(i_bird)[3] <- "bm"
 
-iucn <- data.frame(rbind(i_bird, i_mammal))
+#iucn <- data.frame(rbind(i_bird, i_mammal))
 #head(iucn)
 #tail(iucn)
 #View(iucn)

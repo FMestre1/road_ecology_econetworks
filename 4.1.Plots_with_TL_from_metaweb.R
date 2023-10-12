@@ -12,6 +12,8 @@ library(ggplot2)
 library(igraph)
 library(cheddar)
 
+
+
 grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
 
 #load("C:\\Users\\asus\\Documents\\github\\road_ecoloy_econetworks\\local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
