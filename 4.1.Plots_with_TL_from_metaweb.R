@@ -9,9 +9,10 @@
 
 #Load packages
 library(ggplot2)
-
 library(igraph)
 library(cheddar)
+
+grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
 
 #load("C:\\Users\\asus\\Documents\\github\\road_ecoloy_econetworks\\local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
 #load("C:\\Users\\asus\\Documents\\github\\road_ecoloy_econetworks\\local_fw_MAIORANO_REMOVED_PRIMARY_EX_with_metaweb_TL_11OUT23.RData")
@@ -78,11 +79,109 @@ View(new_properties_SECONDARY[[1]])
 
 ############################## MAP OF NR OF NODES ##############################
 
+#Having
+#local_fw_MAIORANO #the initial FW structures
+#new_properties_ORIGINAL#with the TL T-I-B classification
+
+nr_species_per_grid_per_tl_METAWEB <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 7))
+names(nr_species_per_grid_per_tl_METAWEB) <- c("grid", "total_richness","top", "intermediate", "basal", "connected", "not_connected")
+head(nr_species_per_grid_per_tl_METAWEB)
+
+for(i in 1:nrow(nr_species_per_grid_per_tl_METAWEB)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_species_per_grid_per_tl_METAWEB[i,1] <- names(new_properties_ORIGINAL)[[i]] #Name
+    nr_species_per_grid_per_tl_METAWEB[i,2] <- nrow(new_properties_ORIGINAL[[i]]) #Total Richness
+    levels1 <- data.frame(table(new_properties_ORIGINAL[[i]]$position))
+    #
+    if(any(levels1 == "top")) nr_species_per_grid_per_tl_METAWEB[i,3] <-  levels1[levels1$Var1 == "top",2]#Nr of top level species
+    if(any(levels1 == "intermediate")) nr_species_per_grid_per_tl_METAWEB[i,4] <-  levels1[levels1$Var1 == "intermediate",2]#Nr of mid level species
+    if(any(levels1 == "basal")) nr_species_per_grid_per_tl_METAWEB[i,5] <-  levels1[levels1$Var1 == "basal",2]#Nr of basal level species
+    nr_species_per_grid_per_tl_METAWEB[i,6] <- length(cheddar::ConnectedNodes(local_fw_MAIORANO[[i]])) #Connected nodes
+    nr_species_per_grid_per_tl_METAWEB[i,7] <- nrow(local_fw_MAIORANO[[i]]$nodes) - length(cheddar::ConnectedNodes(local_fw_MAIORANO[[i]])) #Non connected nodes
+    
+  }
+  message(i)
+}
+
+#View(nr_species_per_grid_per_tl_METAWEB)
+
+#saving as shapefile
+sp_richness_per_trophic_level_METAWEB <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl_METAWEB, by.x="PageNumber", by.y="grid")
+#terra::writeVector(sp_richness_per_trophic_level_METAWEB, "sp_richness_per_trophic_level_METAWEB_12OUT23.shp")
+
 ############################## NR OF INTERACTIONS ##############################
+
+
 
 ################################ ROAD DENSITY ##################################
 
+#Get road value on grids
+grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
+grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
+
+#relating it with the number of top predators
+head(grids_grilo)
+sp_rich_TIB <- data.frame(sp_richness_per_trophic_level_METAWEB)
+head(sp_rich_TIB)
+
+names(grids_grilo)
+names(sp_rich_TIB)
+
+density_top_predators <- merge(x = sp_rich_TIB,
+      y = grids_grilo,
+      by.x = "PageName",
+      by.y = "grids_grilo_shape.PageName")
+
+rm(density_top_predators)
+
+plot(sp_rich_TIB$kmkm2, sp_rich_TIB$top)
+
+
+p_top_density <- ggplot(sp_rich_TIB, aes(top, kmkm2))
+p_top_density + geom_point()
+
+######################## LOST INTERACTIONS (PRIMARY) ###########################
+
+nr_lost_interactions_prim <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED_PRIMARY_EX), ncol = 2))
+names(nr_lost_interactions_prim) <- c("grid","lost_interactions")
+#head(nr_lost_interactions_prim)
+
+for(i in 1:nrow(nr_lost_interactions_prim)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_lost_interactions_prim[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_prim[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]$trophic.links) else nr_lost_interactions_prim[i,2]<-0
+  }
+  message(i) 
+}
+
+#names(grids_grilo_shape)
+#names(nr_lost_interactions_prim)
+
+lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_12OUT23_version_2.shp", overwrite=TRUE)
+
 ####################### LOST INTERACTIONS (SECONDARY) ##########################
+
+nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED), ncol = 2))
+names(nr_lost_interactions_sec) <- c("grid","lost_interactions")
+
+for(i in 1:nrow(nr_lost_interactions_sec)){
+  
+  if(any(!is.na(local_fw_MAIORANO[[i]]))){
+    nr_lost_interactions_sec[i,1] <- local_fw_MAIORANO[[i]]$properties$title
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_prim[i,2] <- 0
+  }
+  
+}
+
+#head(nr_lost_interactions_sec)
+#names(grids_grilo_shape)
+#names(nr_lost_interactions_sec)
+
+lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_12OUT23.shp")
 
 ################################################################################
 #     FIGURE 2 - VULNERABILITY, PRIMARY AND SECONDARY EXTINCTIONS PER TL

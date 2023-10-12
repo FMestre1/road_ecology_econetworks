@@ -181,7 +181,7 @@ table(!is.na(species_grilo_merged_maiorano$rownames.maiorano_metaweb.) & is.na(s
 ################################################################################
 #   3.Create a table species taxonomy
 ################################################################################
-#AQUI
+
 head(species_grilo_merged_maiorano_complete) #common species in both datasets matched by GBIFid
 head(all_species_vulnerability_1) #species vulnerability
 

@@ -116,11 +116,13 @@ result_prim_ext <- data.frame(
 
 names(result_prim_ext)[1] <- "grid"
 #View(result_prim_ext)
-#names(grids_grilo_shape)
-#names(result_prim_ext)
+names(grids_grilo_shape)
+names(result_prim_ext)
 
-#grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_11OUT23.shp")
+grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
+#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_12OUT23.shp")
+
+#names(grids_grilo_shape_species_loss_prim_ext)
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -136,11 +138,11 @@ for(i in 1:nrow(nr_lost_interactions_prim)){
     nr_lost_interactions_prim[i,1] <- local_fw_MAIORANO[[i]]$properties$title
     if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_prim[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED_PRIMARY_EX[[i]]$trophic.links) else nr_lost_interactions_prim[i,2]<-0
   }
-  
+message(i) 
 }
 
 #names(grids_grilo_shape)
 #names(nr_lost_interactions_prim)
 
 lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_11OUT23_version_2.shp", overwrite=TRUE)
+#terra::writeVector(lost_interactions_with_primary_extinctions, "lost_interactions_with_primary_extinctions_12OUT23_version_2.shp", overwrite=TRUE)

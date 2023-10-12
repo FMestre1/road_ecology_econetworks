@@ -161,7 +161,7 @@ grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pa
 #terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_11out23.shp")
 
 ################################################################################
-# 2. How many interactions lost? - with primary extinctions
+# 2. How many interactions lost? - with secondary extinctions
 ################################################################################
 
 nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED), ncol = 2))
