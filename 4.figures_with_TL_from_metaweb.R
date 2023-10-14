@@ -13,6 +13,7 @@ library(igraph)
 library(cheddar)
 library(gridExtra)
 library(effectsize)
+library(dplyr)
 
 grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
 
@@ -531,16 +532,23 @@ tl_positions$group <- factor(tl_positions$group,
 tl_previous_nr <- ggplot(tl_positions, aes(x = group, y = tl))
 
 #Fig4
-tl_previous_nr2 <- tl_previous_nr + geom_violin(aes(fill = group),) +
+tl_previous_nr2 <- tl_previous_nr + geom_boxplot(aes(fill = group),) +
   ylab("Trophic position") +
   xlab("Removed and remaining species in each step") +
-  scale_fill_manual(values = c("#008B00", "#8B1A1A", "#008B00", "#8B1A1A"))
+  scale_fill_manual(values = c("#008B00", "#FFB90F", "#8B795E", "#8B1A1A"))
 
 tl_previous_nr2
 
+tl_positions
+
 #save(tl_positions, file = "fig4.RData")
 
+#Summarize
+tl_positions[complete.cases(tl_positions),] %>% 
+  group_by(group) %>% 
+  summarise(Average=mean(tl))
 
+  
 ################################################################################
 #               FIGURE x - Extinctions per trophic level
 ################################################################################
