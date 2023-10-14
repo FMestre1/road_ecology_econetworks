@@ -35,7 +35,7 @@ ToIgraph <- function(community, weight=NULL)
 }
 
 ################################################################################
-# 1. Simulate Cascading effects of primary extinctions         
+# 1. Simulate secondary extinctions         
 ################################################################################
 
 #Get road value on grids
@@ -43,41 +43,33 @@ grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_
 grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
 #head(grids_grilo)
 
-all_species_vulnerability_2 <- all_species_vulnerability_1[,1:2]
-#head(all_species_vulnerability_1)
-#head(all_species_vulnerability_2)
 
 #To save the networks after primary extinctions
-local_fw_MAIORANO_REMOVED <- vector(mode = "list", length = length(local_fw_MAIORANO))
-names(local_fw_MAIORANO_REMOVED) <- names(local_fw_MAIORANO)
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- vector(mode = "list", length = length(local_fw_MAIORANO))
+names(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS) <- names(local_fw_MAIORANO)
 
 #To save results...
-species_loss <- rep(NA, length(local_fw_MAIORANO_REMOVED))
-connectance_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
-compart_dif <- rep(NA, length(local_fw_MAIORANO_REMOVED))
+species_loss_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS))
+connectance_dif_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS))
+compart_dif_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS))
 
-#Pair pagenumber with pagename
-pair_pagenumber_pagename <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\data_artigo_clara_grilo\\Nvulnerablegrid50_wgs84_2.shp")
-pair_pagenumber_pagename <- pair_pagenumber_pagename[,1:2]
-pair_pagenumber_pagename <- as.data.frame(pair_pagenumber_pagename)
-
-#Simulate cascading effects of extinctions
-for(i in 1:length(local_fw_MAIORANO_REMOVED)){
+#Simulate secondayextinctions effects of extinctions
+for(i in 1:length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)){
   
   cheddar1 <- local_fw_MAIORANO[[i]]
   fw_pagenumber <- as.numeric(names(local_fw_MAIORANO)[i])
-  fw_pagename <- pair_pagenumber_pagename[as.numeric(pair_pagenumber_pagename$PageNumber) == fw_pagenumber, ][,1]
-
+  fw_pagename <- paired_pagename_pagenumber[paired_pagename_pagenumber$PageNumber == fw_pagenumber,][,1]
+  
   if(any(!is.na(cheddar1))){
     
     grid_road_density <- grids_grilo[grids_grilo$grids_grilo_shape.PageName == fw_pagename, ]$grids_grilo_shape.kmkm2
-    removed_species <- cheddar1$nodes[cheddar1$nodes$Median_MAXroad.RM.1000. <= grid_road_density,]$node #Species to remove
-    new_title <- paste0("Removed Species ", cheddar1$properties$title, "_", fw_pagename)
+    removed_species <- cheddar1$nodes[cheddar1$nodes$grilo_threshold <= grid_road_density,]$node #Species to remove
+    new_title <- paste0("Removed Species with Secondary Extinctions ", cheddar1_pex$properties$title, "_", fw_pagename)
     
     if(length(removed_species)!=0) cheddar2 <- RemoveNodes(cheddar1, remove = removed_species, title = new_title, method = 'secondary')
     if(length(removed_species)==0) cheddar2 <- cheddar1
     
-    local_fw_MAIORANO_REMOVED[[i]] <- cheddar2 #Adding to new list
+    local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[i]] <- cheddar2 #Adding to new list
     
     if(cheddar::NumberOfTrophicLinks(cheddar1)!=0){
       
@@ -103,13 +95,13 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
     
     n_species_1 <- nrow(cheddar2$nodes)
     
-    species_loss[i] <- n_species_1/n_species_0
+    species_loss_sec_ext[i] <- 1-(n_species_1/n_species_0)
     
     if(cheddar::NumberOfTrophicLinks(cheddar1)!=0 && cheddar::NumberOfTrophicLinks(cheddar2)!=0) {
       
-      connectance_dif[i] <-  metrics2$C - metrics1$C
+      connectance_dif_sec_ext[i] <-  metrics2$C - metrics1$C
       
-      compart_dif[i] <- metrics2$Cbar - metrics1$Cbar
+      compart_dif_sec_ext[i] <- metrics2$Cbar - metrics1$Cbar
       
     } 
     
@@ -117,10 +109,10 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
   if(any(is.na(cheddar1))) {
     
-    local_fw_MAIORANO_REMOVED[[i]] <- NA 
-    species_loss[i] <- NA
-    connectance_dif[i] <- NA
-    compart_dif[i] <- NA
+    local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[i]] <- NA 
+    species_loss_sec_ext[i] <- NA
+    connectance_dif_sec_ext[i] <- NA
+    compart_dif_sec_ext[i] <- NA
     
   }
   
@@ -128,22 +120,19 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED)){
   
 }
 
-#local_fw_MAIORANO_REMOVED[[1]]$nodes
-
-#save(local_fw_MAIORANO_REMOVED, file = "local_fw_MAIORANO_REMOVED_CASCADING_EFF_with_metaweb_TL_11OUT23.RData")
-#load("local_fw_MAIORANO_REMOVED_CASCADING_EFF_with_metaweb_TL_11OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_13OUT23.RData")
 
 #Check results
-species_loss
-connectance_dif
-compart_dif
+species_loss_sec_ext
+connectance_dif_sec_ext
+compart_dif_sec_ext
 
 #Create data frame
 result_sec_ext <- data.frame(
-  names(local_fw_MAIORANO),
-  species_loss,
-  connectance_dif,
-  compart_dif
+  names(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS),
+  species_loss_sec_ext,
+  connectance_dif_sec_ext,
+  compart_dif_sec_ext
 )
 
 names(result_sec_ext)[1] <- "grid"
@@ -157,28 +146,29 @@ result_sec_ext_pair_pagenumber_pagename <- merge(x = pair_pagenumber_pagename,
 #View(result_sec_ext_pair_pagenumber_pagename)
 names(result_sec_ext_pair_pagenumber_pagename)
 
-grids_grilo_shape_species_loss <- merge(x=grids_grilo_shape, y=result_sec_ext_pair_pagenumber_pagename, by.x="PageName", by.y= "PageName")
-#terra::writeVector(grids_grilo_shape_species_loss, "pre_after_road_11out23.shp")
+result_sec_ext$grid <- as.numeric(result_sec_ext$grid)
+
+names(result_sec_ext)
+names(grids_grilo_shape)
+
+grids_grilo_shape_species_loss_sec_ext <- merge(x=grids_grilo_shape, y=result_sec_ext, by.x="PageNumber", by.y= "grid")
+#terra::writeVector(grids_grilo_shape_species_loss_sec_ext, "pre_after_road_sec_ext_13OUT23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with secondary extinctions
 ################################################################################
 
-nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED), ncol = 2))
+nr_lost_interactions_sec <- data.frame(matrix(nrow=length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS), ncol = 2))
 names(nr_lost_interactions_sec) <- c("grid","lost_interactions")
 
 for(i in 1:nrow(nr_lost_interactions_sec)){
   
   if(any(!is.na(local_fw_MAIORANO[[i]]))){
     nr_lost_interactions_sec[i,1] <- local_fw_MAIORANO[[i]]$properties$title
-    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED[[i]]$trophic.links) else nr_lost_interactions_prim[i,2] <- 0
+    if(!is.null(nrow(local_fw_MAIORANO[[i]]$trophic.links))) nr_lost_interactions_sec[i,2] <- nrow(local_fw_MAIORANO[[i]]$trophic.links) - nrow(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[i]]$trophic.links) else nr_lost_interactions_sec[i,2] <- 0
   }
   
 }
 
-#head(nr_lost_interactions_sec)
-#names(grids_grilo_shape)
-#names(nr_lost_interactions_sec)
-
 lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_secondary_extinctions, "lost_interactions_with_secondary_extinctions_11OUT23.shp")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "nr_lost_interactions_with_secondary_extinctions_13OUT23.shp")

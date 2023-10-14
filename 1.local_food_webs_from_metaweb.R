@@ -91,7 +91,7 @@ colnames(maiorano_metaweb) <- stringr::str_replace(colnames(maiorano_metaweb), "
 rownames(maiorano_metaweb) <- stringr::str_replace(rownames(maiorano_metaweb), "_", " ")
 
 ################################################################################
-#                 DERIVING NODE TROPHIC LEVEL FROM MAIORANO
+# 3.                 DERIVING NODE TROPHIC LEVEL FROM MAIORANO
 ################################################################################
 
 #1.CREATE CHEDDAR NETWORK
@@ -162,7 +162,7 @@ gorder(maiorano_igraph) #nr nodes
 gsize(maiorano_igraph) #nr interactions
 
 ################################################################################
-#                 Computing trophic height in the Metaweb
+# 4.                Computing trophic height in the Metaweb
 ################################################################################
 
 maiorano_cheddar_matrix <- cheddar::PredationMatrix(maiorano_cheddar)
@@ -171,14 +171,13 @@ metaweb_TL <- data.frame(rownames(metaweb_TL), metaweb_TL$TL)
 names(metaweb_TL) <- c("species", "TL")
 
 ################################################################################
-#   2.Create a matched table of scientific names across the datasets in use
+#   5.Create a matched table of scientific names across the datasets in use
 ################################################################################
 
 match_table <- read.csv("match_datasets_master_table.csv", sep = ";")
 #View(match_table)
-
-head(match_table)
-head(all_species_vulnerability)
+#head(match_table)
+#head(all_species_vulnerability)
 
 master_table_vuln <- merge(x = match_table,
                            y = all_species_vulnerability,
@@ -190,7 +189,7 @@ names(master_table_vuln)[9] <- "grilo_threshold"
 master_table_vuln <- master_table_vuln[,-c(10:12)] 
 
 ################################################################################
-#   4.Creating local networks
+#   6.Creating local networks
 ################################################################################
 
 master_table_vuln_complete <- master_table_vuln[complete.cases(master_table_vuln),]
@@ -217,10 +216,11 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
                         "class", "order", "family", "grilo_threshold"
                         )
   
+  #head(grid_df_3)
   
   TIB_level <- overall_previous_positions[overall_previous_positions$species %in% grid_df_3$species_maiorano,]
   T_height_level <- metaweb_TL[metaweb_TL$species %in% grid_df_3$species_maiorano,]
-  
+  #
   grid_df_4 <- merge(x=grid_df_3, y=TIB_level, by.x="species_maiorano", by.y="species")
   grid_df_5 <- merge(x=grid_df_4, y=T_height_level, by.x="species_maiorano", by.y="species")
 
@@ -230,6 +230,13 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
     nodes1 <- grid_df_5
     names(nodes1)[1] <- "node"
     rownames(nodes1) <- 1:nrow(nodes1)
+    
+    if(any(table(nodes1$node)==2) && !any(table(nodes1$species_grilo)==2)){#this is mostly because Picus viridis and Picus sharpei are discriminated in Grili, but not Maiorano. It might happen (and it does) that both are present in the same grid, thus having repeated node names.
+      df_0 <- data.frame(table(nodes1$node))
+      repeated_species <- as.character(df_0[which(df_0[,2] == 2),][,1])
+      removed_repetition <- which((nodes1$node == repeated_species & nodes1$species_grilo == repeated_species) == TRUE)
+      nodes1 <- nodes1[-removed_repetition,]
+    }
     
     #Properties
     prop1 <- list()
@@ -303,13 +310,5 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
 }#END LOCAL
 
 #Load & Save
-#load("local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_with_metaweb_TL_10OUT23.RData")
-
-#head(local_fw_MAIORANO[[1]]$nodes)
-
-#class_list <- list()
-#for(i in 1:length(local_fw_MAIORANO)) class_list[[i]] <- class(local_fw_MAIORANO[[i]])[1]
-#how_many_species_df <- data.frame(colnames(species_in_grids), colSums(species_in_grids), unlist(class_list))
-#View(how_many_species_df)
-
+#load("local_fw_MAIORANO_with_metaweb_TL_13OUT23.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_with_metaweb_TL_13OUT23.RData")
