@@ -539,3 +539,19 @@ tl_previous_nr2 <- tl_previous_nr + geom_violin(aes(fill = group),) +
 tl_previous_nr2
 
 #save(tl_positions, file = "fig4.RData")
+
+
+################################################################################
+#               FIGURE x - Extinctions per trophic level
+################################################################################
+
+head(relative_tl_effects)
+
+species_loss_per_trophic_level <- merge(x=grids_grilo_shape, y=relative_tl_effects, by.x="PageNumber", by.y="grid")
+species_loss_per_trophic_level_2 <- species_loss_per_trophic_level[,c(1:2,15:20)]
+#terra::writeVector(species_loss_per_trophic_level_2, "species_loss_per_trophic_level_14OUT23.shp")
+#save(species_loss_per_trophic_level_2, file = "species_loss_per_trophic_level_dataframe.RData")
+
+################################################################################
+#               FIGURE x - Average trophic height of lost species
+################################################################################
