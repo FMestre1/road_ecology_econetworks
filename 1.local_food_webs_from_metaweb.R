@@ -73,6 +73,7 @@ maiorano_metaweb <- read.csv("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\s
 rownames(maiorano_metaweb) <- maiorano_metaweb$X
 maiorano_metaweb <- maiorano_metaweb[,-1]
 #View(maiorano_metaweb)
+#test1 <- maiorano_metaweb[rownames(maiorano_metaweb) == "Coracias garrulus",]
 
 #Replace the codes by the species names
 rn <- rownames(maiorano_metaweb)
