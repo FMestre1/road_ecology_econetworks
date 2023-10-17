@@ -1402,3 +1402,16 @@ lost_interactions_with_sec_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_i
 terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_with_sec_extinctions_11OUT23.shp")
 #terra::plet(lost_interactions_with_sec_extinctions, "lost_interactions")
 
+################################################################################
+
+"Coracias garrulus"
+
+here_it_is <- c()
+
+for(i in 1:length(local_fw_MAIORANO)) here_it_is[i] <- "Coracias garrulus" %in% local_fw_MAIORANO[[i]]$nodes$node
+
+which(here_it_is == TRUE)
+
+local_fw_MAIORANO[[7]]$trophic.links[local_fw_MAIORANO[[7]]$trophic.links$consumer == "Coracias garrulus",]
+local_fw_MAIORANO[[7]]$trophic.links[local_fw_MAIORANO[[7]]$trophic.links$resource == "Coracias garrulus",]
+

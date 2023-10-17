@@ -396,7 +396,7 @@ for(i in 1:nrow(table6_grids_of_presence_per_species)){
     table6_grids_of_presence_per_species[table6_grids_of_presence_per_species$SPECIES == sp_net2f_sp,]$`NUMBER OF GRIDS WHERE IT IS PRESENT AFTER PRIMARY FUTURE TO SECONDARY FUTURE` <- prev_sp_net2f + 1
   }
   
-    message(i)
+  message(i)
   
 }
 
@@ -428,3 +428,5 @@ write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table
 
 
 ################################################################################
+
+
