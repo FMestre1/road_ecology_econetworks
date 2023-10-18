@@ -307,7 +307,7 @@ View(table4_nr_interactions_steps)
 #5. Table with the proportion of interactions lost in each step ######################
 
 table5_proportion_interactions_lost_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 6))
-names() <- c(
+names(table5_proportion_interactions_lost_steps) <- c(
   "grid", 
   "START",
   "AFTER PRIMMARY EXTINCTIONS", 
