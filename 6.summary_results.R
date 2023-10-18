@@ -93,8 +93,11 @@ message(i)
 
 }
 
+View(table1_nr_species_steps)
+
 #write.csv(table1_nr_species_steps, file = "C:\\Users\\asus\\Desktop\\table1_nr_species_steps_17OUT.csv")
 
+ #DONE
 #2. Table with the proportion of species per TL in the start and at the end of each simulation #####################
 
 table2_proportion_species_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 16))
@@ -130,7 +133,7 @@ for(i in 1:length(local_fw_MAIORANO)){
   nr_net2p <- data.frame(table(net2p$nodes$position))
   nr_net1f <- data.frame(table(net1f$nodes$position))
   nr_net2f <- data.frame(table(net2f$nodes$position))
-  ##
+  
   nr_net0_TOP <- as.numeric(nr_net0[nr_net0 == "top",][2])
   nr_net1p_TOP <- as.numeric(nr_net1p[nr_net1p == "top",][2])
   nr_net2p_TOP <- as.numeric(nr_net2p[nr_net2p == "top",][2])
@@ -162,9 +165,9 @@ for(i in 1:length(local_fw_MAIORANO)){
   table2_proportion_species_steps$'AFTER SECONDARY EXTINCTIONS intermediate'[[i]] <- (nr_net1p_MID-nr_net2p_MID)/nr_net1p_MID
   table2_proportion_species_steps$'AFTER SECONDARY EXTINCTIONS basal'[[i]] <- (nr_net1p_BASAL-nr_net2p_BASAL)/nr_net1p_BASAL
   
-  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS top'[[i]] <- (nr_net2p_TOP-nr_net1f_TOP)/nr_net2p_TOP
-  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS intermediate'[[i]] <- (nr_net2p_MID-nr_net1f_MID)/nr_net2p_MID
-  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS basal'[[i]] <- (nr_net2p_BASAL-nr_net1f_BASAL)/nr_net2p_BASAL
+  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS top'[[i]] <- (nr_net0_TOP-nr_net1f_TOP)/nr_net0_TOP
+  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS intermediate'[[i]] <- (nr_net0_MID-nr_net1f_MID)/nr_net0_MID
+  table2_proportion_species_steps$'FUTURE AFTER PRIMMARY EXTINCTIONS basal'[[i]] <- (nr_net0_BASAL-nr_net1f_BASAL)/nr_net0_BASAL
   
   table2_proportion_species_steps$'FUTURE AFTER SECONDARY EXTINCTIONS top'[[i]] <- (nr_net1f_TOP-nr_net2f_TOP)/nr_net1f_TOP
   table2_proportion_species_steps$'FUTURE AFTER SECONDARY EXTINCTIONS intermediate'[[i]] <- (nr_net1f_MID-nr_net2f_MID)/nr_net1f_MID
@@ -174,8 +177,10 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-write.csv(table2_proportion_species_steps, file = "C:\\Users\\asus\\Desktop\\table2_proportion_species_steps_17OUT.csv")
+#write.csv(table2_proportion_species_steps, file = "C:\\Users\\asus\\Desktop\\table2_proportion_species_steps_18OUT.csv")
 
+View(table2_proportion_species_steps)
+ #DONE
 #3. Table with the average trophic height (TH) and that of remaining and extinct species ######################
 
 table3_trophic_height <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 14))
@@ -250,9 +255,11 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
+View(table3_trophic_height)
+
 write.csv(table3_trophic_height, file = "C:\\Users\\asus\\Desktop\\table3_trophic_height_17OUT.csv")
 
-
+ #DONE
 #4. Table with the number of interactions in the start and at the end of each simulation ######################
 
 table4_nr_interactions_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 6))
@@ -292,8 +299,11 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-write.csv(table4_nr_interactions_steps, file = "C:\\Users\\asus\\Desktop\\table4_nr_interactions_steps_17OUT.csv")
+#write.csv(table4_nr_interactions_steps, file = "C:\\Users\\asus\\Desktop\\table4_nr_interactions_steps_17OUT.csv")
 
+View(table4_nr_interactions_steps)
+
+ #DONE
 #5. Table with the proportion of interactions lost in each step ######################
 
 table5_proportion_interactions_lost_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 6))
@@ -325,15 +335,17 @@ for(i in 1:length(local_fw_MAIORANO)){
   table5_proportion_interactions_lost_steps$START[[i]] <- nlinks_net0
   table5_proportion_interactions_lost_steps$`AFTER PRIMMARY EXTINCTIONS`[[i]] <- (nlinks_net0-nlinks_net1p)/nlinks_net0 
   table5_proportion_interactions_lost_steps$`AFTER SECONDARY EXTINCTIONS`[[i]] <- (nlinks_net1p-nlinks_net2p)/nlinks_net1p
-  table5_proportion_interactions_lost_steps$`FUTURE AFTER PRIMMARY EXTINCTIONS`[[i]] <- (nlinks_net2p-nlinks_net1f)/nlinks_net2p
+  table5_proportion_interactions_lost_steps$`FUTURE AFTER PRIMMARY EXTINCTIONS`[[i]] <- (nlinks_net0-nlinks_net1f)/nlinks_net0
   table5_proportion_interactions_lost_steps$`FUTURE AFTER SECONDARY EXTINCTIONS`[[i]] <- (nlinks_net1f-nlinks_net2f)/nlinks_net1f
   
   message(i)
   
 }
 
-write.csv(table5_proportion_interactions_lost_steps, file = "C:\\Users\\asus\\Desktop\\table5_proportion_interactions_lost_steps_17OUT.csv")
+write.csv(table5_proportion_interactions_lost_steps, file = "C:\\Users\\asus\\Desktop\\table5_proportion_interactions_lost_steps_18OUT.csv")
 
+View(table5_proportion_interactions_lost_steps)
+ #DONE
 #6. Number of grids where each species is present #############################################################
 
 comm_colection <- cheddar::CommunityCollection(local_fw_MAIORANO)
@@ -400,9 +412,11 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_18OUT.csv")
+#write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_18OUT.csv")
 
+View(table6_grids_of_presence_per_species)
 
+  #DONE
 #7. Number of grids lost per species in each step  ######################################################################
 
 table7_grids_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 5))
@@ -425,6 +439,7 @@ table7_grids_lost_per_species$`GRIDS LOST FROM PRIMARY FUTURE TO SECONDARY FUTUR
 
 write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_18OUT.csv")
 
+ #DONE
 
 ################################################################################
 
