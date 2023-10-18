@@ -352,7 +352,7 @@ names(table6_grids_of_presence_per_species) <- c("SPECIES",
 table6_grids_of_presence_per_species[,] <- 0
 table6_grids_of_presence_per_species$SPECIES <- species
 
-for(i in 1:nrow(table6_grids_of_presence_per_species)){
+for(i in 1:length(local_fw_MAIORANO)){
   
   net0 <- local_fw_MAIORANO[[i]]
   net1p <- local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[i]]
@@ -365,7 +365,7 @@ for(i in 1:nrow(table6_grids_of_presence_per_species)){
   sp_net2p <- net2p$nodes$node
   sp_net1f <- net1f$nodes$node
   sp_net2f <- net2f$nodes$node
-  
+
   for(j in 1:length(sp_net0)){
     sp_net0_sp <- sp_net0[[j]]
     prev_sp_net0 <- table6_grids_of_presence_per_species[table6_grids_of_presence_per_species$SPECIES == sp_net0_sp,]$`NUMBER OF SQUARE GRIDS AT START`
@@ -400,9 +400,8 @@ for(i in 1:nrow(table6_grids_of_presence_per_species)){
   
 }
 
-#View(table6_grids_of_presence_per_species)
+write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_18OUT.csv")
 
-write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_17OUT.csv")
 
 #7. Number of grids lost per species in each step  ######################################################################
 
@@ -410,7 +409,7 @@ table7_grids_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 
 names(table7_grids_lost_per_species) <- c("SPECIES", 
                                           "GRIDS LOST FROM START TO PRIMARY EXTINCTIONS", 
                                           "GRIDS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS", 
-                                          "GRIDS LOST FROM SECONDARY TO PRIMARY FUTURE", 
+                                          "GRIDS LOST FROM START TO PRIMARY FUTURE", 
                                           "GRIDS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE" 
 )
 
@@ -419,12 +418,12 @@ names(table6_grids_of_presence_per_species)
 table7_grids_lost_per_species$SPECIES <- species
 table7_grids_lost_per_species$`GRIDS LOST FROM START TO PRIMARY EXTINCTIONS` <- table6_grids_of_presence_per_species[,2] - table6_grids_of_presence_per_species[,3]
 table7_grids_lost_per_species$`GRIDS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS`<- table6_grids_of_presence_per_species[,3] - table6_grids_of_presence_per_species[,4]
-table7_grids_lost_per_species$`GRIDS LOST FROM SECONDARY TO PRIMARY FUTURE`<- table6_grids_of_presence_per_species[,4] - table6_grids_of_presence_per_species[,5]
+table7_grids_lost_per_species$`GRIDS LOST FROM START TO PRIMARY FUTURE` <- table6_grids_of_presence_per_species[,2] - table6_grids_of_presence_per_species[,5]
 table7_grids_lost_per_species$`GRIDS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE`<- table6_grids_of_presence_per_species[,5] - table6_grids_of_presence_per_species[,6]
 
 #View(table7_grids_lost_per_species)
 
-write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_17OUT.csv")
+write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_18OUT.csv")
 
 
 ################################################################################
