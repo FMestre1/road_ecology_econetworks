@@ -1404,11 +1404,11 @@ terra::writeVector(lost_interactions_with_sec_extinctions, "lost_interactions_wi
 
 ################################################################################
 
-"Coracias garrulus"
+"Corvus cornix"
 
 here_it_is <- c()
 
-for(i in 1:length(local_fw_MAIORANO)) here_it_is[i] <- "Coracias garrulus" %in% local_fw_MAIORANO[[i]]$nodes$node
+for(i in 1:length(local_fw_MAIORANO)) here_it_is[i] <- "Phylloscopus ibericus" %in% local_fw_MAIORANO[[i]]$nodes$node
 
 which(here_it_is == TRUE)
 
