@@ -72,6 +72,9 @@ template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_net
 maiorano_metaweb <- read.csv("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
 rownames(maiorano_metaweb) <- maiorano_metaweb$X
 maiorano_metaweb <- maiorano_metaweb[,-1]
+
+#write.csv(maiorano_metaweb, file = "maiorano_metaweb.csv")
+
 #View(maiorano_metaweb)
 #test1 <- maiorano_metaweb[rownames(maiorano_metaweb) == "Coracias garrulus",]
 
