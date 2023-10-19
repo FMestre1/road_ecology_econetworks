@@ -496,7 +496,7 @@ for(i in 1:length(species)){
 
 View(table8_interactions_lost_per_species)
 
-write.csv(table8_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table8_interactions_lost_per_species_19OUT.csv")
+#write.csv(table8_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table8_interactions_lost_per_species_19OUT.csv")
 
 #9. Number of  lost interactions per species as predator and prey in each step  ######################################################################
 
@@ -528,4 +528,26 @@ table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY FUTURE TO S
 
 #write.csv(table9_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table9_interactions_lost_per_species_19OUT.csv")
 
+
+
+
+#10 to 14. Full tables of links, per grid, and link   ######################################################################
+
+COMM_COLL_local_fw_MAIORANO <- cheddar::CommunityCollection(local_fw_MAIORANO)
+COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)
+COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
+COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
+COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
+
+tlinks_COMM_COLL_local_fw_MAIORANO <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
+
+write.csv(tlinks_COMM_COLL_local_fw_MAIORANO, file = "C:\\Users\\asus\\Desktop\\table_10_all_links_local_fw_MAIORANO.csv")
+write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_11_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS.csv")
+write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_12_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS.csv")
+write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE.csv")
+write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE.csv")
 
