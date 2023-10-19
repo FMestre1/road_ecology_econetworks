@@ -97,7 +97,7 @@ View(table1_nr_species_steps)
 
 #write.csv(table1_nr_species_steps, file = "C:\\Users\\asus\\Desktop\\table1_nr_species_steps_17OUT.csv")
 
- #DONE
+
 #2. Table with the proportion of species per TL in the start and at the end of each simulation #####################
 
 table2_proportion_species_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 16))
@@ -180,7 +180,7 @@ for(i in 1:length(local_fw_MAIORANO)){
 #write.csv(table2_proportion_species_steps, file = "C:\\Users\\asus\\Desktop\\table2_proportion_species_steps_18OUT.csv")
 
 View(table2_proportion_species_steps)
- #DONE
+
 #3. Table with the average trophic height (TH) and that of remaining and extinct species ######################
 
 table3_trophic_height <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 14))
@@ -259,7 +259,7 @@ View(table3_trophic_height)
 
 write.csv(table3_trophic_height, file = "C:\\Users\\asus\\Desktop\\table3_trophic_height_17OUT.csv")
 
- #DONE
+
 #4. Table with the number of interactions in the start and at the end of each simulation ######################
 
 table4_nr_interactions_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 6))
@@ -303,7 +303,6 @@ for(i in 1:length(local_fw_MAIORANO)){
 
 View(table4_nr_interactions_steps)
 
- #DONE
 #5. Table with the proportion of interactions lost in each step ######################
 
 table5_proportion_interactions_lost_steps <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 6))
@@ -345,7 +344,7 @@ for(i in 1:length(local_fw_MAIORANO)){
 write.csv(table5_proportion_interactions_lost_steps, file = "C:\\Users\\asus\\Desktop\\table5_proportion_interactions_lost_steps_18OUT.csv")
 
 View(table5_proportion_interactions_lost_steps)
- #DONE
+
 #6. Number of grids where each species is present #############################################################
 
 comm_colection <- cheddar::CommunityCollection(local_fw_MAIORANO)
@@ -416,7 +415,6 @@ for(i in 1:length(local_fw_MAIORANO)){
 
 View(table6_grids_of_presence_per_species)
 
-  #DONE
 #7. Number of grids lost per species in each step  ######################################################################
 
 table7_grids_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 5))
@@ -439,8 +437,95 @@ table7_grids_lost_per_species$`GRIDS LOST FROM PRIMARY FUTURE TO SECONDARY FUTUR
 
 write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_18OUT.csv")
 
- #DONE
 
-################################################################################
+
+#8. Number of  interactions per species as predator and prey in each step  ######################################################################
+
+
+COMM_COLL_local_fw_MAIORANO <- cheddar::CommunityCollection(local_fw_MAIORANO)
+COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)
+COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
+COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
+COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CommunityCollection(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
+
+tlinks_COMM_COLL_local_fw_MAIORANO <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
+tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
+
+
+table8_interactions_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 11))
+names(table8_interactions_lost_per_species) <- c(
+  "SPECIES", 
+  "INTERACTIONS AS PREDATOR AT START",
+  "INTERACTIONS AS PREY AT START",
+  "INTERACTIONS AS PREDATOR AFTER PRIMARY EXTINCTIONS",
+  "INTERACTIONS AS PREY AFTER PRIMARY EXTINCTIONS",
+  "INTERACTIONS AS PREDATOR AFTER SECONDARY EXTINCTIONS",
+  "INTERACTIONS AS PREY AFTER SECONDARY EXTINCTIONS",
+  "INTERACTIONS AS PREDATOR AFTER PRIMARY FUTURE EXTINCTIONS",
+  "INTERACTIONS AS PREY AFTER PRIMARY FUTURE EXTINCTIONS",
+  "INTERACTIONS AS PREDATOR AFTER SECONDARY FUTURE EXTINCTIONS",
+  "INTERACTIONS AS PREY AFTER SECONDARY FUTURE EXTINCTIONS"
+)
+
+table8_interactions_lost_per_species[,] <- 0
+table8_interactions_lost_per_species$SPECIES <- species
+
+for(i in 1:length(species)){
+  
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREDATOR AT START' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO$consumer == species[i])
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREY AT START' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO$resource == species[i])
+  
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREDATOR AFTER PRIMARY EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS$consumer == species[i])
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREY AFTER PRIMARY EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS$resource == species[i])
+  
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREDATOR AFTER SECONDARY EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS$consumer == species[i])
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREY AFTER SECONDARY EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS$resource == species[i])
+  
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREDATOR AFTER PRIMARY FUTURE EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE$consumer == species[i])
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREY AFTER PRIMARY FUTURE EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE$resource == species[i])
+  
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREDATOR AFTER SECONDARY FUTURE EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE$consumer == species[i])
+  table8_interactions_lost_per_species[which(table8_interactions_lost_per_species[,1] == species[i]),]$'INTERACTIONS AS PREY AFTER SECONDARY FUTURE EXTINCTIONS' <- sum(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE$resource == species[i])
+  
+  message(i)
+  
+}
+
+View(table8_interactions_lost_per_species)
+
+write.csv(table8_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table8_interactions_lost_per_species_19OUT.csv")
+
+#9. Number of  lost interactions per species as predator and prey in each step  ######################################################################
+
+table9_interactions_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 9))
+names(table9_interactions_lost_per_species) <- c("SPECIES", 
+                                                 "INTERACTIONS LOST FROM START TO PRIMARY EXTINCTIONS AS PREDATOR",
+                                                 "INTERACTIONS LOST FROM START TO PRIMARY EXTINCTIONS AS PREY", 
+                                                 "INTERACTIONS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS AS PREDATOR", 
+                                                 "INTERACTIONS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS AS PREY", 
+                                                 "INTERACTIONS LOST FROM START TO PRIMARY FUTURE AS PREDATOR", 
+                                                 "INTERACTIONS LOST FROM START TO PRIMARY FUTURE AS PREY", 
+                                                 "INTERACTIONS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE AS PREDATOR", 
+                                                 "INTERACTIONS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE AS PREY" 
+)
+
+table9_interactions_lost_per_species[,] <- 0
+table9_interactions_lost_per_species$SPECIES <- species
+#
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM START TO PRIMARY EXTINCTIONS AS PREDATOR` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AT START` - table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER PRIMARY EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM START TO PRIMARY EXTINCTIONS AS PREY` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREY AT START` - table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER PRIMARY EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS AS PREDATOR` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER PRIMARY EXTINCTIONS` - table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER SECONDARY EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY TO SECONDARY EXTINCTIONS AS PREY` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER PRIMARY EXTINCTIONS` - table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER SECONDARY EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM START TO PRIMARY FUTURE AS PREDATOR` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AT START` - table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER PRIMARY FUTURE EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM START TO PRIMARY FUTURE AS PREY` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREY AT START` - table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER PRIMARY FUTURE EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE AS PREDATOR`<- table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER PRIMARY FUTURE EXTINCTIONS` - table8_interactions_lost_per_species$`INTERACTIONS AS PREDATOR AFTER SECONDARY FUTURE EXTINCTIONS`
+table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE AS PREY` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER PRIMARY FUTURE EXTINCTIONS` - table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER SECONDARY FUTURE EXTINCTIONS`
+
+#View(table9_interactions_lost_per_species)
+
+#write.csv(table9_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table9_interactions_lost_per_species_19OUT.csv")
 
 
