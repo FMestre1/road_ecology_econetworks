@@ -545,9 +545,9 @@ tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::Col
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
 
-write.csv(tlinks_COMM_COLL_local_fw_MAIORANO, file = "C:\\Users\\asus\\Desktop\\table_10_all_links_local_fw_MAIORANO.csv")
-write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_11_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS.csv")
-write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_12_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS.csv")
-write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE.csv")
-write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO, file = "C:\\Users\\asus\\Desktop\\table_10_all_links_local_fw_MAIORANO.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_11_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_12_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE.csv")
 
