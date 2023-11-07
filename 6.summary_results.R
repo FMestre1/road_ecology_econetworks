@@ -556,6 +556,8 @@ tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- chedd
 View(table9_interactions_lost_per_species)
 names(overall_previous_positions)
 
+table(table9_interactions_lost_per_species$SPECIES %in% overall_previous_positions$species)
+
 table15_lost_per_TL <- merge(x = table9_interactions_lost_per_species,
       y = overall_previous_positions,
       by.x = "SPECIES",
@@ -575,3 +577,99 @@ table15_lost_per_TL_3 <- as.data.frame(summarise(table15_lost_per_TL_2, across(e
 View(table15_lost_per_TL_3)
 
 #write.csv(table15_lost_per_TL_3, file = "C:\\Users\\asus\\Desktop\\table15_lost_per_TL_3.csv")
+
+
+################################################################################
+#Problem species ###############################################################
+################################################################################
+
+"Dendrocopos syriacus" %in% overall_basal
+"Eliomys quercinus" %in% overall_basal
+"Fulica cristata" %in% overall_basal
+
+problem_species_pos <- data.frame(matrix(ncol = 7))
+names(problem_species_pos) <- c("grid", "is_Ds", "is_Eq", "is_Fc", "Ds_pos", "Eq_pos", "Fc_pos")
+head(problem_species_pos)
+
+#Where is sp1
+for(i in 1:length(local_fw_MAIORANO)){
+  
+  net_sample <- local_fw_MAIORANO[[i]]
+  problem_species_pos[i,1] <- net_sample$properties$title
+  problem_species_pos[i,2] <- "Dendrocopos syriacus" %in% net_sample$nodes$node  
+  problem_species_pos[i,3] <- "Eliomys quercinus" %in% net_sample$nodes$node  
+  problem_species_pos[i,4] <- "Fulica cristata" %in% net_sample$nodes$node  
+  #
+  bas_net <- as.data.frame(cheddar::IsBasalNode(net_sample))
+  inter_net <- as.data.frame(cheddar::IsIntermediateNode(net_sample))
+  top_net <- as.data.frame(cheddar::IsTopLevelNode(net_sample))
+  
+  if("Dendrocopos syriacus" %in% net_sample$nodes$node){   
+    
+    if("Dendrocopos syriacus" %in% rownames(bas_net)) problem_species_pos[i,5] <- "basal"
+    if("Dendrocopos syriacus" %in% rownames(inter_net)) problem_species_pos[i,5] <- "intermediate"
+    if("Dendrocopos syriacus" %in% rownames(top_net)) problem_species_pos[i,5] <- "top"
+    }
+  
+  if("Eliomys quercinus" %in% net_sample$nodes$node){  
+    
+    if("Eliomys quercinus" %in% rownames(bas_net)) problem_species_pos[i,6] <- "basal"
+    if("Eliomys quercinus" %in% rownames(inter_net)) problem_species_pos[i,6] <- "intermediate"
+    if("Eliomys quercinus" %in% rownames(top_net)) problem_species_pos[i,6] <- "top"
+    }
+  
+  if("Fulica cristata" %in% net_sample$nodes$node){  
+    
+    if("Fulica cristata" %in% rownames(bas_net)) problem_species_pos[i,7] <- "basal"
+    if("Fulica cristata" %in% rownames(inter_net)) problem_species_pos[i,7] <- "intermediate"
+    if("Fulica cristata" %in% rownames(top_net)) problem_species_pos[i,7] <- "top"
+    }
+
+  message(i)
+  
+}
+
+
+#write.csv(problem_species_pos, file = "C:\\Users\\asus\\Desktop\\problem_species_pos.csv")
+
+table(problem_species_pos$Ds_pos)
+Ds_pos <- subset(problem_species_pos, Ds_pos == "top")
+Ds_pos <- Ds_pos$grid
+#
+table(problem_species_pos$Eq_pos)
+Eq_pos <- subset(problem_species_pos, Eq_pos == "top")
+Eq_pos <- Eq_pos$grid
+#
+table(problem_species_pos$Fc_pos)
+Fc_pos <- subset(problem_species_pos, Fc_pos == "top")
+Fc_pos <- Fc_pos$grid
+
+
+## "Dendrocopos syriacus" ##
+head(which(problem_species_pos$grid %in% Ds_pos))
+
+error_net <- local_fw_MAIORANO[[7]]
+
+"Dendrocopos syriacus" %in% error_net$nodes$node
+View(error_net$trophic.links)
+
+View(t(maiorano_metaweb["Dendrocopos syriacus", ]))
+#maiorano_metaweb["Lynx pardinus", "Oryctolagus cuniculus"]
+
+#Is the error in the metaweb?
+#View(maiorano_cheddar$trophic.links)
+#no!
+
+## "Eliomys quercinus" ##
+head(which(problem_species_pos$grid %in% Eq_pos))
+
+error_net2 <- local_fw_MAIORANO[[2]]
+
+"Eliomys quercinus" %in% error_net2$nodes$node
+View(error_net2$trophic.links)
+
+View(t(maiorano_metaweb["Eliomys quercinus", ]))
+
+
+## "Fulica cristata" ##
+head(which(problem_species_pos$grid %in% Fc_pos))

@@ -113,9 +113,11 @@ for(i in 1:nrow(maiorano_metaweb)){
   preys1 <- colnames(row1[,which(row1 == 1)])
   predator2 <- rep(predator1, length(preys1))
   df1 <- data.frame(preys1, predator2)
-  if(nrow(df1)!=0) {colnames(df1) <- c("resource", "consumer")
-  trophiclinks <- rbind(trophiclinks, df1)}
-}
+  if(nrow(df1)!=0) {
+    colnames(df1) <- c("resource", "consumer")
+    trophiclinks <- rbind(trophiclinks, df1)
+                   }
+  }
 
 trophiclinks <- trophiclinks[-1,]
 
