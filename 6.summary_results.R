@@ -551,3 +551,27 @@ tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- chedd
 #write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE.csv")
 #write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE.csv")
 
+#15. Number of  lost interactions per TL as predator and prey in each step   ######################################################################
+
+View(table9_interactions_lost_per_species)
+names(overall_previous_positions)
+
+table15_lost_per_TL <- merge(x = table9_interactions_lost_per_species,
+      y = overall_previous_positions,
+      by.x = "SPECIES",
+      by.y = "species",
+      all = FALSE)
+
+names(table15_lost_per_TL)
+table15_lost_per_TL$position <- as.factor(table15_lost_per_TL$position)
+
+View(table15_lost_per_TL)
+
+table15_lost_per_TL_2 <- group_by(table15_lost_per_TL, position)
+View(table15_lost_per_TL_2)
+table15_lost_per_TL_2 <- table15_lost_per_TL_2[,-1]
+
+table15_lost_per_TL_3 <- as.data.frame(summarise(table15_lost_per_TL_2, across(everything(), sum)))
+View(table15_lost_per_TL_3)
+
+#write.csv(table15_lost_per_TL_3, file = "C:\\Users\\asus\\Desktop\\table15_lost_per_TL_3.csv")
