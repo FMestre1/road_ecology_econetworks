@@ -43,7 +43,6 @@ grids_grilo_shape <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_
 grids_grilo <- data.frame(grids_grilo_shape$PageName, grids_grilo_shape$kmkm2)
 #head(grids_grilo)
 
-
 #To save the networks after primary extinctions
 local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- vector(mode = "list", length = length(local_fw_MAIORANO))
 names(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS) <- names(local_fw_MAIORANO)
@@ -53,7 +52,7 @@ species_loss_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTIN
 connectance_dif_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS))
 compart_dif_sec_ext <- rep(NA, length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS))
 
-#Simulate secondayextinctions effects of extinctions
+#Simulate secondary extinctions effects of extinctions
 for(i in 1:length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)){
   
   cheddar1 <- local_fw_MAIORANO[[i]]
@@ -120,7 +119,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)){
   
 }
 
-#save(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_13OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
 
 #Check results
 species_loss_sec_ext
@@ -138,21 +137,12 @@ result_sec_ext <- data.frame(
 names(result_sec_ext)[1] <- "grid"
 #head(result_sec_ext)
 
-result_sec_ext_pair_pagenumber_pagename <- merge(x = pair_pagenumber_pagename,
-                                                 y = result_sec_ext,
-                                                 by.x = "PageNumber",
-                                                 by.y = "grid")
+grids_grilo_shape_species_loss_sec_ext <- merge(x=grids_grilo_shape, 
+                                                y=result_sec_ext, 
+                                                by.x="PageNumber", 
+                                                by.y= "grid")
 
-#View(result_sec_ext_pair_pagenumber_pagename)
-names(result_sec_ext_pair_pagenumber_pagename)
-
-result_sec_ext$grid <- as.numeric(result_sec_ext$grid)
-
-names(result_sec_ext)
-names(grids_grilo_shape)
-
-grids_grilo_shape_species_loss_sec_ext <- merge(x=grids_grilo_shape, y=result_sec_ext, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_sec_ext, "pre_after_road_sec_ext_13OUT23.shp")
+#terra::writeVector(grids_grilo_shape_species_loss_sec_ext, "pre_after_road_sec_ext_08NOV23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with secondary extinctions
@@ -171,4 +161,4 @@ for(i in 1:nrow(nr_lost_interactions_sec)){
 }
 
 lost_interactions_with_secondary_extinctions <- merge(x=grids_grilo_shape, y=nr_lost_interactions_sec, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_secondary_extinctions, "nr_lost_interactions_with_secondary_extinctions_13OUT23.shp")
+#terra::writeVector(lost_interactions_with_secondary_extinctions, "nr_lost_interactions_with_secondary_extinctions_08NOV23.shp")

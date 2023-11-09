@@ -52,13 +52,13 @@ for(i in 1:nrow(nr_species_per_grid_per_tl_METAWEB)){
 
 #saving as shapefile
 sp_richness_per_trophic_level_METAWEB <- merge(x=grids_grilo_shape, y=nr_species_per_grid_per_tl_METAWEB, by.x="PageNumber", by.y="grid")
-#terra::writeVector(sp_richness_per_trophic_level_METAWEB, "sp_richness_per_trophic_level_METAWEB_13OUT23.shp")
+#terra::writeVector(sp_richness_per_trophic_level_METAWEB, "sp_richness_per_trophic_level_METAWEB_08NOV23.shp")
 
 ############################## NR OF INTERACTIONS ##############################
 
 nr_interactions_per_grid_METAWEB <- data.frame(matrix(nrow=length(local_fw_MAIORANO), ncol = 2))
 names(nr_interactions_per_grid_METAWEB) <- c("grid", "nr_interactions")
-head(nr_interactions_per_grid_METAWEB)
+#head(nr_interactions_per_grid_METAWEB)
 
 for(i in 1:nrow(nr_interactions_per_grid_METAWEB)){
   
@@ -74,9 +74,10 @@ for(i in 1:nrow(nr_interactions_per_grid_METAWEB)){
 
 #saving as shapefile
 nr_interactions_METAWEB <- merge(x=grids_grilo_shape, y=nr_interactions_per_grid_METAWEB, by.x="PageNumber", by.y="grid")
-#terra::writeVector(nr_interactions_METAWEB, "nr_interactions_METAWEB_13OUT23.shp")
+#terra::writeVector(nr_interactions_METAWEB, "nr_interactions_METAWEB_08NOV23.shp")
 
 ################################ ROAD DENSITY ##################################
+
 #QGIS
 
 ################################################################################
@@ -145,7 +146,7 @@ for(i in 1:length(local_fw_MAIORANO)){
       proportion_previous_level_METAWEB$proportion_intermediate_removed_orig_prim[i] <- prop_interm
       proportion_previous_level_METAWEB$proportion_basal_removed_orig_prim[i] <- prop_basal
 
-    } 
+    }
     
   }
   
@@ -169,7 +170,7 @@ for(i in 1:length(local_fw_MAIORANO)){
       
       #Original to primary
       proportion_previous_level_METAWEB$PRI_SEC__TL_remaining_sp[i] <- av_remaining2
-      proportion_previous_level_METAWEB$PRI_SEC_extinct_sp[i] <- av_removed2
+      proportion_previous_level_METAWEB$PRI_SEC_TL_extinct_sp[i] <- av_removed2
       proportion_previous_level_METAWEB$proportion_top_removed_prim_sec[i] <- prop_top2
       proportion_previous_level_METAWEB$proportion_intermediate_removed_prim_sec[i] <- prop_interm2
       proportion_previous_level_METAWEB$proportion_basal_removed_prim_sec[i] <- prop_basal2
@@ -333,7 +334,7 @@ for(i in 1:nrow(relative_tl_effects)){
 }
 
 #Save
-#save(relative_tl_effects, file = "relative_tl_effects_13OUT23.RData")
+#save(relative_tl_effects, file = "relative_tl_effects_08NOV23.RData")
 
 #1. From original to primary extinctions
 top_orig_prim2 <- data.frame(relative_tl_effects$BEFORE_to_PRIMARY_top_level, "top")
@@ -363,7 +364,7 @@ rem_orig_prim2_violin <- rem_orig_prim2 + geom_violin(aes(fill = level)) +
 
 rem_orig_prim2_violin
 
-#save(removed_position_orig_prim2, file = "data_fig_2b.RData")
+#save(removed_position_orig_prim2, file = "data_fig_2b_08NOV23.RData")
 
 
 #2. From primary to cascading effects
@@ -394,7 +395,7 @@ rem_prim_casc2_violin <- rem_prim_casc2 + geom_violin(aes(fill = level)) +
 
 rem_prim_casc2_violin
 
-#save(removed_position_prim_casc2, file = "data_fig_2c.RData")
+#save(removed_position_prim_casc2, file = "data_fig_2c_08NOV23.RData")
 
 #Combine three plots for fig.2
 grid.arrange(tl_vuln2_v2, 
@@ -431,9 +432,9 @@ par(mar=c(4,8,1,1))
 x=c(1,2,3)
 
 #Values for point estimate and CI
-avg=c(-0.03,-0.05,-0.17)
-lower=c(-0.07,-0.09,-0.21)
-upper=c(0.01,-0.01,-0.13)
+avg=c(-0.03,-0.06,-0.17)
+lower=c(-0.07,-0.10,-0.21)
+upper=c(0.01,-0.02,-0.13)
 
 #Plot
 plot(1, type="n", ylab="", yaxt="n", xlab="Cohen's d (IC95%)", xlim=c(-0.5, .5), ylim=c(0, 4), main="")
@@ -541,24 +542,23 @@ tl_previous_nr2
 
 tl_positions
 
-#save(tl_positions, file = "fig4.RData")
+#save(tl_positions, file = "fig4_08NOV23.RData")
 
 #Summarize
 tl_positions[complete.cases(tl_positions),] %>% 
   group_by(group) %>% 
   summarise(Average=mean(tl))
 
-  
 ################################################################################
 #               FIGURE x - Extinctions per trophic level
 ################################################################################
 
-head(relative_tl_effects)
+#head(relative_tl_effects)
 
 species_loss_per_trophic_level <- merge(x=grids_grilo_shape, y=relative_tl_effects, by.x="PageNumber", by.y="grid")
 species_loss_per_trophic_level_2 <- species_loss_per_trophic_level[,c(1:2,15:20)]
-#terra::writeVector(species_loss_per_trophic_level_2, "species_loss_per_trophic_level_14OUT23.shp")
-#save(species_loss_per_trophic_level_2, file = "species_loss_per_trophic_level_dataframe.RData")
+#terra::writeVector(species_loss_per_trophic_level_2, "species_loss_per_trophic_level_08NOV23.shp")
+#save(species_loss_per_trophic_level_2, file = "species_loss_per_trophic_level_dataframe_08NOV23.RData")
 
 ################################################################################
 #               FIGURE x - Average trophic height of lost species

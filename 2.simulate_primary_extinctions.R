@@ -23,9 +23,6 @@ template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_net
 paired_pagename_pagenumber <- data.frame(grids_grilo_shape)[,1:2]
 #head(paired_pagename_pagenumber)
 
-#local_fw_MAIORANO # original local networks
-#local_fw_MAIORANO_REMOVED[[2]]
-
 ################################################################################
 # 1. Extinction simulation
 ################################################################################
@@ -106,7 +103,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)){
 }
 
 #Save
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_METAWEB_TL_13OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
 
 result_prim_ext <- data.frame(
   names(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS),
@@ -121,7 +118,7 @@ names(grids_grilo_shape)
 names(result_prim_ext)
 
 grids_grilo_shape_species_loss_prim_ext <- merge(x=grids_grilo_shape, y=result_prim_ext, by.x="PageNumber", by.y= "grid")
-#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_13OUT23.shp")
+#terra::writeVector(grids_grilo_shape_species_loss_prim_ext, "pre_after_road_prim_ext_08NOV23.shp")
 
 ################################################################################
 # 2. How many interactions lost? - with primary extinctions
@@ -144,4 +141,4 @@ message(i)
 #names(nr_lost_interactions_prim)
 
 lost_interactions_with_primary_extinctions <- merge(x=template_grilo, y=nr_lost_interactions_prim, by.x="PageNumber", by.y="grid")
-#terra::writeVector(lost_interactions_with_primary_extinctions, "nr_lost_interactions_with_primary_extinctions_13OUT23.shp", overwrite=TRUE)
+#terra::writeVector(lost_interactions_with_primary_extinctions, "nr_lost_interactions_with_primary_extinctions_08NOV23.shp", overwrite=TRUE)

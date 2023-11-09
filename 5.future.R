@@ -25,7 +25,7 @@ grids_grilo_shape_2 <- terra::cbind2(grids_grilo_shape, data.frame(kmkm2_10))
 #names(grids_grilo_shape_2)
 grids_grilo_shape_2 <- grids_grilo_shape_2[, -c(3:14)]
 
-terra::writeVector(grids_grilo_shape_2, "grids_grilo_shape_2.shp")
+#terra::writeVector(grids_grilo_shape_2, "grids_grilo_shape_2_08NOV23.shp")
 
 ################################################################################
 #                  SIMULATIONS FUTURE - PRIMARY EXTINCTIONS
@@ -107,7 +107,7 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)){
 }
 
 #Save
-#save(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE_16OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE_08NOV23.RData")
 
 ################################################################################
 #                  SIMULATIONS FUTURE - SECONDARY EXTINCTIONS
@@ -189,6 +189,6 @@ for(i in 1:length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)){
 }
 
 #Save
-#save(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE_16OUT23.RData")
+#save(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE_09NOV23.RData")
 
 

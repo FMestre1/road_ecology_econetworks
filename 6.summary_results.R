@@ -93,9 +93,8 @@ message(i)
 
 }
 
-View(table1_nr_species_steps)
-
-#write.csv(table1_nr_species_steps, file = "C:\\Users\\asus\\Desktop\\table1_nr_species_steps_17OUT.csv")
+#View(table1_nr_species_steps)
+#write.csv(table1_nr_species_steps, file = "C:\\Users\\asus\\Desktop\\table1_nr_species_steps_09NOV.csv")
 
 
 #2. Table with the proportion of species per TL in the start and at the end of each simulation #####################
@@ -177,9 +176,9 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-#write.csv(table2_proportion_species_steps, file = "C:\\Users\\asus\\Desktop\\table2_proportion_species_steps_18OUT.csv")
+#View(table2_proportion_species_steps)
+#write.csv(table2_proportion_species_steps, file = "C:\\Users\\asus\\Desktop\\table2_proportion_species_steps_09NOV.csv")
 
-View(table2_proportion_species_steps)
 
 #3. Table with the average trophic height (TH) and that of remaining and extinct species ######################
 
@@ -255,9 +254,8 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-View(table3_trophic_height)
-
-write.csv(table3_trophic_height, file = "C:\\Users\\asus\\Desktop\\table3_trophic_height_17OUT.csv")
+#View(table3_trophic_height)
+#write.csv(table3_trophic_height, file = "C:\\Users\\asus\\Desktop\\table3_trophic_height_09NOV.csv")
 
 
 #4. Table with the number of interactions in the start and at the end of each simulation ######################
@@ -299,9 +297,9 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-#write.csv(table4_nr_interactions_steps, file = "C:\\Users\\asus\\Desktop\\table4_nr_interactions_steps_17OUT.csv")
+#View(table4_nr_interactions_steps)
+#write.csv(table4_nr_interactions_steps, file = "C:\\Users\\asus\\Desktop\\table4_nr_interactions_steps_09NOV.csv")
 
-View(table4_nr_interactions_steps)
 
 #5. Table with the proportion of interactions lost in each step ######################
 
@@ -341,9 +339,8 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-write.csv(table5_proportion_interactions_lost_steps, file = "C:\\Users\\asus\\Desktop\\table5_proportion_interactions_lost_steps_18OUT.csv")
-
-View(table5_proportion_interactions_lost_steps)
+#View(table5_proportion_interactions_lost_steps)
+#write.csv(table5_proportion_interactions_lost_steps, file = "C:\\Users\\asus\\Desktop\\table5_proportion_interactions_lost_steps_09NOV.csv")
 
 #6. Number of grids where each species is present #############################################################
 
@@ -411,9 +408,9 @@ for(i in 1:length(local_fw_MAIORANO)){
   
 }
 
-#write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_18OUT.csv")
+#View(table6_grids_of_presence_per_species)
+#write.csv(table6_grids_of_presence_per_species, file = "C:\\Users\\asus\\Desktop\\table6_grids_of_presence_per_species_09NOV.csv")
 
-View(table6_grids_of_presence_per_species)
 
 #7. Number of grids lost per species in each step  ######################################################################
 
@@ -434,8 +431,7 @@ table7_grids_lost_per_species$`GRIDS LOST FROM START TO PRIMARY FUTURE` <- table
 table7_grids_lost_per_species$`GRIDS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE`<- table6_grids_of_presence_per_species[,5] - table6_grids_of_presence_per_species[,6]
 
 #View(table7_grids_lost_per_species)
-
-write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_18OUT.csv")
+#write.csv(table7_grids_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table7_grids_lost_per_species_09NOV.csv")
 
 
 
@@ -453,7 +449,6 @@ tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS <- cheddar::Colle
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
-
 
 table8_interactions_lost_per_species <- data.frame(matrix(nrow=length(species), ncol = 11))
 names(table8_interactions_lost_per_species) <- c(
@@ -494,9 +489,8 @@ for(i in 1:length(species)){
   
 }
 
-View(table8_interactions_lost_per_species)
-
-#write.csv(table8_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table8_interactions_lost_per_species_19OUT.csv")
+#View(table8_interactions_lost_per_species)
+#write.csv(table8_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table8_interactions_lost_per_species_09NOV.csv")
 
 #9. Number of  lost interactions per species as predator and prey in each step  ######################################################################
 
@@ -525,8 +519,7 @@ table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY FUTURE TO S
 table9_interactions_lost_per_species$`INTERACTIONS LOST FROM PRIMARY FUTURE TO SECONDARY FUTURE AS PREY` <- table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER PRIMARY FUTURE EXTINCTIONS` - table8_interactions_lost_per_species$`INTERACTIONS AS PREY AFTER SECONDARY FUTURE EXTINCTIONS`
 
 #View(table9_interactions_lost_per_species)
-
-#write.csv(table9_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table9_interactions_lost_per_species_19OUT.csv")
+#write.csv(table9_interactions_lost_per_species, file = "C:\\Users\\asus\\Desktop\\table9_interactions_lost_per_species_09NOV.csv")
 
 
 
@@ -545,18 +538,13 @@ tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS <- cheddar::Col
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE)
 tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE <- cheddar::CollectionTLPS(COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE)
 
-#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO, file = "C:\\Users\\asus\\Desktop\\table_10_all_links_local_fw_MAIORANO.csv")
-#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_11_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS.csv")
-#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_12_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS.csv")
-#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE.csv")
-#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO, file = "C:\\Users\\asus\\Desktop\\table_10_all_links_local_fw_MAIORANO_09NOV23.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_11_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_09NOV23.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS, file = "C:\\Users\\asus\\Desktop\\table_12_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_09NOV23.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_13_all_links_local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE_09NOV23.csv")
+#write.csv(tlinks_COMM_COLL_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE, file = "C:\\Users\\asus\\Desktop\\table_14_all_links_local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE_09NOV23.csv")
 
 #15. Number of  lost interactions per TL as predator and prey in each step   ######################################################################
-
-View(table9_interactions_lost_per_species)
-names(overall_previous_positions)
-
-table(table9_interactions_lost_per_species$SPECIES %in% overall_previous_positions$species)
 
 table15_lost_per_TL <- merge(x = table9_interactions_lost_per_species,
       y = overall_previous_positions,
@@ -566,110 +554,9 @@ table15_lost_per_TL <- merge(x = table9_interactions_lost_per_species,
 
 names(table15_lost_per_TL)
 table15_lost_per_TL$position <- as.factor(table15_lost_per_TL$position)
-
-View(table15_lost_per_TL)
-
 table15_lost_per_TL_2 <- group_by(table15_lost_per_TL, position)
-View(table15_lost_per_TL_2)
 table15_lost_per_TL_2 <- table15_lost_per_TL_2[,-1]
-
 table15_lost_per_TL_3 <- as.data.frame(summarise(table15_lost_per_TL_2, across(everything(), sum)))
-View(table15_lost_per_TL_3)
 
-#write.csv(table15_lost_per_TL_3, file = "C:\\Users\\asus\\Desktop\\table15_lost_per_TL_3.csv")
-
-
-################################################################################
-#Problem species ###############################################################
-################################################################################
-
-"Dendrocopos syriacus" %in% overall_basal
-"Eliomys quercinus" %in% overall_basal
-"Fulica cristata" %in% overall_basal
-
-problem_species_pos <- data.frame(matrix(ncol = 7))
-names(problem_species_pos) <- c("grid", "is_Ds", "is_Eq", "is_Fc", "Ds_pos", "Eq_pos", "Fc_pos")
-head(problem_species_pos)
-
-#Where is sp1
-for(i in 1:length(local_fw_MAIORANO)){
-  
-  net_sample <- local_fw_MAIORANO[[i]]
-  problem_species_pos[i,1] <- net_sample$properties$title
-  problem_species_pos[i,2] <- "Dendrocopos syriacus" %in% net_sample$nodes$node  
-  problem_species_pos[i,3] <- "Eliomys quercinus" %in% net_sample$nodes$node  
-  problem_species_pos[i,4] <- "Fulica cristata" %in% net_sample$nodes$node  
-  #
-  bas_net <- as.data.frame(cheddar::IsBasalNode(net_sample))
-  inter_net <- as.data.frame(cheddar::IsIntermediateNode(net_sample))
-  top_net <- as.data.frame(cheddar::IsTopLevelNode(net_sample))
-  
-  if("Dendrocopos syriacus" %in% net_sample$nodes$node){   
-    
-    if("Dendrocopos syriacus" %in% rownames(bas_net)) problem_species_pos[i,5] <- "basal"
-    if("Dendrocopos syriacus" %in% rownames(inter_net)) problem_species_pos[i,5] <- "intermediate"
-    if("Dendrocopos syriacus" %in% rownames(top_net)) problem_species_pos[i,5] <- "top"
-    }
-  
-  if("Eliomys quercinus" %in% net_sample$nodes$node){  
-    
-    if("Eliomys quercinus" %in% rownames(bas_net)) problem_species_pos[i,6] <- "basal"
-    if("Eliomys quercinus" %in% rownames(inter_net)) problem_species_pos[i,6] <- "intermediate"
-    if("Eliomys quercinus" %in% rownames(top_net)) problem_species_pos[i,6] <- "top"
-    }
-  
-  if("Fulica cristata" %in% net_sample$nodes$node){  
-    
-    if("Fulica cristata" %in% rownames(bas_net)) problem_species_pos[i,7] <- "basal"
-    if("Fulica cristata" %in% rownames(inter_net)) problem_species_pos[i,7] <- "intermediate"
-    if("Fulica cristata" %in% rownames(top_net)) problem_species_pos[i,7] <- "top"
-    }
-
-  message(i)
-  
-}
-
-
-#write.csv(problem_species_pos, file = "C:\\Users\\asus\\Desktop\\problem_species_pos.csv")
-
-table(problem_species_pos$Ds_pos)
-Ds_pos <- subset(problem_species_pos, Ds_pos == "top")
-Ds_pos <- Ds_pos$grid
-#
-table(problem_species_pos$Eq_pos)
-Eq_pos <- subset(problem_species_pos, Eq_pos == "top")
-Eq_pos <- Eq_pos$grid
-#
-table(problem_species_pos$Fc_pos)
-Fc_pos <- subset(problem_species_pos, Fc_pos == "top")
-Fc_pos <- Fc_pos$grid
-
-
-## "Dendrocopos syriacus" ##
-head(which(problem_species_pos$grid %in% Ds_pos))
-
-error_net <- local_fw_MAIORANO[[7]]
-
-"Dendrocopos syriacus" %in% error_net$nodes$node
-View(error_net$trophic.links)
-
-View(t(maiorano_metaweb["Dendrocopos syriacus", ]))
-#maiorano_metaweb["Lynx pardinus", "Oryctolagus cuniculus"]
-
-#Is the error in the metaweb?
-#View(maiorano_cheddar$trophic.links)
-#no!
-
-## "Eliomys quercinus" ##
-head(which(problem_species_pos$grid %in% Eq_pos))
-
-error_net2 <- local_fw_MAIORANO[[2]]
-
-"Eliomys quercinus" %in% error_net2$nodes$node
-View(error_net2$trophic.links)
-
-View(t(maiorano_metaweb["Eliomys quercinus", ]))
-
-
-## "Fulica cristata" ##
-head(which(problem_species_pos$grid %in% Fc_pos))
+#View(table15_lost_per_TL_3)
+#write.csv(table15_lost_per_TL_3, file = "C:\\Users\\asus\\Desktop\\table15_lost_per_TL_09NOV23.csv")

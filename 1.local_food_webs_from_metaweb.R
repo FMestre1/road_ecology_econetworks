@@ -110,19 +110,22 @@ for(i in 1:nrow(maiorano_metaweb)){
   
   row1 <- maiorano_metaweb[i,]
   predator1 <- rownames(row1)
-  preys1 <- colnames(row1[,which(row1 == 1)])
+  #preys1 <- colnames(row1[,which(row1 == 1)])
+  preys1 <- colnames(row1)[which(row1 == 1)]
   predator2 <- rep(predator1, length(preys1))
   df1 <- data.frame(preys1, predator2)
   if(nrow(df1)!=0) {
     colnames(df1) <- c("resource", "consumer")
     trophiclinks <- rbind(trophiclinks, df1)
                    }
+  message(i)
   }
 
 trophiclinks <- trophiclinks[-1,]
 
 maiorano_cheddar <- cheddar::Community(nodes, properties = list(title = "MMetaweb"), trophic.links = trophiclinks)
 #plot(maiorano_cheddar)
+#save(maiorano_cheddar, file = "maiorano_cheddar_08NOV23.RData")
 
 #Overall positions
 overall_basal <- cheddar::BasalNodes(maiorano_cheddar)
@@ -140,6 +143,9 @@ names(overall_top_2) <- c("species", "position")
 overall_previous_positions <- rbind(overall_top_2,
                                     overall_intermediate_2,
                                     overall_basal_2)
+
+#View(overall_previous_positions)
+#save(overall_previous_positions, file = "overall_previous_positions.RData")
 
 #2.CREATE IGRAPH NETWORK
 #Required function
@@ -193,6 +199,8 @@ master_table_vuln <- merge(x = match_table,
 
 names(master_table_vuln)[9] <- "grilo_threshold"
 master_table_vuln <- master_table_vuln[,-c(10:12)] 
+
+#View(master_table_vuln)
 
 ################################################################################
 #   6.Creating local networks
@@ -316,5 +324,5 @@ for(i in 1:length(local_fw_MAIORANO)){#START LOCAL
 }#END LOCAL
 
 #Load & Save
-#load("local_fw_MAIORANO_with_metaweb_TL_13OUT23.RData")
-#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_with_metaweb_TL_13OUT23.RData")
+#save(local_fw_MAIORANO, file = "local_fw_MAIORANO_with_metaweb_TL_08NOV23.RData")
+#load("local_fw_MAIORANO_with_metaweb_TL_08NOV23.RData")
