@@ -560,3 +560,98 @@ table15_lost_per_TL_3 <- as.data.frame(summarise(table15_lost_per_TL_2, across(e
 
 #View(table15_lost_per_TL_3)
 #write.csv(table15_lost_per_TL_3, file = "C:\\Users\\asus\\Desktop\\table15_lost_per_TL_09NOV23.csv")
+
+
+
+
+
+#16. Full information table   ######################################################################
+
+
+local_fw_MAIORANO
+local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS
+local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE
+#
+grids_grilo # vulnerability information
+paired_pagename_pagenumber #pair the information on pagename and pagenumber
+
+names_grid <- names(local_fw_MAIORANO)
+
+table16_full_information_20NOV23 <- data.frame(matrix(ncol = 7))
+names(table16_full_information_20NOV23) <- c("grid_number", "grid_name", "road_density",
+  "prey_species", "prey_species_vuln",
+  "predator_species", "predator_species_vuln")
+
+for(i in 1:length(names_grid)){
+  
+  grid_id_name <- names_grid[i]
+  
+  vulnerability_grid <- paired_pagename_pagenumber[which(paired_pagename_pagenumber$PageNumber == grid_id_name),][,1]
+  vulnerability_grid2 <- grids_grilo[which(grids_grilo$grids_grilo_shape.PageName == vulnerability_grid),][,2]
+  
+  t_links1 <- local_fw_MAIORANO[[i]]$trophic.links
+  t_nodes1 <- local_fw_MAIORANO[[i]]$nodes[,c(1,8)]
+  
+  prey1 <- t_links1$resource
+  predator1 <- t_links1$consumer
+  
+  #Set prey vulnerability
+  prey_vuln <- c()
+  for(j in 1:length(prey1)){
+    
+  prey1_1 <- prey1[j]
+  prey_vuln[j] <- t_nodes1[which(t_nodes1$node == prey1_1),][,2]
+  
+  }
+  prey2 <- data.frame(prey1, prey_vuln)
+  
+  #Set predator vulnerability
+  predator_vuln <- c()
+  for(j in 1:length(predator1)){
+    
+    predator1_1 <- predator1[j]
+    predator_vuln[j] <- t_nodes1[which(t_nodes1$node == predator1_1),][,2]
+    
+  }
+  predator2 <- data.frame(predator1, predator_vuln)
+  
+  if(!is.null(t_links1))
+    {
+    grid1_df <- cbind(rep(grid_id_name, nrow(t_links1)), 
+                    rep(vulnerability_grid, nrow(t_links1)),
+                    rep(vulnerability_grid2, nrow(t_links1)),
+                    prey2, 
+                    predator2
+                    )
+  
+  names(grid1_df) <- c("grid_number", "grid_name", "road_density",
+                       "prey_species", "prey_species_vuln",
+                       "predator_species", "predator_species_vuln")
+  
+  table16_full_information_20NOV23 <- rbind(table16_full_information_20NOV23,grid1_df)
+  }
+  
+  rm(grid_id_name,
+     vulnerability_grid,
+     vulnerability_grid2,
+     t_links1,
+     t_nodes1,
+     prey1,
+     predator1,
+     prey2,
+     predator2,
+     prey_vuln,
+     predator_vuln,
+     grid1_df)
+  
+  message(i)
+  
+}
+
+head(table16_full_information_20NOV23)
+table16_full_information_20NOV23 <- table16_full_information_20NOV23[-1,]
+nrow(table16_full_information_20NOV23)
+
+#write.csv(table16_full_information_20NOV23, file = "C:\\Users\\asus\\Desktop\\table16_full_information_20NOV23_20NOV23.csv")
