@@ -654,4 +654,6 @@ head(table16_full_information_20NOV23)
 table16_full_information_20NOV23 <- table16_full_information_20NOV23[-1,]
 nrow(table16_full_information_20NOV23)
 
+#save(table16_full_information_20NOV23, file = "table16_full_information_20NOV23.RData")
 #write.csv(table16_full_information_20NOV23, file = "C:\\Users\\asus\\Desktop\\table16_full_information_20NOV23_20NOV23.csv")
+
