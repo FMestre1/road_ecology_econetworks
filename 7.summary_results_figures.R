@@ -370,9 +370,60 @@ myd_full %>%
   group_by(type, level) %>%
   slice_head(n=5)
 
+################################################################################
+#                       Plot for the Graphical abstract
+################################################################################
+
+#FMestre
+#23-11-2023
+
+#Load package
+library(cheddar)
 
 
+local_fw_MAIORANO
+local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS
+#local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_FUTURE
+#local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_FUTURE
 
+#network 3295
+#paired_pagename_pagenumber
+#paired_pagename_pagenumber[paired_pagename_pagenumber$PageName == "BW39",]
 
-
+#
+nodes1 <- NPS(local_fw_MAIORANO[[4081]])
+nodes1$colour <- "black"
+links1 <- cbind(TLPS(local_fw_MAIORANO[[4081]]), colour="honeydew4", width = 0.5)
+####
+nodes2 <- NPS(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[4081]])
+nodes2$colour <- "black"
+links2 <- cbind(TLPS(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[4081]]), colour="honeydew4", width = 0.5)
+####
+nodes3 <- NPS(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[4081]])
+nodes3$colour <- "black"
+links3 <- cbind(TLPS(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[4081]]), colour="honeydew4", width = 0.5)
+###
+for(i in 1:nrow(links1)){
+  row_links1 <- links1[i,]
+  same_resource_df <- links2[row_links1$resource == links2$resource,]
+  if(!row_links1$consumer %in% same_resource_df$consumer) {
+    links1$colour[i] <- "#FF4500"
+    links1$width[i] <- 1.5
+    }  
+}
+###
+for(i in 1:nrow(links2)){
+  row_links2 <- links2[i,]
+  same_resource_df2 <- links3[row_links2$resource == links3$resource,]
+  if(!row_links2$consumer %in% same_resource_df2$consumer) {
+    links2$colour[i] <- "#FF4500"
+    links2$width[i] <- 1.5
+  }  
+}
+###
+par(mfrow=c(1,3))
+PlotWebByLevel(local_fw_MAIORANO[[4081]], main = "BW39 - Start", pch=19, show.level.labels = FALSE, cex=1.5, link.col=links1$colour, link.lwd = links1$width)
+PlotWebByLevel(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[4081]], main = "BW39 - After primary extinctions", pch=19, show.level.labels = FALSE, cex=1.5, link.col=links2$colour, link.lwd = links2$width)
+PlotWebByLevel(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[4081]], main = "BW39 - After secondary extinctions", pch=19, show.level.labels = FALSE, cex=1.5,link.col=links3$colour, link.lwd = links3$width)
 
