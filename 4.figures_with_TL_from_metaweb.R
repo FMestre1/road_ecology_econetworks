@@ -4,8 +4,8 @@
 ################################################################################
 ################################################################################
 
-#FMestre
-#13-10-2023
+# Road density simplifies regional food webs
+# F. Mestre, V.A.G. Bastazini, F. Ascensão
 
 #Load packages
 library(ggplot2)
