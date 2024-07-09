@@ -4,8 +4,7 @@
 ################################################################################
 ################################################################################
 
-# Road density simplifies regional food webs
-# F. Mestre, V.A.G. Bastazini, F. Ascensão
+##### THIS SCRIPT WAS NOT USED ######
 
 #Load packages
 library(igraph)

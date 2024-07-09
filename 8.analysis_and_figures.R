@@ -21,9 +21,9 @@ rm(list=ls())
 #                               Load data
 ################################################################################
 
-setwd()
+#setwd()
 
-# this table is in the Figshare repository: https://figshare.com/s/430ef7848f7036f13346
+# This table is in the Figshare repository for the paper: https://figshare.com/s/430ef7848f7036f13346
 load("table16_full_information_20NOV23.RData")
 
 taxonomy <- read.csv("taxonomy.csv", head=T) %>% as_tibble()
@@ -147,15 +147,13 @@ myd_all$level <- factor(myd_all$level, levels=c('Top', 'Intermediate', 'Basal'))
 
 # ggsave("Fig3_20240709.png", plot=g3,  width=180, height=120, units="mm", dpi=300)
 
-
-
 ################################################################################
 #              Loss of interactions directly and indirectly
 ################################################################################
 
 # this will produce the Supplementary Material S1
 
- all.species <- trophic.level.df$species
+all.species <- trophic.level.df$species
  
  myd = data.frame()
  
