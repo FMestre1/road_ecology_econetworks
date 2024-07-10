@@ -151,102 +151,102 @@ myd_all$level <- factor(myd_all$level, levels=c('Top', 'Intermediate', 'Basal'))
 #              Loss of interactions directly and indirectly
 ################################################################################
 
-# this will produce the Supplementary Material S1
 
 all.species <- trophic.level.df$species
- 
- myd = data.frame()
- 
- for (i in 1:length(all.species)){
-   
-   mysp = all.species[i]
-   
-   x = myd %>% 
-     filter(predator_species == mysp | prey_species == mysp)
 
-   # AOO => How many grids I occupy?
-   AOO = x %>%
-     select(grid_name) %>%
-     distinct()
-   AOO = nrow(AOO)
-   
-   
-   Nit_total = nrow(x)
-   Nit_pred = nrow(x %>% filter(predator_species == mysp))
-   Nit_prey = nrow(x %>% filter(prey_species == mysp))
- 
-   summary.int = x %>%
-     group_by(grid_name) %>%
-     summarise(sum = n()) %>%
-     ungroup() %>%
-     summarise(Mean.int = mean(sum),
-               SD = sd(sum))
-   
-   # from how many grids I might get extinct from direct effects?
-   direct.effect = x %>%
-     filter((predator_species == mysp & road_density >= predator_species_vuln) |
-              (prey_species == mysp & road_density >= prey_species_vuln))
-   
-   Nint.at.risk_Direct = nrow(direct.effect)
-   Nint.at.risk_Direct.as.pred = nrow(direct.effect %>% filter(predator_species == mysp))
-   Nint.at.risk_Direct.as.prey = nrow(direct.effect %>% filter(prey_species == mysp))
-   
-   direct.effect.area = length(unique(direct.effect$grid_name))
-   
-   gc()
-   
-   # Area of cascading zone
-   cascading.effect = x %>%
-     filter(!grid_name %in% direct.effect$grid_name) %>%
-     filter((predator_species != mysp & road_density >= predator_species_vuln) |
-              (prey_species != mysp & road_density >= prey_species_vuln))
-   
-   Nint.at.risk_Indirect = nrow(cascading.effect)
-   Nint.at.risk_Indirect.as.pred = nrow(cascading.effect %>% filter(predator_species == mysp))
-   Nint.at.risk_Indirect.as.prey = nrow(cascading.effect %>% filter(prey_species == mysp))
-   
-   cascading.effect.area = length(unique(cascading.effect$grid_name))
-   
-   gc()
-   
-   
-   # join
-   myd1 <- data.frame(species = mysp,
-                      Nit_total = Nit_total,
-                      Nit_pred = Nit_pred,
-                      Nit_prey = Nit_prey,
-                      Mean.int = summary.int$Mean.int,
-                      SD.int = summary.int$SD,
-                      
-                      Nint.at.risk_Direct = Nint.at.risk_Direct,
-                      Nint.at.risk_Direct.as.pred = Nint.at.risk_Direct.as.pred,
-                      Nint.at.risk_Direct.as.prey = Nint.at.risk_Direct.as.prey,
-                      
-                      Nint.at.risk_Indirect = Nint.at.risk_Indirect,
-                      Nint.at.risk_Indirect.as.pred = Nint.at.risk_Indirect.as.pred,
-                      Nint.at.risk_Indirect.as.prey = Nint.at.risk_Indirect.as.prey,
-                      
-                      AOO = AOO,
-                      
-                      direct.effect.area = direct.effect.area,
-                      cascading.effect.area = cascading.effect.area,
-                      direct.effect.prop = direct.effect.area/AOO*100,
-                      cascading.effect.prop = cascading.effect.area/AOO*100)
-   
-   
-   myd = rbind(myd, myd1)  
-   
-   print(i)
-   
- }
- 
- gc()
- 
- # join info
- myd_all <- myd %>% 
-   left_join(trophic.level.df) %>% 
-   left_join(taxonomy) %>%
-   relocate(class, species, level) %>%
-   arrange(class, level, species) %>%
-   as_tibble()
+myd = data.frame()
+
+for (i in 1:length(all.species)){
+  
+  mysp = all.species[i]
+  
+  x = table16_full_information_20NOV23 %>%
+    filter(predator_species == mysp | prey_species == mysp)
+  
+  # AOO => How many grids I occupy?
+  AOO = x %>%
+    select(grid_name) %>%
+    distinct()
+  AOO = nrow(AOO)
+  
+  
+  Nit_total = nrow(x)
+  Nit_pred = nrow(x %>% filter(predator_species == mysp))
+  Nit_prey = nrow(x %>% filter(prey_species == mysp))
+  
+  summary.int = x %>%
+    group_by(grid_name) %>%
+    summarise(sum = n()) %>%
+    ungroup() %>%
+    summarise(Mean.int = mean(sum),
+              SD = sd(sum))
+  
+  # from how many grids I might get extinct from direct effects?
+  direct.effect = x %>%
+    filter((predator_species == mysp & road_density >= predator_species_vuln) |
+             (prey_species == mysp & road_density >= prey_species_vuln))
+  
+  Nint.at.risk_Direct = nrow(direct.effect)
+  Nint.at.risk_Direct.as.pred = nrow(direct.effect %>% filter(predator_species == mysp))
+  Nint.at.risk_Direct.as.prey = nrow(direct.effect %>% filter(prey_species == mysp))
+  
+  direct.effect.area = length(unique(direct.effect$grid_name))
+  
+  gc()
+  
+  # Area of cascading zone
+  cascading.effect = x %>%
+    filter(!grid_name %in% direct.effect$grid_name) %>%
+    filter((predator_species != mysp & road_density >= predator_species_vuln) |
+             (prey_species != mysp & road_density >= prey_species_vuln))
+  
+  Nint.at.risk_Indirect = nrow(cascading.effect)
+  Nint.at.risk_Indirect.as.pred = nrow(cascading.effect %>% filter(predator_species == mysp))
+  Nint.at.risk_Indirect.as.prey = nrow(cascading.effect %>% filter(prey_species == mysp))
+  
+  cascading.effect.area = length(unique(cascading.effect$grid_name))
+  
+  gc()
+  
+  
+  # join
+  myd1 <- data.frame(species = mysp,
+                     Nit_total = Nit_total,
+                     Nit_pred = Nit_pred,
+                     Nit_prey = Nit_prey,
+                     Mean.int = summary.int$Mean.int,
+                     SD.int = summary.int$SD,
+                     
+                     Nint.at.risk_Direct = Nint.at.risk_Direct,
+                     Nint.at.risk_Direct.as.pred = Nint.at.risk_Direct.as.pred,
+                     Nint.at.risk_Direct.as.prey = Nint.at.risk_Direct.as.prey,
+                     
+                     Nint.at.risk_Indirect = Nint.at.risk_Indirect,
+                     Nint.at.risk_Indirect.as.pred = Nint.at.risk_Indirect.as.pred,
+                     Nint.at.risk_Indirect.as.prey = Nint.at.risk_Indirect.as.prey,
+                     
+                     AOO = AOO,
+                     
+                     direct.effect.area = direct.effect.area,
+                     cascading.effect.area = cascading.effect.area,
+                     direct.effect.prop = direct.effect.area/AOO*100,
+                     cascading.effect.prop = cascading.effect.area/AOO*100)
+  
+  
+  myd = rbind(myd, myd1)
+  
+  print(i)
+  
+}
+
+gc()
+
+# join info
+myd_all <- myd %>%
+  left_join(trophic.level.df) %>%
+  left_join(taxonomy) %>%
+  relocate(class, species, level) %>%
+  arrange(class, level, species) %>%
+  as_tibble()
+
 # write.csv(myd_all, "SuppMat_S1.csv", row.names = F)
