@@ -286,7 +286,7 @@ for(i in 1:length(local_fw_MAIORANO)) fw_with_felis[i] <- "Felis silvestris" %in
 #table(fw_with_felis)
 fw_with_felis <- which(fw_with_felis == TRUE)
 
-#where did it lose predators, and which predators
+#where did it lose prey, and which prey
 prey_felis_start <- list()
 prey_felis_primary <- list()
 prey_felis_secondary <- list()
@@ -358,3 +358,41 @@ felis_predators <- data.frame(felis_predators, round((felis_predators$Freq * 100
 names(felis_predators) <- c("predator_species", "lost_interactions", "percentage")
 
 felis_predators <- felis_predators[order(-felis_predators$percentage), ]
+
+################################################################################
+################################################################################
+
+library(cheddar)
+
+local_fw_MAIORANO[[1]]
+local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[1]]  
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[1]]
+
+ex1_0 <- cheddar::Community(nodes = local_fw_MAIORANO[[1]]$nodes,
+                   properties = local_fw_MAIORANO[[1]]$properties,
+                   trophic.links = local_fw_MAIORANO[[1]]$trophic.links)
+
+
+table(local_fw_MAIORANO[[1]]$trophic.links$consumer == "Felis silvestris")
+table(local_fw_MAIORANO[[1]]$trophic.links$resource == "Felis silvestris")
+
+length(local_fw_MAIORANO[[1]]$trophic.links$resource)
+
+link_col <- rep("lightgrey", 1320)
+
+link_col[which(local_fw_MAIORANO[[1]]$trophic.links$resource == "Felis silvestris")] <- "red"
+link_col[which(local_fw_MAIORANO[[1]]$trophic.links$consumer == "Felis silvestris")] <- "green"
+
+
+node_col <- rep("black", length(local_fw_MAIORANO[[1]]$nodes$node))
+node_col[which(local_fw_MAIORANO[[1]]$nodes$node == "Felis silvestris")] <- "blue"
+table(node_col)
+
+
+?PlotWebByLevel
+PlotWebByLevel(ex1_0, col = node_col, pch = 16, show.level.labels=FALSE, main=NULL)
+
+
+
+
+
