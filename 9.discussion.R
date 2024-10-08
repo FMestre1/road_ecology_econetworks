@@ -373,6 +373,48 @@ ex1_0 <- cheddar::Community(nodes = local_fw_MAIORANO[[1]]$nodes,
                    trophic.links = local_fw_MAIORANO[[1]]$trophic.links)
 
 
+################################################################################
+################################################################################
+
+#Random code, used for ploting
+
+#Load datasets
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_with_metaweb_TL_08NOV23.RData")
+
+#Lets use the grids BW39!
+length(cheddar::NPS(local_fw_MAIORANO[["4458"]])$node)
+length(cheddar::NPS(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["4458"]])$node)
+length(cheddar::NPS(local_fw_MAIORANO_REMOVED[["4458"]])$node)
+#
+cheddar::TopLevelNodes(local_fw_MAIORANO[["4458"]])
+cheddar::TopLevelNodes(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["4458"]])
+cheddar::TopLevelNodes(local_fw_MAIORANO_REMOVED[["4458"]])
+#
+cheddar::BasalNodes(local_fw_MAIORANO[["4458"]])
+cheddar::BasalNodes(local_fw_MAIORANO_REMOVED_PRIMARY_EX[["4458"]])
+cheddar::BasalNodes(local_fw_MAIORANO_REMOVED[["4458"]])
+
+#
+links <- cbind(TLPS(local_fw_MAIORANO[["4458"]]), colour="#c7c7c788")
+links$colour["Buteo buteo" == links$resource] <- "red"
+links$colour["Buteo buteo" == links$consumer] <- "blue"
+
+#cheddar::plot.Community(network_list_cheddar[[116183]], node.labels="node", show.nodes.as="both", link.col=links$colour)
+cheddar::plot.Community(local_fw_MAIORANO[["4458"]], link.col=links$colour)
+#s
+
+#Plot links going and coming from Circus cyaneus
+links0 <- cbind(TLPS(local_fw_MAIORANO[["4458"]]), colour="#c7c7c788")
+#
+links0 <- cbind(TLPS(local_fw_MAIORANO[["4458"]]), colour="#ffffff00")
+links0$colour["Hieraaetus pennatus" == links0$resource] <- "red"
+links0$colour["Hieraaetus pennatus" == links0$consumer] <- "blue"
+
+cheddar::plot.Community(local_fw_MAIORANO[["BW39"]], node.labels="node", show.nodes.as="both", link.col=links$colour)
+cheddar::plot.Community(local_fw_MAIORANO[["BW39"]], link.col=links0$colour)
+
 table(local_fw_MAIORANO[[1]]$trophic.links$consumer == "Felis silvestris")
 table(local_fw_MAIORANO[[1]]$trophic.links$resource == "Felis silvestris")
 
@@ -391,8 +433,3 @@ table(node_col)
 
 ?PlotWebByLevel
 PlotWebByLevel(ex1_0, col = node_col, pch = 16, show.level.labels=FALSE, main=NULL)
-
-
-
-
-
