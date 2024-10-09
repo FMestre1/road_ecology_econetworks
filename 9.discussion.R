@@ -10,10 +10,8 @@ load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCT
 load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
 load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_with_metaweb_TL_08NOV23.RData")
 
-length(local_fw_MAIORANO)
-
-local_fw_MAIORANO[[1]]$nodes
-local_fw_MAIORANO[[1]]$trophic.links
+#local_fw_MAIORANO[[1]]$nodes
+#local_fw_MAIORANO[[1]]$trophic.links
 
 #Lepus castroviejoi predator release from which predators? #####################
 
@@ -26,30 +24,28 @@ fw_with_lcastro <- which(fw_with_lcastro == TRUE)
  #where did it lose predators, and which predators
 predators_lcastro_start <- list()
 predators_lcastro_primary <- list()
-predators_lcastro_secondary <- list()
+#predators_lcastro_secondary <- list()
 
 for(j in 1:length(fw_with_lcastro)){
-  
   nr <- fw_with_lcastro[j]
-  
   predators_lcastro_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$resource == "Lepus castroviejoi",]$consumer
   predators_lcastro_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Lepus castroviejoi",]$consumer
-  predators_lcastro_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Lepus castroviejoi",]$consumer
+  #predators_lcastro_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Lepus castroviejoi",]$consumer
 }
 
 from_start_to_primary_lcastro <- list()
-from_primary_to_secondary_lcastro <- list()
-from_start_to_secondary_lcastro <- list()
+#from_primary_to_secondary_lcastro <- list()
+#from_start_to_secondary_lcastro <- list()
 
-for(i in 1:11){
+for(i in 1:length(predators_lcastro_primary)){
   
 from_start_to_primary_lcastro[[i]] <- setdiff(predators_lcastro_start[i][[1]], predators_lcastro_primary[i][[1]])
-from_primary_to_secondary_lcastro[[i]] <- setdiff(predators_lcastro_primary[i][[1]], predators_lcastro_secondary[i][[1]])
-from_start_to_secondary_lcastro[[i]] <- setdiff(predators_lcastro_start[i][[1]], predators_lcastro_secondary[i][[1]])
+#from_primary_to_secondary_lcastro[[i]] <- setdiff(predators_lcastro_primary[i][[1]], predators_lcastro_secondary[i][[1]])
+#from_start_to_secondary_lcastro[[i]] <- setdiff(predators_lcastro_start[i][[1]], predators_lcastro_secondary[i][[1]])
 
 }
 
-lcastro_predators <- data.frame(table(unlist(from_start_to_secondary_lcastro)))
+lcastro_predators <- data.frame(table(unlist(from_start_to_primary_lcastro)))
 #sum(lcastro_predators$Freq)
 
 ################################################################################
@@ -66,37 +62,33 @@ fw_with_chort <- which(fw_with_chort == TRUE)
 #where did it lose predators, and which predators
 predators_chort_start <- list()
 predators_chort_primary <- list()
-predators_chort_secondary <- list()
+#predators_chort_secondary <- list()
 
 for(j in 1:length(fw_with_chort)){
-  
   nr <- fw_with_chort[j]
-  
   predators_chort_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$resource == "Sylvia hortensis",]$consumer
   predators_chort_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Sylvia hortensis",]$consumer
-  predators_chort_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Sylvia hortensis",]$consumer
+  #predators_chort_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Sylvia hortensis",]$consumer
 }
 
 from_start_to_primary_chort <- list()
-from_primary_to_secondary_chort <- list()
-from_start_to_secondary_chort <- list()
+#from_primary_to_secondary_chort <- list()
+#from_start_to_secondary_chort <- list()
 
-for(i in 1:364){
-  
+for(i in 1:length(predators_chort_primary)){
   from_start_to_primary_chort[[i]] <- setdiff(predators_chort_start[i][[1]], predators_chort_primary[i][[1]])
-  from_primary_to_secondary_chort[[i]] <- setdiff(predators_chort_primary[i][[1]], predators_chort_secondary[i][[1]])
-  from_start_to_secondary_chort[[i]] <- setdiff(predators_chort_start[i][[1]], predators_chort_secondary[i][[1]])
-  
+  #from_primary_to_secondary_chort[[i]] <- setdiff(predators_chort_primary[i][[1]], predators_chort_secondary[i][[1]])
+  #from_start_to_secondary_chort[[i]] <- setdiff(predators_chort_start[i][[1]], predators_chort_secondary[i][[1]])
 }
 
-chort_predators <- data.frame(table(unlist(from_start_to_secondary_chort)))
+chort_predators <- data.frame(table(unlist(from_start_to_primary_chort)))
 #sum(chort_predators$Freq)
 
-chort_predators <- data.frame(chort_predators, round((chort_predators$Freq * 100)/327, 2))
+chort_predators <- data.frame(chort_predators, round((chort_predators$Freq * 100)/sum(chort_predators$Freq), 2))
 names(chort_predators) <- c("predator_species", "lost_interactions", "percentage")
 
 chort_predators <- chort_predators[order(-chort_predators$percentage), ]
-sum(chort_predators$lost_interactions)
+sum(chort_predators$percentage)
 
 ################################################################################
 
@@ -111,37 +103,35 @@ fw_with_aqchrys <- which(fw_with_aqchrys == TRUE)
 #where did it lose predators, and which predators
 prey_aqchrys_start <- list()
 prey_aqchrys_primary <- list()
-prey_aqchrys_secondary <- list()
+#prey_aqchrys_secondary <- list()
 
 for(j in 1:length(fw_with_aqchrys)){
-  
   nr <- fw_with_aqchrys[j]
-  
   prey_aqchrys_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$consumer == "Aquila chrysaetos",]$resource
   prey_aqchrys_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Aquila chrysaetos",]$resource
-  prey_aqchrys_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Aquila chrysaetos",]$resource
+  #prey_aqchrys_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Aquila chrysaetos",]$resource
 }
 
 from_start_to_primary_aqchrys <- list()
-from_primary_to_secondary_aqchrys <- list()
-from_start_to_secondary_aqchrys <- list()
+#from_primary_to_secondary_aqchrys <- list()
+#from_start_to_secondary_aqchrys <- list()
 
-for(i in 1:364){
+for(i in 1:length(prey_aqchrys_primary)){
   
   from_start_to_primary_aqchrys[[i]] <- setdiff(prey_aqchrys_start[i][[1]], prey_aqchrys_primary[i][[1]])
-  from_primary_to_secondary_aqchrys[[i]] <- setdiff(prey_aqchrys_primary[i][[1]], prey_aqchrys_secondary[i][[1]])
-  from_start_to_secondary_aqchrys[[i]] <- setdiff(prey_aqchrys_start[i][[1]], prey_aqchrys_secondary[i][[1]])
+  #from_primary_to_secondary_aqchrys[[i]] <- setdiff(prey_aqchrys_primary[i][[1]], prey_aqchrys_secondary[i][[1]])
+  #from_start_to_secondary_aqchrys[[i]] <- setdiff(prey_aqchrys_start[i][[1]], prey_aqchrys_secondary[i][[1]])
   
 }
 
-aqchrys_prey <- data.frame(table(unlist(from_start_to_secondary_aqchrys)))
+aqchrys_prey <- data.frame(table(unlist(from_start_to_primary_aqchrys)))
 #sum(aqchrys_prey$Freq)
 
-aqchrys_prey <- data.frame(aqchrys_prey, round((aqchrys_prey$Freq * 100)/620, 2))
+aqchrys_prey <- data.frame(aqchrys_prey, round((aqchrys_prey$Freq * 100)/sum(aqchrys_prey$Freq), 2))
 names(aqchrys_prey) <- c("prey_species", "lost_interactions", "percentage")
 
 aqchrys_prey <- aqchrys_prey[order(-aqchrys_prey$percentage), ]
-sum(aqchrys_prey$lost_interactions)
+sum(aqchrys_prey$percentage)
 
 ################################################################################
 
@@ -156,37 +146,35 @@ fw_with_clupus <- which(fw_with_clupus == TRUE)
 #where did it lose predators, and which predators
 prey_clupus_start <- list()
 prey_clupus_primary <- list()
-prey_clupus_secondary <- list()
+#prey_clupus_secondary <- list()
 
 for(j in 1:length(fw_with_clupus)){
-  
   nr <- fw_with_clupus[j]
-  
   prey_clupus_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$consumer == "Canis lupus",]$resource
   prey_clupus_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Canis lupus",]$resource
-  prey_clupus_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Canis lupus",]$resource
+  #prey_clupus_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Canis lupus",]$resource
 }
 
 from_start_to_primary_clupus <- list()
-from_primary_to_secondary_clupus <- list()
-from_start_to_secondary_clupus <- list()
+#from_primary_to_secondary_clupus <- list()
+#from_start_to_secondary_clupus <- list()
 
-for(i in 1:2881){
+for(i in 1:length(prey_clupus_primary)){
   
   from_start_to_primary_clupus[[i]] <- setdiff(prey_clupus_start[i][[1]], prey_clupus_primary[i][[1]])
-  from_primary_to_secondary_clupus[[i]] <- setdiff(prey_clupus_primary[i][[1]], prey_clupus_secondary[i][[1]])
-  from_start_to_secondary_clupus[[i]] <- setdiff(prey_clupus_start[i][[1]], prey_clupus_secondary[i][[1]])
+  #from_primary_to_secondary_clupus[[i]] <- setdiff(prey_clupus_primary[i][[1]], prey_clupus_secondary[i][[1]])
+  #from_start_to_secondary_clupus[[i]] <- setdiff(prey_clupus_start[i][[1]], prey_clupus_secondary[i][[1]])
   
 }
 
-clupus_prey <- data.frame(table(unlist(from_start_to_secondary_clupus)))
+clupus_prey <- data.frame(table(unlist(from_start_to_primary_clupus)))
 #sum(clupus_prey$Freq)
 
-clupus_prey <- data.frame(clupus_prey, round((clupus_prey$Freq * 100)/6328, 2))
+clupus_prey <- data.frame(clupus_prey, round((clupus_prey$Freq * 100)/sum(clupus_prey$Freq), 2))
 names(clupus_prey) <- c("prey_species", "lost_interactions", "percentage")
 
 clupus_prey <- clupus_prey[order(-clupus_prey$percentage), ]
-sum(clupus_prey$lost_interactions)
+sum(clupus_prey$percentage)
 
 ################################################################################
 
@@ -203,37 +191,35 @@ fw_with_talba <- which(fw_with_talba == TRUE)
 #where did it lose predators, and which predators
 prey_talba_start <- list()
 prey_talba_primary <- list()
-prey_talba_secondary <- list()
+#prey_talba_secondary <- list()
 
 for(j in 1:length(fw_with_talba)){
-  
   nr <- fw_with_talba[j]
-  
   prey_talba_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$consumer == "Tyto alba",]$resource
   prey_talba_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Tyto alba",]$resource
-  prey_talba_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Tyto alba",]$resource
+  #prey_talba_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Tyto alba",]$resource
 }
 
 from_start_to_primary_talba <- list()
-from_primary_to_secondary_talba <- list()
-from_start_to_secondary_talba <- list()
+#from_primary_to_secondary_talba <- list()
+#from_start_to_secondary_talba <- list()
 
-for(i in 1:1855){
+for(i in 1:length(prey_talba_primary)){
   
   from_start_to_primary_talba[[i]] <- setdiff(prey_talba_start[i][[1]], prey_talba_primary[i][[1]])
-  from_primary_to_secondary_talba[[i]] <- setdiff(prey_talba_primary[i][[1]], prey_talba_secondary[i][[1]])
-  from_start_to_secondary_talba[[i]] <- setdiff(prey_talba_start[i][[1]], prey_talba_secondary[i][[1]])
+  #from_primary_to_secondary_talba[[i]] <- setdiff(prey_talba_primary[i][[1]], prey_talba_secondary[i][[1]])
+  #from_start_to_secondary_talba[[i]] <- setdiff(prey_talba_start[i][[1]], prey_talba_secondary[i][[1]])
   
 }
 
-talba_prey <- data.frame(table(unlist(from_start_to_secondary_talba)))
+talba_prey <- data.frame(table(unlist(from_start_to_primary_talba)))
 #sum(talba_prey$Freq)
 
-talba_prey <- data.frame(talba_prey, round((talba_prey$Freq * 100)/16649, 2))
+talba_prey <- data.frame(talba_prey, round((talba_prey$Freq * 100)/sum(talba_prey$Freq), 2))
 names(talba_prey) <- c("prey_species", "lost_interactions", "percentage")
 
 talba_prey <- talba_prey[order(-talba_prey$percentage), ]
-sum(talba_prey$lost_interactions)
+sum(talba_prey$percentage)
 
 #Lost interactions as prey #####################################################
 #Where is this species? Getting, from above
@@ -242,37 +228,33 @@ fw_with_talba
 #where did it lose predators, and which predators
 predators_talba_start <- list()
 predators_talba_primary <- list()
-predators_talba_secondary <- list()
+#predators_talba_secondary <- list()
 
 for(j in 1:length(fw_with_talba)){
-  
   nr <- fw_with_talba[j]
-  
   predators_talba_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$resource == "Tyto alba",]$consumer
   predators_talba_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Tyto alba",]$consumer
-  predators_talba_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Tyto alba",]$consumer
+  #predators_talba_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Tyto alba",]$consumer
 }
 
 from_start_to_primary_talba2 <- list()
-from_primary_to_secondary_talba2 <- list()
-from_start_to_secondary_talba2 <- list()
+#from_primary_to_secondary_talba2 <- list()
+#from_start_to_secondary_talba2 <- list()
 
-for(i in 1:1855){
-  
+for(i in 1:length(predators_talba_primary)){
   from_start_to_primary_talba2[[i]] <- setdiff(predators_talba_start[i][[1]], predators_talba_primary[i][[1]])
-  from_primary_to_secondary_talba2[[i]] <- setdiff(predators_talba_primary[i][[1]], predators_talba_secondary[i][[1]])
-  from_start_to_secondary_talba2[[i]] <- setdiff(predators_talba_start[i][[1]], predators_talba_secondary[i][[1]])
-  
+  #from_primary_to_secondary_talba2[[i]] <- setdiff(predators_talba_primary[i][[1]], predators_talba_secondary[i][[1]])
+  #from_start_to_secondary_talba2[[i]] <- setdiff(predators_talba_start[i][[1]], predators_talba_secondary[i][[1]])
 }
 
-talba_predators <- data.frame(table(unlist(from_start_to_secondary_talba2)))
+talba_predators <- data.frame(table(unlist(from_start_to_primary_talba2)))
 #sum(talba_predators$Freq)
 
-talba_predators <- data.frame(talba_predators, round((talba_predators$Freq * 100)/20, 2))
+talba_predators <- data.frame(talba_predators, round((talba_predators$Freq * 100)/sum(talba_predators$Freq), 2))
 names(talba_predators) <- c("predator_species", "lost_interactions", "percentage")
 
 talba_predators <- talba_predators[order(-talba_predators$percentage), ]
-sum(talba_predators$lost_interactions)
+sum(talba_predators$percentage)
 
 ################################################################################
 
@@ -289,37 +271,34 @@ fw_with_felis <- which(fw_with_felis == TRUE)
 #where did it lose prey, and which prey
 prey_felis_start <- list()
 prey_felis_primary <- list()
-prey_felis_secondary <- list()
+#prey_felis_secondary <- list()
 
 for(j in 1:length(fw_with_felis)){
-  
   nr <- fw_with_felis[j]
-  
   prey_felis_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$consumer == "Felis silvestris",]$resource
   prey_felis_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Felis silvestris",]$resource
-  prey_felis_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Felis silvestris",]$resource
+  #prey_felis_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$consumer == "Felis silvestris",]$resource
 }
 
 from_start_to_primary_felis <- list()
-from_primary_to_secondary_felis <- list()
-from_start_to_secondary_felis <- list()
+#from_primary_to_secondary_felis <- list()
+#from_start_to_secondary_felis <- list()
 
 for(i in 1:length(fw_with_felis)){
-  
   from_start_to_primary_felis[[i]] <- setdiff(prey_felis_start[i][[1]], prey_felis_primary[i][[1]])
-  from_primary_to_secondary_felis[[i]] <- setdiff(prey_felis_primary[i][[1]], prey_felis_secondary[i][[1]])
-  from_start_to_secondary_felis[[i]] <- setdiff(prey_felis_start[i][[1]], prey_felis_secondary[i][[1]])
+  #from_primary_to_secondary_felis[[i]] <- setdiff(prey_felis_primary[i][[1]], prey_felis_secondary[i][[1]])
+  #from_start_to_secondary_felis[[i]] <- setdiff(prey_felis_start[i][[1]], prey_felis_secondary[i][[1]])
   
 }
 
-felis_prey <- data.frame(table(unlist(from_start_to_secondary_felis)))
+felis_prey <- data.frame(table(unlist(from_start_to_primary_felis)))
 #sum(felis_prey$Freq)
 
-felis_prey <- data.frame(felis_prey, round((felis_prey$Freq * 100)/3916, 2))
+felis_prey <- data.frame(felis_prey, round((felis_prey$Freq * 100)/sum(felis_prey$Freq), 2))
 names(felis_prey) <- c("prey_species", "lost_interactions", "percentage")
 
 felis_prey <- felis_prey[order(-felis_prey$percentage), ]
-sum(felis_prey$lost_interactions)
+sum(felis_prey$percentage)
 
 #Lost interactions as prey #####################################################
 #Where is this species? Getting, from above
@@ -328,33 +307,31 @@ fw_with_felis
 #where did it lose predators, and which predators
 predators_felis_start <- list()
 predators_felis_primary <- list()
-predators_felis_secondary <- list()
+#predators_felis_secondary <- list()
 
 for(j in 1:length(fw_with_felis)){
-  
   nr <- fw_with_felis[j]
-  
   predators_felis_start[[j]] <-  local_fw_MAIORANO[[nr]]$trophic.links[local_fw_MAIORANO[[nr]]$trophic.links$resource == "Felis silvestris",]$consumer
   predators_felis_primary[[j]] <-  local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Felis silvestris",]$consumer
-  predators_felis_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Felis silvestris",]$consumer
+  #predators_felis_secondary[[j]] <-  local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links[local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[nr]]$trophic.links$resource == "Felis silvestris",]$consumer
 }
 
 from_start_to_primary_felis2 <- list()
-from_primary_to_secondary_felis2 <- list()
-from_start_to_secondary_felis2 <- list()
+#from_primary_to_secondary_felis2 <- list()
+#from_start_to_secondary_felis2 <- list()
 
 for(i in 1:length(fw_with_felis)){
   
   from_start_to_primary_felis2[[i]] <- setdiff(predators_felis_start[i][[1]], predators_felis_primary[i][[1]])
-  from_primary_to_secondary_felis2[[i]] <- setdiff(predators_felis_primary[i][[1]], predators_felis_secondary[i][[1]])
-  from_start_to_secondary_felis2[[i]] <- setdiff(predators_felis_start[i][[1]], predators_felis_secondary[i][[1]])
+  #from_primary_to_secondary_felis2[[i]] <- setdiff(predators_felis_primary[i][[1]], predators_felis_secondary[i][[1]])
+  #from_start_to_secondary_felis2[[i]] <- setdiff(predators_felis_start[i][[1]], predators_felis_secondary[i][[1]])
   
 }
 
-felis_predators <- data.frame(table(unlist(from_start_to_secondary_felis2)))
+felis_predators <- data.frame(table(unlist(from_start_to_primary_felis2)))
 #sum(felis_predators$Freq)
 
-felis_predators <- data.frame(felis_predators, round((felis_predators$Freq * 100)/4, 2))
+felis_predators <- data.frame(felis_predators, round((felis_predators$Freq * 100)/sum(felis_predators$Freq), 2))
 names(felis_predators) <- c("predator_species", "lost_interactions", "percentage")
 
 felis_predators <- felis_predators[order(-felis_predators$percentage), ]
@@ -376,7 +353,7 @@ ex1_0 <- cheddar::Community(nodes = local_fw_MAIORANO[[1]]$nodes,
 ################################################################################
 ################################################################################
 
-'''
+'
 #Random code, used for ploting
 
 #Load datasets
@@ -435,8 +412,7 @@ table(node_col)
 ?PlotWebByLevel
 PlotWebByLevel(ex1_0, col = node_col, pch = 16, show.level.labels=FALSE, main=NULL)
 
-'''
-
+'
 ################################################################################
 # Code for example figure
 ################################################################################
