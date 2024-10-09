@@ -376,6 +376,7 @@ ex1_0 <- cheddar::Community(nodes = local_fw_MAIORANO[[1]]$nodes,
 ################################################################################
 ################################################################################
 
+'''
 #Random code, used for ploting
 
 #Load datasets
@@ -433,3 +434,23 @@ table(node_col)
 
 ?PlotWebByLevel
 PlotWebByLevel(ex1_0, col = node_col, pch = 16, show.level.labels=FALSE, main=NULL)
+
+'''
+
+################################################################################
+# Code for example figure
+################################################################################
+
+length(local_fw_MAIORANO)
+length(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS)
+length(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS)
+
+#Wildcat predators species lost
+head(predators_felis_secondary)
+
+#Wildcat prey species lost
+head(from_start_to_secondary_felis)
+#Save csv files with sample data
+write.csv(local_fw_MAIORANO[[4]]$trophic.links, file = "before_extinctions.csv")
+write.csv(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[4]]$trophic.links, file = "after_primary.csv")
+write.csv(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[4]]$trophic.links, file = "after_secondary.csv")
