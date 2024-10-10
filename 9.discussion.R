@@ -430,3 +430,68 @@ head(from_start_to_secondary_felis)
 write.csv(local_fw_MAIORANO[[4]]$trophic.links, file = "before_extinctions.csv")
 write.csv(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[4]]$trophic.links, file = "after_primary.csv")
 write.csv(local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[4]]$trophic.links, file = "after_secondary.csv")
+
+################################################################################
+#                            Metrics Before-After
+################################################################################
+
+library(cheddar)
+library(igraph)
+library(NetIndices)
+
+local_fw_MAIORANO[[1]]
+local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[1]]  
+local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[1]]
+
+res <- QuantitativeDescriptors(local_fw_MAIORANO[[1]], 'biomass.flow')
+
+###### check with igraph and netindices
+"ToIgraph <- function(community, weight=NULL)
+{
+  if(is.null(TLPS(community)))
+  {
+    stop('The community has no trophic links')
+  }
+  else
+  {
+    tlps <- TLPS(community, link.properties=weight)
+    if(!is.null(weight))
+    {
+      tlps$weight <- tlps[,weight]
+    }
+    return (graph.data.frame(tlps,
+                             vertices=NPS(community),
+                             directed=TRUE))
+  }
+}
+"
+#ex1 <- ToIgraph(local_fw_MAIORANO[[1]])
+# The "GenInd()" function requires an input of an adjacency matrix
+#ex1.adj <-get.adjacency(ex1,sparse=F)
+#GenInd(ex1.adj)
+######
+
+#local_fw_MAIORANO[[1]]
+#local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[1]]  
+
+#res <- QuantitativeDescriptors(local_fw_MAIORANO[[1]], 'biomass.flow')
+
+conn_before <- c()
+conn_after <- c()
+chainL_before <- c()
+chainL_after <- c()
+
+for(i in 1:length(local_fw_MAIORANO)){
+  
+before_table <- QuantitativeDescriptors(local_fw_MAIORANO[[i]], 'biomass.flow')
+after_table <- QuantitativeDescriptors(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[i]], 'biomass.flow')
+
+conn_before[i] <- as.numeric(before_table[rownames(before_table) =="Connectance",][1])
+conn_after[i] <- as.numeric(after_table[rownames(after_table) =="Connectance",][1])
+chainL_before[i] <- as.numeric(before_table[rownames(before_table) =="Mean chain length",][1])
+chainL_after[i] <- as.numeric(after_table[rownames(after_table) =="Mean chain length",][1])
+  
+print(i)
+
+}
+
