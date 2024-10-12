@@ -439,11 +439,16 @@ library(cheddar)
 library(igraph)
 library(NetIndices)
 
+#Load datasets
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS_METAWEB_TL_08NOV23.RData")
+load("~/github/road_ecoloy_econetworks/local_fw_MAIORANO_with_metaweb_TL_08NOV23.RData")
+
 local_fw_MAIORANO[[1]]
 local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[1]]  
 local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[1]]
 
-res <- QuantitativeDescriptors(local_fw_MAIORANO[[1]], 'biomass.flow')
+#res <- QuantitativeDescriptors(local_fw_MAIORANO[[1]], 'biomass.flow')
 
 ###### check with igraph and netindices
 "ToIgraph <- function(community, weight=NULL)
@@ -491,7 +496,26 @@ conn_after[i] <- as.numeric(after_table[rownames(after_table) =="Connectance",][
 chainL_before[i] <- as.numeric(before_table[rownames(before_table) =="Mean chain length",][1])
 chainL_after[i] <- as.numeric(after_table[rownames(after_table) =="Mean chain length",][1])
   
-print(i)
+message(i)
 
 }
+
+#Save
+saveRDS(conn_before, "conn_before_from_125_on.rds")
+saveRDS(conn_after, "conn_after_from_125_on.rds")
+saveRDS(chainL_before, "chainL_before_from_125_on.rds")
+saveRDS(chainL_after, "chainL_after_from_125_on.rds")
+
+#Load
+conn_before_1_to_124 <- readRDS("conn_before_1_to_124.rds")
+conn_after_1_to_124 <- readRDS("conn_after_1_to_124.rds")
+chainL_before_1_to_124 <- readRDS("chainL_before_1_to_124.rds")
+chainL_after_1_to_124 <- readRDS("chainL_after_1_to_124.rds")
+#
+conn_before_from_125_on <- readRDS("conn_before_from_125_on.rds")
+conn_after_from_125_on <- readRDS("conn_after_from_125_on.rds")
+chainL_before_from_125_on <- readRDS("chainL_before_from_125_on.rds")
+chainL_after_from_125_on <- readRDS("chainL_after_from_125_on.rds")
+
+
 
