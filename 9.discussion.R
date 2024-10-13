@@ -479,15 +479,15 @@ local_fw_MAIORANO_REMOVED_SECONDARY_EXTINCTIONS[[1]]
 #local_fw_MAIORANO[[1]]
 #local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[1]]  
 
-#res <- QuantitativeDescriptors(local_fw_MAIORANO[[1]], 'biomass.flow')
-
 conn_before <- c()
 conn_after <- c()
 chainL_before <- c()
 chainL_after <- c()
 
 for(i in 1:length(local_fw_MAIORANO)){
-  
+
+if(!(is.null(local_fw_MAIORANO[[i]]$trophic.links))){
+
 before_table <- QuantitativeDescriptors(local_fw_MAIORANO[[i]], 'biomass.flow')
 after_table <- QuantitativeDescriptors(local_fw_MAIORANO_REMOVED_PRIMARY_EXTINCTIONS[[i]], 'biomass.flow')
 
@@ -495,27 +495,53 @@ conn_before[i] <- as.numeric(before_table[rownames(before_table) =="Connectance"
 conn_after[i] <- as.numeric(after_table[rownames(after_table) =="Connectance",][1])
 chainL_before[i] <- as.numeric(before_table[rownames(before_table) =="Mean chain length",][1])
 chainL_after[i] <- as.numeric(after_table[rownames(after_table) =="Mean chain length",][1])
-  
+
+} else {
+  conn_before[i] <- 0
+  conn_after[i] <- 0
+  chainL_before[i] <- 0
+  chainL_after[i] <- 0 
+}  
+
 message(i)
 
 }
 
+#Save individiaual vectors with metrics
+saveRDS(conn_before, "conn_before.rds")
+saveRDS(conn_after, "conn_after.rds")
+saveRDS(chainL_before, "chainL_before.rds")
+saveRDS(chainL_after, "chainL_after.rds")
+
+
+#create data frame with metrics before and after
+network_metrics <- data.frame(conn_before,
+                    conn_after,
+                    chainL_before,
+                    chainL_after
+                    )
+
+names(network_metrics) <- c("connectance_before", 
+                            "connectance_after", 
+                            "mean_chain_length_before", 
+                            "mean_chain_length_after"
+                            )
+
+#View(network_metrics)
+
 #Save
-saveRDS(conn_before, "conn_before_from_125_on.rds")
-saveRDS(conn_after, "conn_after_from_125_on.rds")
-saveRDS(chainL_before, "chainL_before_from_125_on.rds")
-saveRDS(chainL_after, "chainL_after_from_125_on.rds")
-
-#Load
-conn_before_1_to_124 <- readRDS("conn_before_1_to_124.rds")
-conn_after_1_to_124 <- readRDS("conn_after_1_to_124.rds")
-chainL_before_1_to_124 <- readRDS("chainL_before_1_to_124.rds")
-chainL_after_1_to_124 <- readRDS("chainL_after_1_to_124.rds")
-#
-conn_before_from_125_on <- readRDS("conn_before_from_125_on.rds")
-conn_after_from_125_on <- readRDS("conn_after_from_125_on.rds")
-chainL_before_from_125_on <- readRDS("chainL_before_from_125_on.rds")
-chainL_after_from_125_on <- readRDS("chainL_after_from_125_on.rds")
+write.csv(network_metrics, "network_metrics.csv")
 
 
 
+# Boxplot for multiple columns
+
+summary(network_metrics)
+
+boxplot(network_metrics[, c("connectance_before", "connectance_after")],
+        main = "Connectance",
+        col = c("lightblue", "lightgreen"))
+
+boxplot(network_metrics[, c("mean_chain_length_before", "mean_chain_length_after")],
+        main = "Mean Chain Length",
+        col = c("lightblue", "lightgreen"))
