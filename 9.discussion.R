@@ -530,8 +530,8 @@ names(network_metrics) <- c("connectance_before",
 #View(network_metrics)
 
 #Save
-write.csv(network_metrics, "network_metrics.csv")
-
+#write.csv(network_metrics, "network_metrics.csv")
+#network_metrics <- read.csv("network_metrics.csv")
 
 
 # Boxplot for multiple columns
