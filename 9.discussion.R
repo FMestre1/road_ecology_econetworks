@@ -545,3 +545,5 @@ boxplot(network_metrics[, c("connectance_before", "connectance_after")],
 boxplot(network_metrics[, c("mean_chain_length_before", "mean_chain_length_after")],
         main = "Mean Chain Length",
         col = c("lightblue", "lightgreen"))
+
+################################################################################

@@ -28,13 +28,13 @@ library(NetIndices)
 #https://doi.org/10.1002/fee.2216
 
 #Load vulnerability information from Grilo et al
-birds_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\9 RankingvulnerableBirds.csv", header = TRUE)
-mammals_vulnerability <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\10 RankingvulnerableMammals.csv", header = TRUE)
+birds_vulnerability <- read.csv("~\\data\\9 RankingvulnerableBirds.csv", header = TRUE)
+mammals_vulnerability <- read.csv("~\\data\\10 RankingvulnerableMammals.csv", header = TRUE)
 all_species_vulnerability <- rbind(mammals_vulnerability, birds_vulnerability)
 
 #Load spatial information, study site, grids and species occurrence (based on Grilo et al)
-mammals <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\matrix_occurrence_mammals.csv")
-birds <- read.csv("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\matrix_occurrence_birds.csv")
+mammals <- read.csv("matrix_occurrence_mammals.csv")
+birds <- read.csv("C:matrix_occurrence_birds.csv")
 mammals <- mammals[,-2]
 birds <- birds[,-2]
 
@@ -59,7 +59,7 @@ birds <- birds[,-1]
 all_species <- all_species[,-1]
 #
 
-template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_networks\\data\\fernando_26set_2023\\template_grilo.shp")
+template_grilo <- terra::vect("~\\grilo\\template_grilo.shp")
 
 ################################################################################
 # 1. Maiorano et al. European Metaweb of trophic interactions             
@@ -69,7 +69,7 @@ template_grilo <- terra::vect("C:\\Users\\asus\\Documents\\0. Artigos\\roads_net
 #TETRA‐EU 1.0: a species‐level trophic metaweb of European tetrapods.
 #Global Ecology and Biogeography, 29(9), 1452-1457.
 
-maiorano_metaweb <- read.csv("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
+maiorano_metaweb <- read.csv("~\\food_webs_tetrapods_europe\\dataset\\Metaweb_adults.csv", header = T)
 rownames(maiorano_metaweb) <- maiorano_metaweb$X
 maiorano_metaweb <- maiorano_metaweb[,-1]
 
@@ -82,7 +82,7 @@ maiorano_metaweb <- maiorano_metaweb[,-1]
 rn <- rownames(maiorano_metaweb)
 cn <- colnames(maiorano_metaweb)
 
-spp_maiorano <- read.delim("C:\\Users\\asus\\Documents\\0. Posdoc\\CONTRATO\\species_databases\\food_webs_tetrapods_europe\\dataset\\Spp_Id.txt")
+spp_maiorano <- read.delim("~\\food_webs_tetrapods_europe\\dataset\\Spp_Id.txt")
 
 #
 for(i in 1:length(rn)) rn[i] <- spp_maiorano[spp_maiorano$ID == rn[i],]$SPPname

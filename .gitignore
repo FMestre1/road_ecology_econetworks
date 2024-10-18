@@ -1,3 +1,8 @@
+# Scripts to be ignored
+9.discussion.R
+5.future.R
+garbage.R
+
 # History files
 .Rhistory
 .Rapp.history
